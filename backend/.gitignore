@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Environnement
+.env
+venv/
+env/
+.venv/
+
+# Base de donnees locale
+*.db
+*.sqlite3
+examboost.db
+
+# Modeles ML serialises
+services/models/*.joblib
+models/*.joblib
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

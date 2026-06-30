@@ -1,12 +1,18 @@
 // lib/screens/revision/revision_screen.dart
 // Écran principal de révision adaptative (flashcard SRS)
+// Branché sur QuestionService (chargement), SrsService (SM-2) et BKT (AppUser)
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
+
 import '../../models/question.dart';
-import '../../models/review_card.dart';
+import '../../models/user.dart';
+import '../../services/question_service.dart';
+import '../../services/srs_service.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/cards/question_card.dart';
 import '../../widgets/buttons/srs_buttons.dart';
+import '../../widgets/cards/question_card.dart';
 
 class RevisionScreen extends StatefulWidget {
   final String matiere;
@@ -24,25 +30,26 @@ class RevisionScreen extends StatefulWidget {
 
 class _RevisionScreenState extends State<RevisionScreen>
     with TickerProviderStateMixin {
-  // ─── État ─────────────────────────────────────────────────────
+  // ─── État de chargement ────────────────────────────────────────
+  bool _isLoading = true;
+  String? _loadingError;
+
+  // ─── État de la session ────────────────────────────────────────
+  List<Question> _questions = [];
   bool _reponseVisible = false;
   int _currentIndex = 0;
   int _sessionsCorrectes = 0;
   int _sessionsTotales = 0;
+  int _cartesARevoirDemain = 0; // cartes notées < 4 (intervalle = 1 jour)
   bool _sessionTerminee = false;
 
-  // Animation flip de la carte
+  // ─── Animation flip de la carte ────────────────────────────────
   late AnimationController _flipController;
   late Animation<double> _flipAnimation;
-
-  // Données de la session (à remplacer par le service en production)
-  late List<Question> _questions;
 
   @override
   void initState() {
     super.initState();
-    _questions = _getQuestionsForDemo();
-
     _flipController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 350),
@@ -50,12 +57,34 @@ class _RevisionScreenState extends State<RevisionScreen>
     _flipAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _flipController, curve: Curves.easeInOut),
     );
+    // Chargement différé pour que Provider soit disponible dans le contexte
+    WidgetsBinding.instance.addPostFrameCallback((_) => _chargerQuestions());
   }
 
   @override
   void dispose() {
     _flipController.dispose();
     super.dispose();
+  }
+
+  // ─── Chargement des questions depuis QuestionService ───────────
+  Future<void> _chargerQuestions() async {
+    try {
+      final questionService =
+          Provider.of<QuestionService>(context, listen: false);
+      await questionService.loadQuestions();
+      final questions = questionService.getByMatiere(widget.matiere);
+      questions.shuffle();
+      setState(() {
+        _questions = questions;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _loadingError = e.toString();
+        _isLoading = false;
+      });
+    }
   }
 
   // ─── Actions ──────────────────────────────────────────────────
@@ -65,13 +94,42 @@ class _RevisionScreenState extends State<RevisionScreen>
     _flipController.forward();
   }
 
+  /// Enregistre une réponse SRS (qualité 0-5) :
+  /// - Met à jour la carte SM-2 via SrsService.recordAnswer
+  /// - Met à jour le BKT de l'élève via AppUser.updateBkt
+  /// - Avance à la question suivante ou termine la session
   void _recordAnswer(int quality) {
-    // TODO: appeler SrsService.recordAnswer() en production
+    final question = _questions[_currentIndex];
+    final srsService = Provider.of<SrsService>(context, listen: false);
+
     final isCorrect = quality >= 3;
     if (isCorrect) _sessionsCorrectes++;
     _sessionsTotales++;
 
-    // Passer à la question suivante
+    // Estimation locale : cartes notées < 4 auront un intervalle de 1 jour
+    // (donc dues demain). Complétée par SrsStats à l'écran de fin.
+    if (quality < 4) _cartesARevoirDemain++;
+
+    // Avancer immédiatement à la question suivante (UX réactive)
+    _prochaineQuestion();
+
+    // Enregistrement asynchrone en arrière-plan (sans bloquer l'UI).
+    // Le Future n'est pas attendu volontairement : on veut que la session
+    // avance immédiatement à la question suivante.
+    _enregistrerReponseEnArrierePlan(
+      question: question,
+      quality: quality,
+      isCorrect: isCorrect,
+      srsService: srsService,
+    );
+  }
+
+  /// Passe à la question suivante sans enregistrer de réponse
+  void _passerQuestion() {
+    _prochaineQuestion();
+  }
+
+  void _prochaineQuestion() {
     if (_currentIndex < _questions.length - 1) {
       setState(() {
         _currentIndex++;
@@ -83,13 +141,79 @@ class _RevisionScreenState extends State<RevisionScreen>
     }
   }
 
+  // ─── Enregistrement asynchrone (SM-2 + BKT) ────────────────────
+
+  Future<void> _enregistrerReponseEnArrierePlan({
+    required Question question,
+    required int quality,
+    required bool isCorrect,
+    required SrsService srsService,
+  }) async {
+    try {
+      // 1. SM-2 : enregistre la qualité et planifie la prochaine révision
+      await srsService.recordAnswer(
+        userId: widget.userId,
+        questionId: question.id,
+        quality: quality,
+      );
+
+      // 2. BKT : met à jour P(L) de la compétence concernée
+      await _updateBkt(
+        competenceId: question.competenceId,
+        correct: isCorrect,
+      );
+    } catch (e) {
+      // Erreur non bloquante : la session continue même si la persistance échoue
+      debugPrint('Erreur enregistrement SRS/BKT : $e');
+    }
+  }
+
+  /// Charge ou crée un AppUser depuis la box Hive "users",
+  /// met à jour le BKT pour la compétence, puis sauvegarde.
+  ///
+  /// Note : cette méthode utilitaire est locale à l'écran pour cette tâche.
+  /// L'agent principal remplacera par un UserProvider global ensuite.
+  Future<void> _updateBkt({
+    required String competenceId,
+    required bool correct,
+  }) async {
+    try {
+      final Box<AppUser> usersBox;
+      if (Hive.isBoxOpen('users')) {
+        usersBox = Hive.box<AppUser>('users');
+      } else {
+        usersBox = await Hive.openBox<AppUser>('users');
+      }
+
+      AppUser? user = usersBox.get(widget.userId);
+      if (user == null) {
+        // Création d'un utilisateur de session s'il n'existe pas encore
+        user = AppUser(
+          id: widget.userId,
+          nom: 'Invité',
+          prenom: 'Élève',
+          niveauScolaire: '3eme',
+          dateInscription: DateTime.now(),
+        );
+        await usersBox.put(widget.userId, user);
+      }
+
+      // updateBkt calcule P(L|observation) + transition, puis appelle save()
+      user.updateBkt(competenceId: competenceId, correct: correct);
+    } catch (e) {
+      debugPrint('Erreur mise à jour BKT : $e');
+    }
+  }
+
   // ─── Build ────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
-    if (_sessionTerminee) {
-      return _buildSessionSummary();
-    }
+    // ─── États spéciaux (avant la session) ──────────────────────
+    if (_isLoading) return _buildLoadingScreen();
+    if (_loadingError != null) return _buildErrorScreen();
+    if (_questions.isEmpty) return _buildEmptyState();
+    if (_sessionTerminee) return _buildSessionSummary();
 
     final question = _questions[_currentIndex];
 
@@ -102,17 +226,17 @@ class _RevisionScreenState extends State<RevisionScreen>
           _buildProgressBar(),
           const SizedBox(height: 8),
 
-          // Carte question/réponse
+          // Corps : carte question/réponse + boutons
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Column(
                 children: [
-                  // Chip matière + difficulté
+                  // Chips matière + difficulté + année
                   _buildQuestionMeta(question),
                   const SizedBox(height: 12),
 
-                  // La carte principale
+                  // La carte principale (avec animation flip)
                   Expanded(
                     child: QuestionCard(
                       question: question,
@@ -122,13 +246,17 @@ class _RevisionScreenState extends State<RevisionScreen>
                   ),
                   const SizedBox(height: 16),
 
-                  // Boutons d'action
+                  // Boutons d'action (Voir réponse OU Boutons SRS)
                   if (!_reponseVisible)
                     _buildVoirReponseButton()
                   else
                     SrsButtons(onQualitySelected: _recordAnswer),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 8),
+
+                  // Bouton "Passer la question"
+                  _buildPasserButton(),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
@@ -137,6 +265,8 @@ class _RevisionScreenState extends State<RevisionScreen>
       ),
     );
   }
+
+  // ─── AppBar & progression ─────────────────────────────────────
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -163,7 +293,8 @@ class _RevisionScreenState extends State<RevisionScreen>
   }
 
   Widget _buildProgressBar() {
-    final progress = (_currentIndex + (_reponseVisible ? 1 : 0)) / _questions.length;
+    final progress =
+        (_currentIndex + (_reponseVisible ? 1 : 0)) / _questions.length;
     return LinearProgressIndicator(
       value: progress,
       minHeight: 4,
@@ -172,13 +303,12 @@ class _RevisionScreenState extends State<RevisionScreen>
     );
   }
 
+  // ─── Méta-info de la question ─────────────────────────────────
+
   Widget _buildQuestionMeta(Question question) {
     return Row(
       children: [
-        _buildChip(
-          label: question.matiere,
-          color: AppColors.primary,
-        ),
+        _buildChip(label: question.matiere, color: AppColors.primary),
         const SizedBox(width: 8),
         _buildChip(
           label: _difficulteLabel(question.difficulte),
@@ -209,6 +339,8 @@ class _RevisionScreenState extends State<RevisionScreen>
     );
   }
 
+  // ─── Boutons d'action ─────────────────────────────────────────
+
   Widget _buildVoirReponseButton() {
     return SizedBox(
       width: double.infinity,
@@ -224,52 +356,245 @@ class _RevisionScreenState extends State<RevisionScreen>
     );
   }
 
-  Widget _buildSessionSummary() {
-    final taux = _sessionsTotales > 0
-        ? (_sessionsCorrectes / _sessionsTotales * 100).round()
-        : 0;
+  Widget _buildPasserButton() {
+    return Align(
+      alignment: Alignment.center,
+      child: TextButton.icon(
+        onPressed: _passerQuestion,
+        icon: const Icon(Icons.skip_next, size: 18),
+        label: const Text('Passer la question'),
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.textSecondary,
+          textStyle: AppTextStyles.label.copyWith(fontSize: 13),
+        ),
+      ),
+    );
+  }
 
+  // ─── États spéciaux : loading / error / empty ─────────────────
+
+  Widget _buildLoadingScreen() {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
+      appBar: AppBar(title: Text(widget.matiere)),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text(
+              'Chargement des questions...',
+              style: AppTextStyles.bodySmall,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorScreen() {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(title: Text(widget.matiere)),
+      body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.emoji_events, size: 80, color: AppColors.accent),
-              const SizedBox(height: 24),
-              Text('Session terminée !', style: AppTextStyles.h1),
+              const Icon(Icons.error_outline, size: 64, color: AppColors.error),
+              const SizedBox(height: 16),
+              Text(
+                'Une erreur est survenue',
+                style: AppTextStyles.h2,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 8),
               Text(
-                'Tu as répondu correctement à $_sessionsCorrectes questions sur $_sessionsTotales',
-                style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+                _loadingError ?? 'Erreur inconnue',
+                style: AppTextStyles.bodySmall,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _isLoading = true;
+                    _loadingError = null;
+                  });
+                  _chargerQuestions();
+                },
+                icon: const Icon(Icons.refresh),
+                label: const Text('Réessayer'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(title: Text(widget.matiere)),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.inbox,
+                size: 80,
+                color: AppColors.textSecondary,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Aucune question disponible pour ${widget.matiere}',
+                style: AppTextStyles.h2,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Pas encore de questions pour cette matière. '
+                'Revenez bientôt réviser !',
+                style: AppTextStyles.body.copyWith(
+                  color: AppColors.textSecondary,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
-              // Score circulaire
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _scoreColor(taux).withOpacity(0.15),
-                  border: Border.all(color: _scoreColor(taux), width: 4),
+              ElevatedButton.icon(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('Retour'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ─── Écran de fin de session ──────────────────────────────────
+
+  Widget _buildSessionSummary() {
+    final taux = _sessionsTotales > 0
+        ? (_sessionsCorrectes / _sessionsTotales * 100).round()
+        : 0;
+
+    // Estimation des cartes à revoir demain via SrsService.getStats
+    // + estimation locale (cartes notées < 4 dans cette session)
+    int aRevoirDemain = _cartesARevoirDemain;
+    try {
+      final srsService = Provider.of<SrsService>(context, listen: false);
+      final stats = srsService.getStats(widget.userId);
+      // Cartes en phase d'apprentissage (intervalle = 1 jour) +
+      // cartes déjà dues non révisées aujourd'hui => à revoir demain
+      aRevoirDemain = _cartesARevoirDemain + stats.learning + stats.dueToday;
+    } catch (_) {
+      // On conserve l'estimation locale si le service échoue
+    }
+
+    final messageMotivant = _messageMotivant(taux);
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 24),
+              const Icon(Icons.emoji_events, size: 80, color: AppColors.accent),
+              const SizedBox(height: 24),
+              Text(
+                'Session terminée !',
+                style: AppTextStyles.h1,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Tu as répondu correctement à $_sessionsCorrectes questions '
+                'sur $_sessionsTotales.',
+                style: AppTextStyles.body.copyWith(
+                  color: AppColors.textSecondary,
                 ),
-                child: Center(
-                  child: Text(
-                    '$taux%',
-                    style: AppTextStyles.h1.copyWith(color: _scoreColor(taux)),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+
+              // Score circulaire
+              Center(
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _scoreColor(taux).withOpacity(0.15),
+                    border:
+                        Border.all(color: _scoreColor(taux), width: 4),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '$taux%',
+                      style: AppTextStyles.h1
+                          .copyWith(color: _scoreColor(taux)),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Retour au tableau de bord'),
+              const SizedBox(height: 24),
+
+              // Cartes à revoir demain (estimation SrsService)
+              _buildStatRow(
+                icon: Icons.event_repeat,
+                iconColor: AppColors.accent,
+                label: 'Cartes à revoir demain',
+                value: '$aRevoirDemain',
+              ),
+              const SizedBox(height: 12),
+
+              // Message motivant
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
                 ),
+                decoration: BoxDecoration(
+                  color: AppColors.primarySurface,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.local_fire_department,
+                      color: AppColors.accent,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        messageMotivant,
+                        style: AppTextStyles.body.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Boutons de fin
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Retour au tableau de bord'),
               ),
               const SizedBox(height: 12),
               TextButton(
@@ -280,12 +605,14 @@ class _RevisionScreenState extends State<RevisionScreen>
                     _sessionTerminee = false;
                     _sessionsCorrectes = 0;
                     _sessionsTotales = 0;
+                    _cartesARevoirDemain = 0;
                     _questions.shuffle();
                   });
                   _flipController.reset();
                 },
                 child: const Text('Recommencer une session'),
               ),
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -293,14 +620,48 @@ class _RevisionScreenState extends State<RevisionScreen>
     );
   }
 
+  Widget _buildStatRow({
+    required IconData icon,
+    required Color iconColor,
+    required String label,
+    required String value,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.divider),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor, size: 24),
+          const SizedBox(width: 12),
+          Expanded(child: Text(label, style: AppTextStyles.body)),
+          Text(
+            value,
+            style: AppTextStyles.h3.copyWith(color: iconColor),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─── Dialog quitter la session ────────────────────────────────
+
   void _showQuitDialog() {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Quitter la session ?'),
-        content: const Text('Ta progression dans cette session ne sera pas sauvegardée.'),
+        content: const Text(
+          'Ta progression dans cette session ne sera pas sauvegardée.',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Continuer')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Continuer'),
+          ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(ctx);
@@ -315,52 +676,48 @@ class _RevisionScreenState extends State<RevisionScreen>
   }
 
   // ─── Helpers ──────────────────────────────────────────────────
+
   Color _scoreColor(int taux) {
     if (taux >= 70) return AppColors.success;
     if (taux >= 40) return AppColors.warning;
     return AppColors.error;
   }
 
+  /// Message motivant personnalisé selon la performance.
+  /// Inclut toujours la phrase clé "Tu progresses en X ! Continue !"
+  String _messageMotivant(int taux) {
+    String prefix;
+    if (taux >= 80) {
+      prefix = 'Excellent ! ';
+    } else if (taux >= 50) {
+      prefix = 'Bon travail ! ';
+    } else if (taux > 0) {
+      prefix = 'Ne lâche rien ! ';
+    } else {
+      prefix = "C'est en se trompant qu'on apprend. ";
+    }
+    return '$prefix Tu progresses en ${widget.matiere} ! Continue !';
+  }
+
   String _difficulteLabel(DifficulteNiveau d) {
     switch (d) {
-      case DifficulteNiveau.facile:   return 'Facile';
-      case DifficulteNiveau.moyen:    return 'Moyen';
-      case DifficulteNiveau.difficile: return 'Difficile';
+      case DifficulteNiveau.facile:
+        return 'Facile';
+      case DifficulteNiveau.moyen:
+        return 'Moyen';
+      case DifficulteNiveau.difficile:
+        return 'Difficile';
     }
   }
 
   Color _difficulteColor(DifficulteNiveau d) {
     switch (d) {
-      case DifficulteNiveau.facile:   return AppColors.facile;
-      case DifficulteNiveau.moyen:    return AppColors.info;
-      case DifficulteNiveau.difficile: return AppColors.difficile;
+      case DifficulteNiveau.facile:
+        return AppColors.facile;
+      case DifficulteNiveau.moyen:
+        return AppColors.info;
+      case DifficulteNiveau.difficile:
+        return AppColors.difficile;
     }
-  }
-
-  List<Question> _getQuestionsForDemo() {
-    // Données codées en dur pour la démo — remplacées par QuestionService en prod
-    return [
-      Question(
-        id: 'demo-001', enonce: 'Résoudre : 3x + 7 = 22',
-        reponse: 'x = 5',
-        explication: 'On isole x : 3x = 22 - 7 = 15, donc x = 15 ÷ 3 = 5.',
-        matiere: 'Mathématiques', chapitre: 'Équations', competenceId: 'eq1d',
-        examen: 'BEPC', type: QuestionType.calcul, annee: 2022, irtB: -0.5,
-      ),
-      Question(
-        id: 'demo-002', enonce: 'Quelle est l\'aire d\'un triangle de base 8 cm et hauteur 5 cm ?',
-        reponse: '20 cm²',
-        explication: 'Aire = (base × hauteur) ÷ 2 = (8 × 5) ÷ 2 = 20 cm².',
-        matiere: 'Mathématiques', chapitre: 'Géométrie', competenceId: 'geo01',
-        examen: 'BEPC', type: QuestionType.calcul, annee: 2021, irtB: -0.3,
-      ),
-      Question(
-        id: 'demo-003', enonce: 'Conjuguez "finir" au conditionnel présent (1ère personne singulier).',
-        reponse: 'Je finirais',
-        explication: 'Le conditionnel présent de "finir" : je finirais, tu finirais, il finirait...',
-        matiere: 'Français', chapitre: 'Conjugaison', competenceId: 'conj01',
-        examen: 'BEPC', type: QuestionType.ouvert, annee: 2023, irtB: -0.4,
-      ),
-    ];
   }
 }

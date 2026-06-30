@@ -1,5 +1,13 @@
 // lib/main.dart
 // Point d'entrée principal d'ExamBoost Togo
+//
+// Architecture :
+//   - Hive (offline-first) : boxes "users", "review_cards"
+//   - Providers : SrsService, QuestionService, UserProvider (global)
+//   - Router GoRouter : redirect vers /onboarding si pas d'user connecté
+//
+// Pour générer les adaptateurs Hive :
+//   dart run build_runner build --delete-conflicting-outputs
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'models/question.dart';
 import 'models/review_card.dart';
 import 'models/user.dart';
+import 'providers/user_provider.dart';
 import 'services/srs_service.dart';
 import 'services/question_service.dart';
 import 'theme/app_theme.dart';
@@ -30,6 +39,9 @@ void main() async {
   Hive.registerAdapter(AppUserAdapter());
   Hive.registerAdapter(QuestionTypeAdapter());
 
+  // Ouvrir la box "users" tôt (utilisée par UserProvider)
+  await Hive.openBox<AppUser>('users');
+
   // ─── Initialisation des services ──────────────────────────────
   final srsService = SrsService();
   await srsService.init();
@@ -37,11 +49,16 @@ void main() async {
   final questionService = QuestionService();
   await questionService.loadQuestions();
 
+  // ─── UserProvider (auth + persistance) ────────────────────────
+  final userProvider = UserProvider();
+  await userProvider.initialize();
+
   runApp(
     MultiProvider(
       providers: [
         Provider<SrsService>.value(value: srsService),
         Provider<QuestionService>.value(value: questionService),
+        ChangeNotifierProvider<UserProvider>.value(value: userProvider),
       ],
       child: const ExamBoostApp(),
     ),
