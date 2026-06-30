@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExamBoost Togo — Maquettes</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#006837; --primary-dark:#004A26; --primary-surface:#E8F5ED;
+    --accent:#D97700; --accent-surface:#FFF3E0;
+    --bg:#F8F9FA; --surface:#FFFFFF; --surface-variant:#F1F3F4;
+    --text:#1A1A1A; --text-sec:#757575; --text-dis:#BDBDBD;
+    --info:#1565C0; --success:#2E7D32; --error:#C62828; --divider:#E0E0E0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+  body{background:#2c2c34;padding:40px 20px;display:flex;flex-wrap:wrap;
+       gap:36px;justify-content:center;align-items:flex-start;}
+
+  /* Cadre téléphone */
+  .phone{
+    width:300px;height:640px;background:#000;border-radius:38px;
+    padding:10px;box-shadow:0 24px 60px rgba(0,0,0,.45);position:relative;
+    flex-shrink:0;
+  }
+  .phone::before{content:"";position:absolute;top:20px;left:50%;
+    transform:translateX(-50%);width:90px;height:22px;background:#000;
+    border-radius:0 0 16px 16px;z-index:20;}
+  .screen{width:100%;height:100%;background:var(--bg);border-radius:30px;
+    overflow:hidden;position:relative;display:flex;flex-direction:column;}
+
+  /* Barre de statut */
+  .statusbar{height:34px;display:flex;justify-content:space-between;
+    align-items:center;padding:0 22px;font-size:11px;font-weight:600;
+    color:var(--text);background:transparent;padding-top:6px;}
+  .statusbar .right{display:flex;gap:5px;align-items:center;}
+
+  .label{text-align:center;color:#fff;font-family:'Outfit';font-weight:600;
+    font-size:14px;margin-top:14px;letter-spacing:.3px;}
+  .wrap{display:flex;flex-direction:column;align-items:center;}
+
+  h1,h2,h3,h4{font-family:'Outfit';}
+
+  /* ============ ÉCRAN 1 — ACCUEIL ============ */
+  .home-header{padding:14px 18px 10px;display:flex;align-items:center;gap:10px;}
+  .logo-box{width:42px;height:42px;background:var(--primary);border-radius:11px;
+    display:flex;align-items:center;justify-content:center;color:#fff;
+    font-family:'Outfit';font-weight:800;font-size:17px;}
+  .home-greet h3{font-size:15px;color:var(--text);font-weight:700;}
+  .home-greet p{font-size:11px;color:var(--text-sec);}
+  .home-streak{margin-left:auto;background:var(--accent-surface);
+    border-radius:20px;padding:5px 11px;display:flex;align-items:center;gap:4px;
+    font-size:12px;font-weight:600;color:var(--accent);}
+  .home-body{padding:8px 18px;flex:1;}
+  .section-title{font-size:17px;font-weight:700;color:var(--text);
+    margin:14px 0 10px;}
+  .action-card{background:var(--surface);border-radius:16px;padding:14px;
+    display:flex;align-items:center;gap:13px;margin-bottom:11px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);}
+  .ac-icon{width:46px;height:46px;border-radius:12px;display:flex;
+    align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .ac-text h4{font-size:14px;font-weight:600;color:var(--text);}
+  .ac-text p{font-size:11px;color:var(--text-sec);margin-top:2px;}
+  .ac-arrow{margin-left:auto;color:var(--text-dis);font-size:15px;}
+  .home-stat{background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    border-radius:16px;padding:16px;margin-top:6px;color:#fff;}
+  .home-stat .row{display:flex;justify-content:space-between;align-items:center;}
+  .home-stat h4{font-size:13px;font-weight:500;opacity:.9;}
+  .home-stat .big{font-size:30px;font-weight:800;font-family:'Outfit';}
+  .home-stat .sub{font-size:11px;opacity:.8;margin-top:2px;}
+  .progress-mini{height:6px;background:rgba(255,255,255,.25);border-radius:3px;
+    margin-top:10px;overflow:hidden;}
+  .progress-mini span{display:block;height:100%;width:62%;background:var(--accent);
+    border-radius:3px;}
+
+  /* ============ ÉCRAN 2 — MATIÈRES ============ */
+  .topbar{padding:14px 18px;display:flex;align-items:center;gap:12px;
+    background:var(--surface);border-bottom:1px solid var(--divider);}
+  .topbar .back{font-size:20px;color:var(--text);}
+  .topbar h3{font-size:16px;font-weight:700;}
+  .exam-tabs{display:flex;gap:8px;padding:14px 18px 6px;overflow-x:auto;}
+  .tab{padding:7px 15px;border-radius:20px;font-size:12px;font-weight:600;
+    white-space:nowrap;}
+  .tab.active{background:var(--primary);color:#fff;}
+  .tab.idle{background:var(--surface-variant);color:var(--text-sec);}
+  .subj-grid{padding:10px 18px;display:grid;grid-template-columns:1fr 1fr;
+    gap:12px;}
+  .subj-card{background:var(--surface);border-radius:16px;padding:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);position:relative;overflow:hidden;}
+  .subj-icon{width:40px;height:40px;border-radius:11px;display:flex;
+    align-items:center;justify-content:center;font-size:20px;margin-bottom:10px;}
+  .subj-card h4{font-size:13px;font-weight:600;color:var(--text);}
+  .subj-card .qcount{font-size:10px;color:var(--text-sec);margin-top:3px;}
+  .subj-prog{height:5px;background:var(--surface-variant);border-radius:3px;
+    margin-top:10px;overflow:hidden;}
+  .subj-prog span{display:block;height:100%;border-radius:3px;}
+  .subj-pct{font-size:10px;font-weight:600;margin-top:5px;}
+
+  /* ============ ÉCRAN 3 — RÉVISION ============ */
+  .rev-top{padding:12px 18px;display:flex;align-items:center;
+    justify-content:space-between;background:var(--surface);}
+  .rev-top .close{font-size:20px;color:var(--text);}
+  .rev-top .count{font-size:13px;font-weight:600;color:var(--text-sec);}
+  .rev-progress{height:4px;background:var(--primary-surface);}
+  .rev-progress span{display:block;height:100%;width:40%;background:var(--primary);}
+  .rev-body{flex:1;padding:16px 18px;display:flex;flex-direction:column;}
+  .chips{display:flex;gap:7px;margin-bottom:12px;}
+  .chip{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:600;}
+  .qcard{background:var(--surface);border:1.5px solid rgba(0,104,55,.2);
+    border-radius:20px;padding:18px;flex:1;display:flex;flex-direction:column;
+    box-shadow:0 6px 18px rgba(0,0,0,.06);}
+  .qcard .qhead{display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:14px;}
+  .qtag{background:var(--primary-surface);color:var(--primary);
+    padding:5px 11px;border-radius:8px;font-size:10px;font-weight:600;}
+  .qpts{font-size:11px;color:var(--text-sec);}
+  .qicon{font-size:28px;color:var(--primary);margin-bottom:10px;}
+  .qtext{font-size:16px;font-weight:500;color:var(--text);line-height:1.55;
+    font-family:'Outfit';flex:1;}
+  .qhint{font-size:11px;color:var(--text-sec);font-style:italic;
+    text-align:center;margin-top:10px;}
+  .reveal-btn{background:var(--primary);color:#fff;border:none;
+    border-radius:12px;padding:15px;font-size:14px;font-weight:600;
+    font-family:'Outfit';margin-top:14px;display:flex;align-items:center;
+    justify-content:center;gap:8px;}
+
+  /* ============ ÉCRAN 4 — SIMULATION ============ */
+  .sim-hero{background:linear-gradient(135deg,var(--accent),#B85C00);
+    padding:20px 18px 24px;color:#fff;}
+  .sim-hero .label-sm{font-size:11px;opacity:.85;font-weight:600;
+    letter-spacing:.5px;text-transform:uppercase;}
+  .sim-hero h2{font-size:21px;font-weight:800;font-family:'Outfit';margin-top:4px;}
+  .sim-timer{background:rgba(255,255,255,.18);border-radius:14px;padding:14px;
+    margin-top:16px;display:flex;align-items:center;justify-content:space-between;}
+  .sim-timer .time{font-size:30px;font-weight:800;font-family:'Outfit';}
+  .sim-timer .tlabel{font-size:11px;opacity:.85;}
+  .sim-body{padding:16px 18px;flex:1;}
+  .sim-qbox{background:var(--surface);border-radius:16px;padding:16px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);}
+  .sim-qnum{font-size:11px;color:var(--accent);font-weight:700;}
+  .sim-qtext{font-size:15px;font-weight:500;color:var(--text);margin-top:6px;
+    line-height:1.5;font-family:'Outfit';}
+  .opt{background:var(--surface-variant);border-radius:11px;padding:13px 14px;
+    margin-top:10px;font-size:13px;color:var(--text);display:flex;
+    align-items:center;gap:10px;border:1.5px solid transparent;}
+  .opt.sel{border-color:var(--accent);background:var(--accent-surface);
+    color:var(--accent);font-weight:600;}
+  .opt-letter{width:24px;height:24px;border-radius:50%;background:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:11px;
+    font-weight:700;flex-shrink:0;border:1.5px solid var(--divider);}
+  .opt.sel .opt-letter{border-color:var(--accent);color:var(--accent);}
+  .sim-nav{display:flex;gap:10px;padding:14px 18px;}
+  .sim-nav button{flex:1;border-radius:11px;padding:13px;font-size:13px;
+    font-weight:600;font-family:'Outfit';border:none;}
+  .nav-prev{background:var(--surface-variant);color:var(--text-sec);}
+  .nav-next{background:var(--primary);color:#fff;}
+
+  /* ============ ÉCRAN 5 — TABLEAU DE BORD ============ */
+  .dash-head{padding:16px 18px 10px;}
+  .dash-head h3{font-size:18px;font-weight:700;color:var(--text);}
+  .dash-head p{font-size:12px;color:var(--text-sec);margin-top:2px;}
+  .score-ring-wrap{display:flex;justify-content:center;padding:10px 0 4px;}
+  .score-ring{width:130px;height:130px;border-radius:50%;
+    background:conic-gradient(var(--primary) 0% 72%, var(--primary-surface) 72% 100%);
+    display:flex;align-items:center;justify-content:center;position:relative;}
+  .score-ring .inner{width:104px;height:104px;background:var(--bg);
+    border-radius:50%;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;}
+  .score-ring .pct{font-size:30px;font-weight:800;font-family:'Outfit';
+    color:var(--primary);}
+  .score-ring .lbl{font-size:10px;color:var(--text-sec);}
+  .dash-stats{display:flex;gap:10px;padding:10px 18px;}
+  .ds-card{flex:1;background:var(--surface);border-radius:14px;padding:12px;
+    text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+  .ds-card .num{font-size:20px;font-weight:800;font-family:'Outfit';}
+  .ds-card .lbl{font-size:10px;color:var(--text-sec);margin-top:2px;}
+  .dash-sub{padding:6px 18px 4px;font-size:14px;font-weight:700;
+    color:var(--text);font-family:'Outfit';}
+  .matiere-row{background:var(--surface);border-radius:12px;padding:11px 13px;
+    margin:0 18px 9px;display:flex;align-items:center;gap:11px;
+    box-shadow:0 1px 6px rgba(0,0,0,.04);}
+  .mr-icon{width:34px;height:34px;border-radius:9px;display:flex;
+    align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .mr-info{flex:1;}
+  .mr-info h4{font-size:12px;font-weight:600;color:var(--text);}
+  .mr-bar{height:5px;background:var(--surface-variant);border-radius:3px;
+    margin-top:5px;overflow:hidden;}
+  .mr-bar span{display:block;height:100%;border-radius:3px;}
+  .mr-pct{font-size:12px;font-weight:700;font-family:'Outfit';}
+
+  /* Bottom nav */
+  .botnav{height:58px;background:var(--surface);border-top:1px solid var(--divider);
+    display:flex;justify-content:space-around;align-items:center;padding:0 8px;}
+  .botnav .item{display:flex;flex-direction:column;align-items:center;gap:2px;
+    font-size:9px;color:var(--text-sec);}
+  .botnav .item.active{color:var(--primary);font-weight:600;}
+  .botnav .item .ic{font-size:18px;}
+</style>
+</head>
+<body>
+
+<!-- ============ ÉCRAN 1 — ACCUEIL ============ -->
+<div class="wrap">
+<div class="phone"><div class="screen">
+  <div class="statusbar"><span>9:41</span>
+    <span class="right">📶 📡 🔋</span></div>
+  <div class="home-header">
+    <div class="logo-box">EB</div>
+    <div class="home-greet"><h3>ExamBoost Togo</h3><p>Bonjour, Amina 👋</p></div>
+    <div class="home-streak">🔥 5j</div>
+  </div>
+  <div class="home-body">
+    <div class="home-stat">
+      <div class="row">
+        <div><h4>Préparation BEPC</h4><div class="big">72%</div>
+          <div class="sub">Continue, tu progresses bien !</div></div>
+        <div style="font-size:34px;">🎯</div>
+      </div>
+      <div class="progress-mini"><span></span></div>
+    </div>
+    <div class="section-title">Que veux-tu faire ?</div>
+    <div class="action-card">
+      <div class="ac-icon" style="background:rgba(0,104,55,.12);">⚡</div>
+      <div class="ac-text"><h4>Révision Adaptative</h4>
+        <p>Questions ciblées sur tes lacunes</p></div>
+      <div class="ac-arrow">›</div>
+    </div>
+    <div class="action-card">
+      <div class="ac-icon" style="background:rgba(217,119,0,.12);">⏱️</div>
+      <div class="ac-text"><h4>Simulation d'Examen</h4>
+        <p>Conditions réelles du BEPC</p></div>
+      <div class="ac-arrow">›</div>
+    </div>
+    <div class="action-card">
+      <div class="ac-icon" style="background:rgba(21,101,192,.12);">📊</div>
+      <div class="ac-text"><h4>Ma Progression</h4>
+        <p>Statistiques et points faibles</p></div>
+      <div class="ac-arrow">›</div>
+    </div>
+  </div>
+  <div class="botnav">
+    <div class="item active"><span class="ic">🏠</span>Accueil</div>
+    <div class="item"><span class="ic">📚</span>Réviser</div>
+    <div class="item"><span class="ic">📊</span>Progrès</div>
+    <div class="item"><span class="ic">👤</span>Profil</div>
+  </div>
+</div></div>
+<div class="label">1 · Accueil</div>
+</div>
+
+<!-- ============ ÉCRAN 2 — MATIÈRES ============ -->
+<div class="wrap">
+<div class="phone"><div class="screen">
+  <div class="statusbar"><span>9:41</span><span class="right">📶 📡 🔋</span></div>
+  <div class="topbar"><span class="back">‹</span><h3>Choisis ta matière</h3></div>
+  <div class="exam-tabs">
+    <div class="tab active">BEPC</div>
+    <div class="tab idle">BAC 1</div>
+    <div class="tab idle">BAC 2</div>
+  </div>
+  <div class="subj-grid">
+    <div class="subj-card">
+      <div class="subj-icon" style="background:rgba(0,104,55,.12);">📐</div>
+      <h4>Mathématiques</h4><div class="qcount">142 questions</div>
+      <div class="subj-prog"><span style="width:78%;background:var(--primary);"></span></div>
+      <div class="subj-pct" style="color:var(--primary);">78% maîtrisé</div>
+    </div>
+    <div class="subj-card">
+      <div class="subj-icon" style="background:rgba(217,119,0,.12);">📖</div>
+      <h4>Français</h4><div class="qcount">98 questions</div>
+      <div class="subj-prog"><span style="width:64%;background:var(--accent);"></span></div>
+      <div class="subj-pct" style="color:var(--accent);">64% maîtrisé</div>
+    </div>
+    <div class="subj-card">
+      <div class="subj-icon" style="background:rgba(21,101,192,.12);">⚗️</div>
+      <h4>Sciences Phys.</h4><div class="qcount">76 questions</div>
+      <div class="subj-prog"><span style="width:52%;background:var(--info);"></span></div>
+      <div class="subj-pct" style="color:var(--info);">52% maîtrisé</div>
+    </div>
+    <div class="subj-card">
+      <div class="subj-icon" style="background:rgba(46,125,50,.12);">🧬</div>
+      <h4>SVT</h4><div class="qcount">64 questions</div>
+      <div class="subj-prog"><span style="width:41%;background:var(--success);"></span></div>
+      <div class="subj-pct" style="color:var(--success);">41% maîtrisé</div>
+    </div>
+    <div class="subj-card">
+      <div class="subj-icon" style="background:rgba(117,117,117,.12);">🌍</div>
+      <h4>Histoire-Géo</h4><div class="qcount">58 questions</div>
+      <div class="subj-prog"><span style="width:33%;background:var(--text-sec);"></span></div>
+      <div class="subj-pct" style="color:var(--text-sec);">33% maîtrisé</div>
+    </div>
+    <div class="subj-card">
+      <div class="subj-icon" style="background:rgba(198,40,40,.12);">🇬🇧</div>
+      <h4>Anglais</h4><div class="qcount">52 questions</div>
+      <div class="subj-prog"><span style="width:58%;background:var(--error);"></span></div>
+      <div class="subj-pct" style="color:var(--error);">58% maîtrisé</div>
+    </div>
+  </div>
+</div></div>
+<div class="label">2 · Choix de matière</div>
+</div>
+
+<!-- ============ ÉCRAN 3 — RÉVISION ============ -->
+<div class="wrap">
+<div class="phone"><div class="screen">
+  <div class="statusbar"><span>9:41</span><span class="right">📶 📡 🔋</span></div>
+  <div class="rev-top"><span class="close">✕</span>
+    <span style="font-family:'Outfit';font-weight:600;font-size:14px;">Mathématiques</span>
+    <span class="count">8 / 20</span></div>
+  <div class="rev-progress"><span></span></div>
+  <div class="rev-body">
+    <div class="chips">
+      <span class="chip" style="background:rgba(0,104,55,.12);color:var(--primary);">Mathématiques</span>
+      <span class="chip" style="background:rgba(217,119,0,.12);color:var(--accent);">Difficile</span>
+      <span class="chip" style="background:rgba(117,117,117,.12);color:var(--text-sec);">2022</span>
+    </div>
+    <div class="qcard">
+      <div class="qhead">
+        <span class="qtag">Équations du 1er degré</span>
+        <span class="qpts">4 pts</span>
+      </div>
+      <div class="qicon">❓</div>
+      <div class="qtext">Résoudre dans ℝ l'équation suivante :<br><br>
+        <b>3x + 7 = 22</b></div>
+      <div class="qhint">Appuyez sur « Voir la réponse » quand vous êtes prêt</div>
+    </div>
+    <button class="reveal-btn">👁 Voir la réponse</button>
+  </div>
+</div></div>
+<div class="label">3 · Révision SRS</div>
+</div>
+
+<!-- ============ ÉCRAN 4 — SIMULATION ============ -->
+<div class="wrap">
+<div class="phone"><div class="screen">
+  <div class="statusbar" style="color:#fff;"><span>9:41</span><span class="right">📶 📡 🔋</span></div>
+  <div class="sim-hero">
+    <div class="label-sm">Simulation · BEPC Blanc</div>
+    <h2>Mathématiques</h2>
+    <div class="sim-timer">
+      <div><div class="time">47:12</div><div class="tlabel">Temps restant</div></div>
+      <div style="text-align:right;"><div class="time" style="font-size:20px;">5/20</div>
+        <div class="tlabel">Questions</div></div>
+    </div>
+  </div>
+  <div class="sim-body">
+    <div class="sim-qbox">
+      <div class="sim-qnum">QUESTION 5 · 4 POINTS</div>
+      <div class="sim-qtext">Quelle est l'aire d'un triangle de base 8 cm et de hauteur 5 cm ?</div>
+      <div class="opt"><span class="opt-letter">A</span> 13 cm²</div>
+      <div class="opt sel"><span class="opt-letter">B</span> 20 cm²</div>
+      <div class="opt"><span class="opt-letter">C</span> 40 cm²</div>
+      <div class="opt"><span class="opt-letter">D</span> 26 cm²</div>
+    </div>
+  </div>
+  <div class="sim-nav">
+    <button class="nav-prev">‹ Précédent</button>
+    <button class="nav-next">Suivant ›</button>
+  </div>
+</div></div>
+<div class="label">4 · Simulation d'examen</div>
+</div>
+
+<!-- ============ ÉCRAN 5 — TABLEAU DE BORD ============ -->
+<div class="wrap">
+<div class="phone"><div class="screen">
+  <div class="statusbar"><span>9:41</span><span class="right">📶 📡 🔋</span></div>
+  <div class="dash-head"><h3>Ma Progression</h3>
+    <p>Préparation au BEPC · Session 2026</p></div>
+  <div class="score-ring-wrap">
+    <div class="score-ring"><div class="inner">
+      <div class="pct">72%</div><div class="lbl">Score global</div>
+    </div></div>
+  </div>
+  <div class="dash-stats">
+    <div class="ds-card"><div class="num" style="color:var(--primary);">386</div>
+      <div class="lbl">Questions revues</div></div>
+    <div class="ds-card"><div class="num" style="color:var(--accent);">12</div>
+      <div class="lbl">Jours de suite</div></div>
+    <div class="ds-card"><div class="num" style="color:var(--info);">4</div>
+      <div class="lbl">Chap. maîtrisés</div></div>
+  </div>
+  <div class="dash-sub">Progression par matière</div>
+  <div class="matiere-row">
+    <div class="mr-icon" style="background:rgba(0,104,55,.12);">📐</div>
+    <div class="mr-info"><h4>Mathématiques</h4>
+      <div class="mr-bar"><span style="width:78%;background:var(--primary);"></span></div></div>
+    <div class="mr-pct" style="color:var(--primary);">78%</div>
+  </div>
+  <div class="matiere-row">
+    <div class="mr-icon" style="background:rgba(217,119,0,.12);">📖</div>
+    <div class="mr-info"><h4>Français</h4>
+      <div class="mr-bar"><span style="width:64%;background:var(--accent);"></span></div></div>
+    <div class="mr-pct" style="color:var(--accent);">64%</div>
+  </div>
+  <div class="matiere-row">
+    <div class="mr-icon" style="background:rgba(21,101,192,.12);">⚗️</div>
+    <div class="mr-info"><h4>Sciences Physiques</h4>
+      <div class="mr-bar"><span style="width:52%;background:var(--info);"></span></div></div>
+    <div class="mr-pct" style="color:var(--info);">52%</div>
+  </div>
+  <div class="botnav">
+    <div class="item"><span class="ic">🏠</span>Accueil</div>
+    <div class="item"><span class="ic">📚</span>Réviser</div>
+    <div class="item active"><span class="ic">📊</span>Progrès</div>
+    <div class="item"><span class="ic">👤</span>Profil</div>
+  </div>
+</div></div>
+<div class="label">5 · Tableau de bord</div>
+</div>
+
+</body>
+</html>
