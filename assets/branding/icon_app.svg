@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ExamBoost Togo — Icône app (carrée, Material 3)
+     Coins arrondis radius 22%. Symbole central livre + cap.
+     Fond dégradé diagonal vert Togo → vert foncé.
+     Lisible à 48x48 (notifications Android). ViewBox : 0 0 100 100 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="ExamBoost Togo">
+  <defs>
+    <linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#006837"/>
+      <stop offset="100%" stop-color="#004A26"/>
+    </linearGradient>
+    <linearGradient id="iconCap" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFB74D"/>
+      <stop offset="100%" stop-color="#D97700"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle Material 3 (radius ~22%) -->
+  <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#iconBg)"/>
+  <!-- Subtile bordure intérieure blanche -->
+  <rect x="2" y="2" width="96" height="96" rx="22" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.18"/>
+
+  <!-- Mortarboard (cap) -->
+  <polygon points="50,22 76,35 50,48 24,35" fill="url(#iconCap)"/>
+  <polygon points="50,22 76,35 50,35" fill="#FFFFFF" fill-opacity="0.2"/>
+  <!-- Base du cap -->
+  <path d="M 35,40 Q 35,52 50,54 Q 65,52 65,40 Q 50,46 35,40 Z" fill="#A85200"/>
+  <!-- Cordon + pompon -->
+  <path d="M 76,35 Q 80,41 79,52 L 78,60" stroke="#FFB74D" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <circle cx="78" cy="62" r="2.2" fill="#FFB74D"/>
+
+  <!-- Livre ouvert -->
+  <path d="M 50,56 L 26,60 L 26,82 Q 38,86 50,82 Z" fill="#FFFFFF"/>
+  <path d="M 50,56 L 74,60 L 74,82 Q 62,86 50,82 Z" fill="#FFFFFF"/>
+  <!-- Lignes de texte (page gauche) -->
+  <line x1="31" y1="66" x2="45" y2="69" stroke="#006837" stroke-width="0.9" stroke-opacity="0.5"/>
+  <line x1="31" y1="71" x2="45" y2="74" stroke="#006837" stroke-width="0.9" stroke-opacity="0.5"/>
+  <line x1="31" y1="76" x2="42" y2="78" stroke="#006837" stroke-width="0.9" stroke-opacity="0.5"/>
+  <!-- Lignes de texte (page droite) -->
+  <line x1="55" y1="69" x2="69" y2="66" stroke="#006837" stroke-width="0.9" stroke-opacity="0.5"/>
+  <line x1="55" y1="74" x2="69" y2="71" stroke="#006837" stroke-width="0.9" stroke-opacity="0.5"/>
+  <line x1="55" y1="78" x2="66" y2="76" stroke="#006837" stroke-width="0.9" stroke-opacity="0.5"/>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="ExamBoost Togo — Préparation intelligente aux examens nationaux">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#006837"/>
+      <stop offset="1" stop-color="#004A26"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#D97700"/>
+      <stop offset="1" stop-color="#FFB74D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- subtle dot grid -->
+  <g fill="#FFFFFF" opacity="0.06">
+    <circle cx="60" cy="60" r="1.5"/>
+    <circle cx="120" cy="60" r="1.5"/>
+    <circle cx="180" cy="60" r="1.5"/>
+    <circle cx="60" cy="120" r="1.5"/>
+    <circle cx="120" cy="120" r="1.5"/>
+    <circle cx="180" cy="120" r="1.5"/>
+  </g>
+
+  <!-- orange glow top-right -->
+  <circle cx="1050" cy="100" r="220" fill="#D97700" opacity="0.22"/>
+
+  <!-- Logo EB -->
+  <g transform="translate(96, 96)">
+    <rect width="88" height="88" rx="20" fill="#FFFFFF" opacity="0.12"/>
+    <rect x="4" y="4" width="80" height="80" rx="18" fill="#006837"/>
+    <path d="M22 28h28M22 44h26M22 60h28" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="64" cy="22" r="6" fill="#D97700"/>
+  </g>
+
+  <!-- Brand name -->
+  <text x="208" y="158" font-family="Outfit, system-ui, sans-serif" font-size="44" font-weight="800" fill="#FFFFFF">ExamBoost Togo</text>
+
+  <!-- Headline -->
+  <text x="96" y="300" font-family="Outfit, system-ui, sans-serif" font-size="84" font-weight="800" fill="#FFFFFF">Réussis ton BEPC</text>
+  <text x="96" y="390" font-family="Outfit, system-ui, sans-serif" font-size="84" font-weight="800" fill="#FFFFFF">et ton <tspan fill="#FFB74D">BAC</tspan> avec l'IA</text>
+
+  <!-- Subtitle -->
+  <text x="96" y="450" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="500" fill="#FFFFFF" opacity="0.85">Préparation intelligente aux examens nationaux togolais.</text>
+
+  <!-- Pills -->
+  <g transform="translate(96, 500)" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600">
+    <rect width="200" height="44" rx="22" fill="#FFFFFF" opacity="0.15"/>
+    <text x="20" y="29" fill="#FFFFFF">100 % gratuit</text>
+
+    <rect x="220" width="200" height="44" rx="22" fill="#FFFFFF" opacity="0.15"/>
+    <text x="240" y="29" fill="#FFFFFF">Android 5+</text>
+
+    <rect x="440" width="200" height="44" rx="22" fill="#D97700"/>
+    <text x="460" y="29" fill="#FFFFFF">Hors-ligne</text>
+  </g>
+
+  <!-- Bottom accent bar -->
+  <rect x="0" y="610" width="1200" height="20" fill="url(#accent)"/>
+</svg>

@@ -1,0 +1,84 @@
+/* app/globals.css
+   Tailwind 4 entry + ExamBoost Togo theme tokens.
+   Tailwind 4 is CSS-first: custom colors and fonts are declared via @theme.
+*/
+@import "tailwindcss";
+
+/* ── Theme tokens ──────────────────────────────────────────────── */
+@theme {
+  /* Brand palette (mirrors lib/theme/app_theme.dart) */
+  --color-togo-green: #006837;
+  --color-togo-green-dark: #004a26;
+  --color-togo-green-light: #4caf7a;
+  --color-togo-green-surface: #e8f5ed;
+  --color-togo-orange: #d97700;
+  --color-togo-orange-light: #ffb74d;
+  --color-togo-orange-surface: #fff3e0;
+  --color-togo-cream: #f8f9fa;
+  --color-togo-ink: #1a1a1a;
+
+  /* Font families are bound to CSS variables set by next/font in layout.tsx */
+  --font-outfit: var(--font-outfit-variable, Outfit, system-ui, sans-serif);
+  --font-inter: var(--font-inter-variable, Inter, system-ui, sans-serif);
+
+  /* Slightly larger default base font for accessibility */
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+}
+
+/* ── Base styles ───────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 5rem; /* offset for sticky navbar on anchor links */
+}
+
+body {
+  background-color: var(--color-togo-cream);
+  color: var(--color-togo-ink);
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Honor reduced-motion preferences: disable animations. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Visible focus ring for keyboard users (accessibility). */
+:focus-visible {
+  outline: 2px solid var(--color-togo-green);
+  outline-offset: 2px;
+}
+
+/* Skip-to-content link for screen reader / keyboard users. */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 100;
+  background: var(--color-togo-green);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: top 0.2s ease-in-out;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Selection color matches brand. */
+::selection {
+  background: var(--color-togo-green);
+  color: #ffffff;
+}

@@ -1,0 +1,739 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "ExamBoost Togo",
+  "@appTitle": {
+    "description": "Application title shown in the AppBar and onboarding screen"
+  },
+
+  "welcomeGreeting": "Hello, {name}!",
+  "@welcomeGreeting": {
+    "description": "Personalized greeting on the home screen",
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "welcomeGreetingWithLevel": "Hello, {name} · {level}",
+  "@welcomeGreetingWithLevel": {
+    "description": "Personalized greeting with grade level (e.g. 1ère C)",
+    "placeholders": {
+      "name": {"type": "String"},
+      "level": {"type": "String"}
+    }
+  },
+
+  "homeWhatDoYouWant": "What do you want to do?",
+  "@homeWhatDoYouWant": {
+    "description": "Actions section title on the home screen"
+  },
+
+  "homeRevisionAdaptive": "Adaptive Revision",
+  "@homeRevisionAdaptive": {
+    "description": "Revision card title"
+  },
+  "homeRevisionAdaptiveSubtitle": "BEPC and BAC questions by subject",
+  "@homeRevisionAdaptiveSubtitle": {
+    "description": "Revision card subtitle"
+  },
+  "homeSimulation": "Exam Simulation",
+  "@homeSimulation": {
+    "description": "Simulation card title"
+  },
+  "homeSimulationSubtitle": "Practice under real exam conditions",
+  "@homeSimulationSubtitle": {
+    "description": "Simulation card subtitle"
+  },
+  "homeDashboard": "My Dashboard",
+  "@homeDashboard": {
+    "description": "Dashboard card title"
+  },
+  "homeDashboardSubtitle": "See my progress and statistics",
+  "@homeDashboardSubtitle": {
+    "description": "Dashboard card subtitle"
+  },
+
+  "homeProfileTitle": "My profile",
+  "@homeProfileTitle": {
+    "description": "Profile dialog title"
+  },
+  "homeProfileLevel": "Level: {level}",
+  "@homeProfileLevel": {
+    "description": "Grade level row in profile",
+    "placeholders": {
+      "level": {"type": "String"}
+    }
+  },
+  "homeProfileSerie": "Track {serie}",
+  "@homeProfileSerie": {
+    "description": "Track shown in profile",
+    "placeholders": {
+      "serie": {"type": "String"}
+    }
+  },
+  "homeProfileSchool": "School: {school}",
+  "@homeProfileSchool": {
+    "description": "School row in profile",
+    "placeholders": {
+      "school": {"type": "String"}
+    }
+  },
+  "homeProfileCity": "City: {city}",
+  "@homeProfileCity": {
+    "description": "City row in profile",
+    "placeholders": {
+      "city": {"type": "String"}
+    }
+  },
+  "homeProfileRegisteredSince": "Registered since {date}",
+  "@homeProfileRegisteredSince": {
+    "description": "Registration date in profile",
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "homeNoProfileLoaded": "No profile loaded",
+  "@homeNoProfileLoaded": {
+    "description": "Message when no user is signed in"
+  },
+  "homeLogout": "Log out",
+  "@homeLogout": {
+    "description": "Logout button"
+  },
+
+  "onboardingWelcomeTitle": "ExamBoost Togo",
+  "@onboardingWelcomeTitle": {
+    "description": "Onboarding welcome screen title"
+  },
+  "onboardingWelcomeSlogan": "Prepare for your national exams smartly.",
+  "@onboardingWelcomeSlogan": {
+    "description": "Welcome screen slogan"
+  },
+  "onboardingWelcomeSubtitle": "BEPC · BAC · Aligned with Togo curriculum · 100% offline",
+  "@onboardingWelcomeSubtitle": {
+    "description": "Welcome screen subtitle"
+  },
+  "onboardingStartButton": "Get started",
+  "@onboardingStartButton": {
+    "description": "Onboarding start button"
+  },
+
+  "onboardingIdentityTitle": "Identity",
+  "@onboardingIdentityTitle": {
+    "description": "Identity step title"
+  },
+  "onboardingIdentityHint": "Tell us more about yourself so we can personalize your journey.",
+  "@onboardingIdentityHint": {
+    "description": "Identity step subtitle"
+  },
+  "onboardingFirstname": "First name *",
+  "@onboardingFirstname": {
+    "description": "First name field label"
+  },
+  "onboardingFirstnameHint": "e.g. Kofi",
+  "@onboardingFirstnameHint": {
+    "description": "First name field hint"
+  },
+  "onboardingLastname": "Last name *",
+  "@onboardingLastname": {
+    "description": "Last name field label"
+  },
+  "onboardingLastnameHint": "e.g. Komla",
+  "@onboardingLastnameHint": {
+    "description": "Last name field hint"
+  },
+  "onboardingSchool": "School (optional)",
+  "@onboardingSchool": {
+    "description": "School field label"
+  },
+  "onboardingSchoolHint": "e.g. Lycée de Tokoin",
+  "@onboardingSchoolHint": {
+    "description": "School field hint"
+  },
+  "onboardingCity": "City (optional)",
+  "@onboardingCity": {
+    "description": "City field label"
+  },
+  "onboardingCityHint": "e.g. Lomé",
+  "@onboardingCityHint": {
+    "description": "City field hint"
+  },
+  "onboardingNextButton": "Next",
+  "@onboardingNextButton": {
+    "description": "Onboarding next button"
+  },
+  "onboardingPreviousButton": "Previous",
+  "@onboardingPreviousButton": {
+    "description": "Onboarding previous button"
+  },
+
+  "onboardingLevelTitle": "Your grade level",
+  "@onboardingLevelTitle": {
+    "description": "Level step title"
+  },
+  "onboardingLevelHint": "Select the class that matches your current situation.",
+  "@onboardingLevelHint": {
+    "description": "Level step subtitle"
+  },
+  "onboardingLevel3eme": "9th grade (3ème)",
+  "@onboardingLevel3eme": {
+    "description": "Level 3ème"
+  },
+  "onboardingLevel3emeDesc": "BEPC preparation",
+  "@onboardingLevel3emeDesc": {
+    "description": "Level 3ème description"
+  },
+  "onboardingLevel2nde": "10th grade (2nde)",
+  "@onboardingLevel2nde": {
+    "description": "Level 2nde"
+  },
+  "onboardingLevel2ndeDesc": "BAC preparation (common)",
+  "@onboardingLevel2ndeDesc": {
+    "description": "Level 2nde description"
+  },
+  "onboardingLevel1ere": "11th grade (1ère)",
+  "@onboardingLevel1ere": {
+    "description": "Level 1ère"
+  },
+  "onboardingLevel1ereDesc": "BAC preparation (Probatoire)",
+  "@onboardingLevel1ereDesc": {
+    "description": "Level 1ère description"
+  },
+  "onboardingLevelTerminale": "12th grade (Terminale)",
+  "@onboardingLevelTerminale": {
+    "description": "Level Terminale"
+  },
+  "onboardingLevelTerminaleDesc": "BAC preparation (final)",
+  "@onboardingLevelTerminaleDesc": {
+    "description": "Level Terminale description"
+  },
+
+  "onboardingSerieTitle": "Your track",
+  "@onboardingSerieTitle": {
+    "description": "Serie step title"
+  },
+  "onboardingSerieHint": "Pick the track of your scientific or literary orientation.",
+  "@onboardingSerieHint": {
+    "description": "Serie step subtitle"
+  },
+  "onboardingSerieA": "Track A — Literature",
+  "@onboardingSerieA": {
+    "description": "Track A"
+  },
+  "onboardingSerieB": "Track B — Economics",
+  "@onboardingSerieB": {
+    "description": "Track B"
+  },
+  "onboardingSerieC": "Track C — Math & Physics",
+  "@onboardingSerieC": {
+    "description": "Track C"
+  },
+  "onboardingSerieD": "Track D — Natural Sciences",
+  "@onboardingSerieD": {
+    "description": "Track D"
+  },
+  "onboardingSerieF": "Track F — Technical",
+  "@onboardingSerieF": {
+    "description": "Track F"
+  },
+
+  "onboardingSubjectsTitle": "Favorite subjects",
+  "@onboardingSubjectsTitle": {
+    "description": "Subjects step title"
+  },
+  "onboardingSubjectsHint": "Pick 1 to 3 subjects to start",
+  "@onboardingSubjectsHint": {
+    "description": "Subjects step subtitle"
+  },
+  "onboardingSubjectsCount": "{count} / 3 selected",
+  "@onboardingSubjectsCount": {
+    "description": "Selected subjects counter",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "onboardingCreateProfile": "Create my profile",
+  "@onboardingCreateProfile": {
+    "description": "Final profile creation button"
+  },
+  "onboardingProfileCreated": "Profile created!",
+  "@onboardingProfileCreated": {
+    "description": "Success screen message"
+  },
+  "onboardingProfileError": "Error creating profile: {error}",
+  "@onboardingProfileError": {
+    "description": "Profile creation error message",
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
+  "revisionSeeAnswer": "Show answer",
+  "@revisionSeeAnswer": {
+    "description": "Flip flashcard button"
+  },
+  "revisionHowDidYouDo": "How did you do?",
+  "@revisionHowDidYouDo": {
+    "description": "Self-assessment section title"
+  },
+  "revisionEasy": "Easy",
+  "@revisionEasy": {
+    "description": "SM-2 quality button = 5"
+  },
+  "revisionEasySub": "Instant answer",
+  "@revisionEasySub": {
+    "description": "Easy button subtitle"
+  },
+  "revisionCorrect": "Correct",
+  "@revisionCorrect": {
+    "description": "SM-2 quality button = 4"
+  },
+  "revisionCorrectSub": "Slight hesitation",
+  "@revisionCorrectSub": {
+    "description": "Correct button subtitle"
+  },
+  "revisionHard": "Hard",
+  "@revisionHard": {
+    "description": "SM-2 quality button = 3"
+  },
+  "revisionHardSub": "Found the answer",
+  "@revisionHardSub": {
+    "description": "Hard button subtitle"
+  },
+  "revisionForgotten": "Forgotten",
+  "@revisionForgotten": {
+    "description": "SM-2 quality button = 0/1/2"
+  },
+  "revisionForgottenSub": "Wrong answer",
+  "@revisionForgottenSub": {
+    "description": "Forgotten button subtitle"
+  },
+  "revisionSkip": "Skip question",
+  "@revisionSkip": {
+    "description": "Skip question button"
+  },
+  "revisionSessionEnded": "Session complete!",
+  "@revisionSessionEnded": {
+    "description": "End-of-session screen title"
+  },
+  "revisionCorrectAnswers": "You answered {correct} out of {total} questions correctly",
+  "@revisionCorrectAnswers": {
+    "description": "Revision session summary",
+    "placeholders": {
+      "correct": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "revisionBackToDashboard": "Back to dashboard",
+  "@revisionBackToDashboard": {
+    "description": "Back to dashboard button"
+  },
+  "revisionRestartSession": "Start a new session",
+  "@revisionRestartSession": {
+    "description": "Restart session button"
+  },
+  "revisionNoQuestions": "No questions available for {matiere}",
+  "@revisionNoQuestions": {
+    "description": "Empty state question bank",
+    "placeholders": {
+      "matiere": {"type": "String"}
+    }
+  },
+  "revisionNoQuestionsHint": "No questions yet for this subject",
+  "@revisionNoQuestionsHint": {
+    "description": "Empty state subtitle"
+  },
+  "revisionBack": "Back",
+  "@revisionBack": {
+    "description": "Generic back button"
+  },
+  "revisionQuitTitle": "Quit the session?",
+  "@revisionQuitTitle": {
+    "description": "Quit session dialog title"
+  },
+  "revisionQuitMsg": "Your progress will be lost.",
+  "@revisionQuitMsg": {
+    "description": "Quit session dialog message"
+  },
+  "revisionLoading": "Loading questions...",
+  "@revisionLoading": {
+    "description": "Loading message"
+  },
+  "revisionDueTomorrow": "Cards to review tomorrow",
+  "@revisionDueTomorrow": {
+    "description": "End-of-session estimate label"
+  },
+
+  "simulationConfig": "Exam configuration",
+  "@simulationConfig": {
+    "description": "Simulation config step title"
+  },
+  "simulationExamType": "Exam type",
+  "@simulationExamType": {
+    "description": "Exam type label"
+  },
+  "simulationBEPC": "BEPC",
+  "@simulationBEPC": {
+    "description": "BEPC exam"
+  },
+  "simulationBAC1": "BAC 1",
+  "@simulationBAC1": {
+    "description": "BAC 1ère exam"
+  },
+  "simulationBAC2": "BAC 2",
+  "@simulationBAC2": {
+    "description": "BAC Terminale exam"
+  },
+  "simulationProbatoire": "Probatoire",
+  "@simulationProbatoire": {
+    "description": "Probatoire (1ère)"
+  },
+  "simulationSerie": "Track",
+  "@simulationSerie": {
+    "description": "Track label"
+  },
+  "simulationNbQuestions": "Number of questions",
+  "@simulationNbQuestions": {
+    "description": "Number of questions label"
+  },
+  "simulationDuration": "Duration",
+  "@simulationDuration": {
+    "description": "Duration label"
+  },
+  "simulationStandard": "Standard",
+  "@simulationStandard": {
+    "description": "Standard duration"
+  },
+  "simulationQuickMode": "Quick mode 30 min",
+  "@simulationQuickMode": {
+    "description": "Quick 30 minutes mode"
+  },
+  "simulationStart": "Start exam",
+  "@simulationStart": {
+    "description": "Start exam button"
+  },
+  "simulationReadyPrompt": "Ready?",
+  "@simulationReadyPrompt": {
+    "description": "Ready to start prompt"
+  },
+  "simulationWillAnswer": "You will answer {count} questions in {minutes} minutes.",
+  "@simulationWillAnswer": {
+    "description": "Simulation config summary",
+    "placeholders": {
+      "count": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+  "simulationExamSummary": "Exam: {exam} (Track {serie})",
+  "@simulationExamSummary": {
+    "description": "Selected exam summary",
+    "placeholders": {
+      "exam": {"type": "String"},
+      "serie": {"type": "String"}
+    }
+  },
+  "simulationNoQuestionsTitle": "No questions available",
+  "@simulationNoQuestionsTitle": {
+    "description": "No questions dialog title"
+  },
+  "simulationNoQuestionsMsg": "The question bank does not yet contain questions for this configuration.",
+  "@simulationNoQuestionsMsg": {
+    "description": "No questions dialog message"
+  },
+  "simulationQuestion": "Question {current} / {total}",
+  "@simulationQuestion": {
+    "description": "Question counter",
+    "placeholders": {
+      "current": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "simulationAnswered": "Answered",
+  "@simulationAnswered": {
+    "description": "Answered questions badge"
+  },
+  "simulationFlagged": "Flagged",
+  "@simulationFlagged": {
+    "description": "Flagged questions badge"
+  },
+  "simulationTimeLeft": "Time left",
+  "@simulationTimeLeft": {
+    "description": "Time left label"
+  },
+  "simulationPrevious": "Previous",
+  "@simulationPrevious": {
+    "description": "Previous button"
+  },
+  "simulationNext": "Next",
+  "@simulationNext": {
+    "description": "Next button"
+  },
+  "simulationFinish": "Finish",
+  "@simulationFinish": {
+    "description": "Finish exam button"
+  },
+  "simulationFlagForReview": "Flag for review",
+  "@simulationFlagForReview": {
+    "description": "Flag for review button"
+  },
+  "simulationExamPlan": "Exam plan",
+  "@simulationExamPlan": {
+    "description": "Plan bottom-sheet title"
+  },
+  "simulationConfirmFinish": "Finish exam?",
+  "@simulationConfirmFinish": {
+    "description": "Confirm finish dialog title"
+  },
+  "simulationConfirmFinishMsg": "You still have {remaining} unanswered question(s). Finish anyway?",
+  "@simulationConfirmFinishMsg": {
+    "description": "Confirm finish dialog message",
+    "placeholders": {
+      "remaining": {"type": "int"}
+    }
+  },
+  "simulationQuitTitle": "Quit the exam?",
+  "@simulationQuitTitle": {
+    "description": "Quit exam dialog title"
+  },
+  "simulationQuitMsg": "Your progress will be lost and the exam will not be saved.",
+  "@simulationQuitMsg": {
+    "description": "Quit exam dialog message"
+  },
+  "simulationReportTitle": "Exam report",
+  "@simulationReportTitle": {
+    "description": "End-of-exam report title"
+  },
+  "simulationScore": "Score: {score} / 20",
+  "@simulationScore": {
+    "description": "Final score display",
+    "placeholders": {
+      "score": {"type": "String"}
+    }
+  },
+  "simulationTimeUsed": "Time used",
+  "@simulationTimeUsed": {
+    "description": "Time used label"
+  },
+  "simulationAvgTimePerQ": "Average time per question",
+  "@simulationAvgTimePerQ": {
+    "description": "Avg time per question label"
+  },
+  "simulationCompletionRate": "Completion rate",
+  "@simulationCompletionRate": {
+    "description": "Completion rate label"
+  },
+  "simulationBySubject": "Analysis by subject",
+  "@simulationBySubject": {
+    "description": "Subject analysis section title"
+  },
+  "simulationRecommendations": "Recommendations",
+  "@simulationRecommendations": {
+    "description": "Recommendations section title"
+  },
+  "simulationSeeCorrections": "See detailed corrections",
+  "@simulationSeeCorrections": {
+    "description": "Detailed corrections button"
+  },
+  "simulationRedoExam": "Take another exam",
+  "@simulationRedoExam": {
+    "description": "Redo exam button"
+  },
+  "simulationBackHome": "Back to home",
+  "@simulationBackHome": {
+    "description": "Back home button"
+  },
+  "simulationCorrectAnswer": "Correct answer",
+  "@simulationCorrectAnswer": {
+    "description": "Correct answer label"
+  },
+  "simulationYourAnswer": "Your answer",
+  "@simulationYourAnswer": {
+    "description": "Your answer label"
+  },
+  "simulationExplanation": "Explanation",
+  "@simulationExplanation": {
+    "description": "Explanation label"
+  },
+  "simulationGotItRight": "I got it right",
+  "@simulationGotItRight": {
+    "description": "Self-assessment correct button"
+  },
+  "simulationGotItWrong": "I got it wrong",
+  "@simulationGotItWrong": {
+    "description": "Self-assessment wrong button"
+  },
+
+  "dashboardTitle": "Dashboard",
+  "@dashboardTitle": {
+    "description": "Dashboard screen title"
+  },
+  "dashboardGlobalScore": "Global mastery score",
+  "@dashboardGlobalScore": {
+    "description": "Global score label"
+  },
+  "dashboardPredictedBepc": "BEPC prediction: ~{score} / 20",
+  "@dashboardPredictedBepc": {
+    "description": "BEPC score prediction card",
+    "placeholders": {
+      "score": {"type": "String"}
+    }
+  },
+  "dashboardBasedOnXSkills": "Based on {count} tracked skills",
+  "@dashboardBasedOnXSkills": {
+    "description": "Global score subtitle",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "dashboardSubjectsProgress": "Progress by subject",
+  "@dashboardSubjectsProgress": {
+    "description": "Subject progress section title"
+  },
+  "dashboardWeakChapters": "Chapters to work on",
+  "@dashboardWeakChapters": {
+    "description": "Weak chapters section title"
+  },
+  "dashboardKeepRevising": "Keep revising to see your weak chapters appear here.",
+  "@dashboardKeepRevising": {
+    "description": "Weak chapters empty state message"
+  },
+  "dashboardSrsStats": "Revision statistics",
+  "@dashboardSrsStats": {
+    "description": "SRS stats section title"
+  },
+  "dashboardDueToday": "Due today",
+  "@dashboardDueToday": {
+    "description": "Cards due today label"
+  },
+  "dashboardMastered": "Mastered",
+  "@dashboardMastered": {
+    "description": "Mastered cards label"
+  },
+  "dashboardLearning": "Learning",
+  "@dashboardLearning": {
+    "description": "Learning cards label"
+  },
+  "dashboardActivity7days": "Activity over the last 7 days",
+  "@dashboardActivity7days": {
+    "description": "7-day activity section title"
+  },
+  "dashboardNoActivity": "No activity yet this week. Start today!",
+  "@dashboardNoActivity": {
+    "description": "Activity empty state message"
+  },
+  "dashboardQuickActions": "Quick actions",
+  "@dashboardQuickActions": {
+    "description": "Quick actions section title"
+  },
+  "dashboardReviseNow": "Revise now",
+  "@dashboardReviseNow": {
+    "description": "Revise button"
+  },
+  "dashboardMockExam": "Take a mock exam",
+  "@dashboardMockExam": {
+    "description": "Mock exam button"
+  },
+  "dashboardEmptyState": "Welcome! Start your first revision to see your statistics appear.",
+  "@dashboardEmptyState": {
+    "description": "Dashboard empty state message"
+  },
+  "dashboardStartFirstRevision": "Start my first revision",
+  "@dashboardStartFirstRevision": {
+    "description": "Start first revision button"
+  },
+  "dashboardRevise": "Revise",
+  "@dashboardRevise": {
+    "description": "Short revise button"
+  },
+
+  "commonLoading": "Loading...",
+  "@commonLoading": {
+    "description": "Generic loading message"
+  },
+  "commonError": "An error occurred",
+  "@commonError": {
+    "description": "Generic error message"
+  },
+  "commonRetry": "Retry",
+  "@commonRetry": {
+    "description": "Retry button"
+  },
+  "commonCancel": "Cancel",
+  "@commonCancel": {
+    "description": "Cancel button"
+  },
+  "commonConfirm": "Confirm",
+  "@commonConfirm": {
+    "description": "Confirm button"
+  },
+  "commonSave": "Save",
+  "@commonSave": {
+    "description": "Save button"
+  },
+  "commonClose": "Close",
+  "@commonClose": {
+    "description": "Close button"
+  },
+  "commonOk": "OK",
+  "@commonOk": {
+    "description": "OK button"
+  },
+  "commonYes": "Yes",
+  "@commonYes": {
+    "description": "Yes button"
+  },
+  "commonNo": "No",
+  "@commonNo": {
+    "description": "No button"
+  },
+
+  "subjectMathematiques": "Mathematics",
+  "@subjectMathematiques": {
+    "description": "Mathematics subject"
+  },
+  "subjectFrancais": "French",
+  "@subjectFrancais": {
+    "description": "French subject"
+  },
+  "subjectSciencesPhysiques": "Physics",
+  "@subjectSciencesPhysiques": {
+    "description": "Physics subject"
+  },
+  "subjectSVT": "Life & Earth Sciences",
+  "@subjectSVT": {
+    "description": "SVT subject"
+  },
+  "subjectHistoireGeographie": "History-Geography",
+  "@subjectHistoireGeographie": {
+    "description": "History-Geography subject"
+  },
+  "subjectAnglais": "English",
+  "@subjectAnglais": {
+    "description": "English subject"
+  },
+  "subjectPhilosophie": "Philosophy",
+  "@subjectPhilosophie": {
+    "description": "Philosophy subject"
+  },
+  "subjectEconomie": "Economics",
+  "@subjectEconomie": {
+    "description": "Economics subject"
+  },
+
+  "niveau3eme": "9th",
+  "@niveau3eme": {
+    "description": "Short 3ème level"
+  },
+  "niveau2nde": "10th",
+  "@niveau2nde": {
+    "description": "Short 2nde level"
+  },
+  "niveau1ere": "11th",
+  "@niveau1ere": {
+    "description": "Short 1ère level"
+  },
+  "niveauTerminale": "12th",
+  "@niveauTerminale": {
+    "description": "Short Terminale level"
+  }
+}

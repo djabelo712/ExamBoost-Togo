@@ -1,0 +1,1156 @@
+openapi: 3.0.3
+
+info:
+  title: ExamBoost Togo API
+  description: |
+    Backend API for ExamBoost Togo — Adaptive exam preparation platform for
+    Togolese national exams (BEPC, BAC1, BAC2).
+
+    The API exposes:
+      - **Authentication** — JWT-based register / login / me endpoints.
+      - **Question bank** — Paginated listing with filters (subject, exam,
+        serie, competence, chapter), random sampling for exam simulations,
+        admin-only creation endpoint.
+      - **Learning sessions** — Records each student answer and updates both
+        the SM-2 spaced-repetition state and the Bayesian Knowledge Tracing
+        (BKT) per-competence mastery estimate.
+      - **ML predictions** — Predicted exam score (XGBoost if >= 100
+        responses available, heuristic BKT fallback otherwise) and dropout
+        risk score.
+
+    Adaptive learning algorithms implemented server-side (mirror of the
+    Flutter app's local-first engine):
+      - **IRT 3PL** (a/b/c parameters, Fisher information for CAT)
+      - **BKT** (4-parameter model: P(L), P(T), P(S), P(G), mastery 0.85)
+      - **SM-2** (Easiness Factor >= 1.3, intervals 1/6/N*EF)
+
+    Default BKT parameters (configurable via env vars):
+      - P(L) initial  = 0.10
+      - P(T) transit  = 0.20
+      - P(S) slip     = 0.10
+      - P(G) guess    = 0.20
+      - mastery       = 0.85
+  version: 1.0.0
+  contact:
+    name: ExamBoost Togo Team
+    email: contact@examboost.togo
+    url: https://github.com/djabelo712/ExamBoost-Togo
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://github.com/djabelo712/ExamBoost-Togo/blob/main/LICENSE
+
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://examboost-togo.up.railway.app
+    description: Production (Railway)
+  - url: https://examboost-togo.onrender.com
+    description: Staging (Render)
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Meta
+    description: Healthcheck and API root endpoints
+  - name: Auth
+    description: Authentication endpoints (JWT register / login / me)
+  - name: Questions
+    description: Question bank management (BEPC + BAC, all series)
+  - name: Sessions
+    description: Learning session recording (SM-2 + BKT) and stats
+  - name: Prediction
+    description: ML-powered exam score and dropout risk prediction
+
+paths:
+
+  # ─── Meta ───────────────────────────────────────────────────────────
+  /health:
+    get:
+      tags: [Meta]
+      summary: Healthcheck
+      description: |
+        Simple healthcheck endpoint used by Railway / Render for uptime
+        monitoring and container liveness probes.
+      security: []
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "ok" }
+                  service: { type: string, example: "examboost-backend" }
+                  version: { type: string, example: "0.1.0" }
+
+  /:
+    get:
+      tags: [Meta]
+      summary: API root — links to documentation
+      description: |
+        Returns links to the Swagger UI, ReDoc, and the raw OpenAPI JSON.
+      security: []
+      operationId: getRoot
+      responses:
+        '200':
+          description: API metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: { type: string, example: "ExamBoost Togo API" }
+                  docs: { type: string, example: "/docs" }
+                  redoc: { type: string, example: "/redoc" }
+                  openapi: { type: string, example: "/openapi.json" }
+
+  # ─── Auth ──────────────────────────────────────────────────────────
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new student
+      description: |
+        Creates a new student account and returns a JWT access token
+        (valid for 7 days by default). The first account created becomes
+        admin automatically (useful for dev bootstrap); in production,
+        the env var `ADMIN_EMAIL` overrides this behaviour.
+      security: []
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+            examples:
+              bepcStudent:
+                summary: BEPC student (no serie)
+                value:
+                  email: "amina.kofi@example.com"
+                  password: "monMotDePasse123"
+                  nom: "Kofi"
+                  prenom: "Amina"
+                  niveau_scolaire: "3eme"
+              bacStudent:
+                summary: Terminale C student
+                value:
+                  email: "kossi.bla@example.com"
+                  password: "monMotDePasse123"
+                  nom: "Bla"
+                  prenom: "Kossi"
+                  niveau_scolaire: "Terminale"
+                  serie: "C"
+                  etablissement: "Lycée de Tokoin"
+                  ville: "Lomé"
+      responses:
+        '201':
+          description: Account created — JWT returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                detail: "Un compte existe deja avec cet email"
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login a student
+      description: |
+        Authenticates a student with email + password and returns a JWT
+        access token (valid for 7 days).
+      security: []
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+            example:
+              email: "amina.kofi@example.com"
+              password: "monMotDePasse123"
+      responses:
+        '200':
+          description: Authentication successful — JWT returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                detail: "Email ou mot de passe incorrect"
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get the current user's profile
+      description: |
+        Returns the full profile of the authenticated user, including the
+        BKT mastery map (`bkt_maitrise` keyed by `competence_id`), the IRT
+        theta estimate, and aggregate counters.
+      operationId: getCurrentUser
+      responses:
+        '200':
+          description: Authenticated user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOut'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ─── Questions ─────────────────────────────────────────────────────
+  /questions:
+    get:
+      tags: [Questions]
+      summary: List questions with filters
+      description: |
+        Returns a paginated list of questions filtered by subject, exam
+        type, serie, competence, or chapter. Used by the Flutter app to
+        populate the revision and simulation screens.
+      security: []
+      operationId: listQuestions
+      parameters:
+        - name: matiere
+          in: query
+          description: Filter by subject (e.g. "Mathematiques", "Francais")
+          required: false
+          schema: { type: string }
+        - name: examen
+          in: query
+          description: Filter by exam type
+          required: false
+          schema:
+            type: string
+            enum: [BEPC, BAC1, BAC2, Probatoire]
+        - name: serie
+          in: query
+          description: Filter by track (only relevant for BAC)
+          required: false
+          schema:
+            type: string
+            enum: [A, B, C, D, F]
+        - name: competence_id
+          in: query
+          description: Filter by competence ID (e.g. "TG-MATHS-ALGEBRE-EQ2D")
+          required: false
+          schema: { type: string }
+        - name: chapitre
+          in: query
+          description: Filter by chapter (free text)
+          required: false
+          schema: { type: string }
+        - name: limit
+          in: query
+          description: Page size
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 200
+        - name: offset
+          in: query
+          description: Page offset
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Paginated list of questions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionListOut'
+    post:
+      tags: [Questions]
+      summary: Create a new question (admin only)
+      description: |
+        Adds a question to the bank. Restricted to admin users (the first
+        registered account, or any account matching `ADMIN_EMAIL`).
+      operationId: createQuestion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionCreate'
+      responses:
+        '201':
+          description: Question created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionOut'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Admin only
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                detail: "Acces reserve aux administrateurs"
+        '409':
+          description: Question ID already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                detail: "La question TG-BEPC-MATHS-2022-Q01 existe deja"
+
+  /questions/random/list:
+    get:
+      tags: [Questions]
+      summary: Random question sample (for simulations)
+      description: |
+        Returns `n` random questions, optionally filtered by subject and
+        exam type. Used by the simulation screen to build a fresh exam
+        set on each launch.
+      security: []
+      operationId: getRandomQuestions
+      parameters:
+        - name: n
+          in: query
+          description: Number of questions to sample
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+        - name: matiere
+          in: query
+          required: false
+          schema: { type: string }
+        - name: examen
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [BEPC, BAC1, BAC2, Probatoire]
+      responses:
+        '200':
+          description: Random list of questions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionOut'
+
+  /questions/{question_id}:
+    get:
+      tags: [Questions]
+      summary: Get a question by ID
+      description: Returns the full question record including answer, explanation, and IRT parameters.
+      security: []
+      operationId: getQuestion
+      parameters:
+        - name: question_id
+          in: path
+          required: true
+          description: Question identifier (e.g. "TG-BEPC-MATHS-2022-Q01")
+          schema: { type: string }
+          example: "TG-BEPC-MATHS-2022-Q01"
+      responses:
+        '200':
+          description: Question found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionOut'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Sessions ──────────────────────────────────────────────────────
+  /sessions:
+    post:
+      tags: [Sessions]
+      summary: Record a student answer
+      description: |
+        Records a single answer for a (user, question) pair and updates:
+
+        1. **SM-2 state** for the corresponding review card — new interval,
+           new easiness factor, new next-review date.
+        2. **BKT mastery** for the question's competence — P(L) updated
+           via the 4-parameter Bayes formula.
+        3. **User aggregate counters** — `total_sessions`,
+           `total_questions_answered`, `last_active_date`.
+        4. **Raw history** — a row in the `responses` table (for ML
+           training and audit).
+
+        The `quality` field is the SM-2 quality score (0-5):
+          - 0 = complete blackout
+          - 1 = wrong, but felt familiar
+          - 2 = wrong, but easy to recall on seeing the answer
+          - 3 = correct, but with serious difficulty
+          - 4 = correct, after some hesitation
+          - 5 = perfect, instant recall
+
+        If `correct` is null, it is derived from `quality` (q >= 3 → correct).
+      security: []
+      operationId: recordSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionIn'
+            example:
+              user_id: "550e8400-e29b-41d4-a716-446655440000"
+              question_id: "TG-BEPC-MATHS-2022-Q01"
+              quality: 4
+              time_spent_sec: 42
+      responses:
+        '200':
+          description: Answer recorded — updated SM-2 + BKT state returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionOut'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /sessions/{user_id}/due:
+    get:
+      tags: [Sessions]
+      summary: Cards due for review today
+      description: |
+        Returns the list of review cards whose `next_review_date` is in the
+        past (i.e. due today). Cards in `is_learning` state are listed
+        first (highest priority).
+      security: []
+      operationId: getDueCards
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 200
+      responses:
+        '200':
+          description: List of due cards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DueCardOut'
+
+  /sessions/{user_id}/stats:
+    get:
+      tags: [Sessions]
+      summary: Aggregated revision statistics
+      description: |
+        Returns aggregate SM-2 stats for the user (mirror of the Flutter
+        `SrsStats` model): total cards, due today, mastered, learning,
+        new cards, and due in the next 7 days.
+      security: []
+      operationId: getUserStats
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Aggregated revision statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SrsStatsOut'
+
+  # ─── Prediction ────────────────────────────────────────────────────
+  /predict-score/{user_id}:
+    get:
+      tags: [Prediction]
+      summary: Predict the student's exam score
+      description: |
+        Predicts the score (on 20) the student would get at the given
+        exam. Strategy:
+
+          - If `total_responses >= 100` and the XGBoost model is available
+            on disk → use **XGBoost** with 8 features (pL_global, pL_maths,
+            pL_fr, pL_sciences, sessions_7j, avg_time_per_q,
+            simulations_completed, last_sim_score).
+          - Otherwise → **heuristic** fallback = average of BKT P(L) per
+            subject × 20.
+
+        The response includes a `breakdown` with the estimated score per
+        subject, and the `method` used (`heuristic` | `xgboost`).
+      security: []
+      operationId: predictScore
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: examen
+          in: query
+          description: Target exam
+          required: false
+          schema:
+            type: string
+            enum: [BEPC, BAC1, BAC2]
+            default: BEPC
+      responses:
+        '200':
+          description: Predicted score and breakdown
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PredictScoreOut'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /predict-dropout/{user_id}:
+    get:
+      tags: [Prediction]
+      summary: Predict the student's dropout risk
+      description: |
+        Estimates the probability (0-1) that the student will drop out of
+        the app in the next 30 days. Currently a transparent rule-based
+        model (for the DJANTA pitch), based on:
+
+          - Inactivity (days since last session)
+          - Engagement (sessions in the last 7 days)
+          - Performance (global BKT mastery)
+          - Average time spent per question
+          - Number of completed simulations
+
+        Will be replaced by an XGBoost classifier once enough labeled data
+        is collected.
+      security: []
+      operationId: predictDropout
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Dropout risk prediction
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PredictDropoutOut'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT access token obtained from `/auth/register` or `/auth/login`.
+        Pass it as `Authorization: Bearer <token>` in the request header.
+        Tokens are valid for 7 days (configurable via
+        `ACCESS_TOKEN_EXPIRE_MINUTES`).
+
+  schemas:
+
+    UserCreate:
+      type: object
+      description: Payload for student registration.
+      required: [email, password, nom, prenom, niveau_scolaire]
+      properties:
+        email:
+          type: string
+          format: email
+          example: "amina.kofi@example.com"
+        password:
+          type: string
+          minLength: 6
+          maxLength: 128
+          description: Plain-text password (bcrypt-hashed server-side)
+          example: "monMotDePasse123"
+        nom:
+          type: string
+          minLength: 1
+          maxLength: 80
+          example: "Kofi"
+        prenom:
+          type: string
+          minLength: 1
+          maxLength: 80
+          example: "Amina"
+        niveau_scolaire:
+          type: string
+          description: Grade level
+          enum: [3eme, 2nde, 1ere, Terminale, tle]
+          example: "3eme"
+        serie:
+          type: string
+          nullable: true
+          description: Track (required only for 1ère and Terminale). Null for BEPC.
+          enum: [A, B, C, D, F]
+          example: "C"
+        etablissement:
+          type: string
+          nullable: true
+          example: "Lycée de Tokoin"
+        ville:
+          type: string
+          nullable: true
+          example: "Lomé"
+
+    UserLogin:
+      type: object
+      description: Payload for student login.
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    UserOut:
+      type: object
+      description: Public user profile (no password hash).
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        email:
+          type: string
+          format: email
+        nom:
+          type: string
+        prenom:
+          type: string
+        niveau_scolaire:
+          type: string
+          enum: [3eme, 2nde, 1ere, Terminale]
+        serie:
+          type: string
+          nullable: true
+          enum: [A, B, C, D, F]
+        etablissement:
+          type: string
+          nullable: true
+        ville:
+          type: string
+          nullable: true
+        date_inscription:
+          type: string
+          format: date-time
+        theta_irt:
+          type: number
+          nullable: true
+          description: IRT 3PL ability estimate (theta). Null until calibrated.
+        total_sessions:
+          type: integer
+          minimum: 0
+        total_questions_answered:
+          type: integer
+          minimum: 0
+        bkt_maitrise:
+          type: object
+          description: |
+            Map of competence_id → BKT P(L) (probability the student has
+            mastered the competence). Values are floats in [0, 1].
+          additionalProperties:
+            type: number
+            minimum: 0
+            maximum: 1
+          example:
+            "TG-MATHS-ALGEBRE-EQ2D": 0.4667
+            "TG-MATHS-GEOMETRIE-PYTHAGORE": 0.8234
+
+    Token:
+      type: object
+      description: JWT authentication response.
+      properties:
+        access_token:
+          type: string
+          description: JWT token (HS256 signed)
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        token_type:
+          type: string
+          example: "bearer"
+        user_id:
+          type: string
+          format: uuid
+        user:
+          $ref: '#/components/schemas/UserOut'
+
+    IrtParams:
+      type: object
+      description: IRT 3PL parameters (a/b/c) for a question.
+      properties:
+        a:
+          type: number
+          nullable: true
+          description: Discrimination parameter (typically 0.5-2.5)
+          example: 1.4
+        b:
+          type: number
+          nullable: true
+          description: Difficulty parameter (typically -3 to +3)
+          example: 0.2
+        c:
+          type: number
+          nullable: true
+          description: Guessing parameter (typically 0-0.35)
+          example: 0.15
+        calibre:
+          type: boolean
+          description: True if parameters have been calibrated via py-irt
+          default: false
+
+    QuestionCreate:
+      type: object
+      description: Payload for question creation (admin only).
+      required: [enonce, reponse, matiere, chapitre, competence_id]
+      properties:
+        id:
+          type: string
+          nullable: true
+          description: Optional ID. Auto-generated if absent.
+          example: "TG-BEPC-MATHS-2022-Q01"
+        enonce:
+          type: string
+          minLength: 3
+          example: "Résous le système d'équations : 2x + 3y = 12 et x - y = 1."
+        reponse:
+          type: string
+          example: "x = 3, y = 2"
+        explication:
+          type: string
+          nullable: true
+          example: "On utilise la substitution : x = 1 + y..."
+        matiere:
+          type: string
+          example: "Mathematiques"
+        chapitre:
+          type: string
+          example: "Algèbre — Systèmes d'équations"
+        competence_id:
+          type: string
+          example: "TG-MATHS-ALGEBRE-EQ2D"
+        examen:
+          type: string
+          enum: [BEPC, BAC1, BAC2, Probatoire]
+          default: BEPC
+        serie:
+          type: string
+          nullable: true
+          enum: [A, B, C, D, F]
+        annee:
+          type: integer
+          nullable: true
+          example: 2022
+        type:
+          type: string
+          enum: [calcul, ouvert, qcm, vraiFaux, redaction]
+          default: ouvert
+        choix:
+          type: array
+          nullable: true
+          description: Choices for QCM questions (required if type=qcm)
+          items: { type: string }
+          example: ["3", "5", "7", "9"]
+        points:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 20
+          example: 4
+        irt:
+          $ref: '#/components/schemas/IrtParams'
+
+    QuestionOut:
+      type: object
+      description: Full question record (serialised for API responses).
+      properties:
+        id:
+          type: string
+          example: "TG-BEPC-MATHS-2022-Q01"
+        enonce:
+          type: string
+        reponse:
+          type: string
+        explication:
+          type: string
+          nullable: true
+        matiere:
+          type: string
+        chapitre:
+          type: string
+        competence_id:
+          type: string
+        examen:
+          type: string
+          enum: [BEPC, BAC1, BAC2, Probatoire]
+        serie:
+          type: string
+          nullable: true
+          enum: [A, B, C, D, F]
+        annee:
+          type: integer
+          nullable: true
+        type:
+          type: string
+          enum: [calcul, ouvert, qcm, vraiFaux, redaction]
+        choix:
+          type: array
+          nullable: true
+          items: { type: string }
+        points:
+          type: integer
+          nullable: true
+        irt:
+          $ref: '#/components/schemas/IrtParams'
+
+    QuestionListOut:
+      type: object
+      description: Paginated list of questions.
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionOut'
+        total:
+          type: integer
+          description: Total number of questions matching the filters
+          example: 64
+        limit:
+          type: integer
+          example: 20
+        offset:
+          type: integer
+          example: 0
+
+    SessionIn:
+      type: object
+      description: Payload to record a student answer.
+      required: [user_id, question_id, quality]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        question_id:
+          type: string
+          example: "TG-BEPC-MATHS-2022-Q01"
+        quality:
+          type: integer
+          minimum: 0
+          maximum: 5
+          description: SM-2 quality score (0=forgot, 5=perfect)
+          example: 4
+        time_spent_sec:
+          type: integer
+          minimum: 0
+          default: 0
+          description: Time spent answering, in seconds
+          example: 42
+        correct:
+          type: boolean
+          nullable: true
+          description: |
+            If null, derived from `quality` (q >= 3 → correct). Useful for
+            QCM/vraiFaux where correctness is binary, vs open-ended where
+            SM-2 quality is more granular.
+
+    BktUpdate:
+      type: object
+      description: BKT mastery update for the question's competence.
+      properties:
+        competence_id:
+          type: string
+          example: "TG-MATHS-ALGEBRE-EQ2D"
+        pL_before:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: BKT P(L) before the answer
+          example: 0.10
+        pL_after:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: BKT P(L) after the answer (Bayesian update)
+          example: 0.4667
+        mastered:
+          type: boolean
+          description: True if `pL_after` >= 0.85 (mastery threshold)
+          example: false
+
+    SessionOut:
+      type: object
+      description: Response after recording an answer — updated SM-2 + BKT state.
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        question_id:
+          type: string
+        quality:
+          type: integer
+          minimum: 0
+          maximum: 5
+        correct:
+          type: boolean
+        interval_days:
+          type: integer
+          description: New SM-2 interval in days
+          example: 1
+        easiness_factor:
+          type: number
+          description: New SM-2 easiness factor (>= 1.3)
+          example: 2.36
+        next_review_date:
+          type: string
+          format: date-time
+          description: When the card should be reviewed next
+        bkt_update:
+          $ref: '#/components/schemas/BktUpdate'
+
+    DueCardOut:
+      type: object
+      description: A review card due for review today.
+      properties:
+        question_id:
+          type: string
+        next_review_date:
+          type: string
+          format: date-time
+        last_review_date:
+          type: string
+          format: date-time
+          nullable: true
+        repetitions:
+          type: integer
+          minimum: 0
+        easiness_factor:
+          type: number
+        interval_days:
+          type: integer
+        is_learning:
+          type: boolean
+          description: True if the card is still in the initial learning phase
+        total_attempts:
+          type: integer
+        correct_attempts:
+          type: integer
+        days_overdue:
+          type: integer
+          description: Number of days the card is overdue (0 if due today)
+
+    SrsStatsOut:
+      type: object
+      description: Aggregated revision statistics (mirror of Flutter SrsStats).
+      properties:
+        total_cards:
+          type: integer
+          minimum: 0
+        due_today:
+          type: integer
+          minimum: 0
+        mastered:
+          type: integer
+          minimum: 0
+          description: Cards with success_rate >= 0.8 and not in learning phase
+        learning:
+          type: integer
+          minimum: 0
+        new_cards:
+          type: integer
+          minimum: 0
+          description: Cards with 0 attempts
+        due_in_7_days:
+          type: integer
+          minimum: 0
+
+    ScoreBreakdownItem:
+      type: object
+      description: Estimated score for one subject.
+      properties:
+        matiere:
+          type: string
+          example: "Mathematiques"
+        score_estime:
+          type: number
+          minimum: 0
+          maximum: 20
+          description: Estimated score on 20 (= pL_moyen × 20)
+          example: 9.33
+        pL_moyen:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Average BKT P(L) for the subject
+          example: 0.4667
+        nb_questions:
+          type: integer
+          minimum: 0
+          description: Number of questions answered in this subject
+          example: 8
+
+    PredictScoreOut:
+      type: object
+      description: Predicted exam score (on 20) with breakdown by subject.
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        examen:
+          type: string
+          enum: [BEPC, BAC1, BAC2]
+        predicted_score:
+          type: number
+          minimum: 0
+          maximum: 20
+          example: 9.33
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: |
+            Model confidence. Low (< 0.5) for heuristic method or when few
+            responses have been recorded; high (> 0.7) for XGBoost with
+            sufficient data.
+          example: 0.3
+        method:
+          type: string
+          enum: [heuristic, xgboost, insufficient_data]
+          description: Prediction method used
+          example: "heuristic"
+        breakdown:
+          type: array
+          description: Estimated score per subject
+          items:
+            $ref: '#/components/schemas/ScoreBreakdownItem'
+        total_responses:
+          type: integer
+          minimum: 0
+          description: Total number of responses recorded for this user
+          example: 12
+
+    PredictDropoutOut:
+      type: object
+      description: Dropout risk prediction.
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        dropout_probability:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Probability of dropping out in the next 30 days
+          example: 0.42
+        risk_level:
+          type: string
+          enum: [faible, modere, eleve]
+          description: Categorical risk level (low / moderate / high)
+          example: "modere"
+        factors:
+          type: object
+          description: |
+            Key factors driving the prediction (transparent model). Keys are
+            factor names, values are normalised contributions.
+          additionalProperties: true
+          example:
+            inactivity_days: 5
+            sessions_7j: 2
+            pL_global: 0.42
+            avg_time_per_q: 38.5
+            simulations_completed: 1
+
+    Error:
+      type: object
+      description: Standard error response (FastAPI format).
+      properties:
+        detail:
+          oneOf:
+            - type: string
+              example: "Utilisateur 550e8400-e29b-41d4-a716-446655440000 introuvable"
+            - type: object
+              description: Validation error detail (FastAPI wraps multiple errors)
+            - type: array
+              items: { type: object }
+
+  responses:
+
+    BadRequest:
+      description: Bad request — validation error or malformed payload
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            detail: "niveau_scolaire doit etre dans ['2nde', '3eme', '1ere', 'Terminale', 'tle']"
+
+    Unauthorized:
+      description: Unauthorized — missing or invalid JWT token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            detail: "Token invalide ou absent"
+
+    NotFound:
+      description: Not found — resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            detail: "Question TG-BEPC-MATHS-2022-Q99 introuvable"
+
+    Forbidden:
+      description: Forbidden — admin access required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            detail: "Acces reserve aux administrateurs"
+
+    Conflict:
+      description: Conflict — resource already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            detail: "Un compte existe deja avec cet email"

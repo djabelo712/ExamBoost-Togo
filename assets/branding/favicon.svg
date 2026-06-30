@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ExamBoost Togo — Favicon 32x32 (simplifié)
+     Monogramme EB orange sur fond vert dégradé.
+     ViewBox : 0 0 32 32 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="ExamBoost Togo">
+  <defs>
+    <linearGradient id="favBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#006837"/>
+      <stop offset="100%" stop-color="#004A26"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fond arrondi -->
+  <rect x="1" y="1" width="30" height="30" rx="7" fill="url(#favBg)"/>
+  <rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="#FFFFFF" stroke-width="0.5" stroke-opacity="0.2"/>
+
+  <!-- Monogramme EB -->
+  <text x="16" y="22" font-family="Outfit, Inter, Arial, sans-serif" font-size="15" font-weight="800" fill="#FFB74D" text-anchor="middle" letter-spacing="0.5">EB</text>
+</svg>

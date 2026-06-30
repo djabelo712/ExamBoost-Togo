@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ExamBoost Togo — Template de slide de pitch (16:9)
+     Format 1280x720. Zones : titre / contenu / image / footer branding.
+     À utiliser comme gabarit pour les 10 slides du pitch deck DJANTA. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Template slide pitch ExamBoost Togo">
+  <defs>
+    <linearGradient id="slideAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#006837"/>
+      <stop offset="100%" stop-color="#D97700"/>
+    </linearGradient>
+    <linearGradient id="slideImgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8F5ED"/>
+      <stop offset="100%" stop-color="#FFF3E0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fond blanc cassé -->
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+
+  <!-- Barre d'accent en haut (dégradé vert→orange) -->
+  <rect x="0" y="0" width="1280" height="8" fill="url(#slideAccent)"/>
+
+  <!-- Zone titre (header) -->
+  <g>
+    <!-- Petit logo EB -->
+    <circle cx="80" cy="80" r="28" fill="#006837"/>
+    <polygon points="80,68 100,76 80,84 60,76" fill="#FFB74D"/>
+    <path d="M 70,80 Q 70,90 80,92 Q 90,90 90,80" fill="none" stroke="#A85200" stroke-width="2"/>
+    <path d="M 80,86 L 80,98 M 76,94 L 80,98 L 84,94" stroke="#FFB74D" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <text x="80" y="118" font-family="Outfit, Inter, sans-serif" font-size="9" font-weight="700" fill="#006837" text-anchor="middle" letter-spacing="2">EB</text>
+
+    <!-- Tag de slide (numéro) -->
+    <rect x="130" y="56" width="80" height="22" rx="11" fill="#E8F5ED"/>
+    <text x="170" y="71" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#006837" text-anchor="middle">SLIDE 1/10</text>
+
+    <!-- Catégorie de slide -->
+    <text x="130" y="98" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#757575" letter-spacing="2">PROBLÈME</text>
+
+    <!-- Titre principal -->
+    <text x="130" y="140" font-family="Outfit, Inter, sans-serif" font-size="42" font-weight="700" fill="#1A1A1A">Une crise silencieuse</text>
+    <text x="130" y="184" font-family="Outfit, Inter, sans-serif" font-size="42" font-weight="700" fill="#006837">au Togo</text>
+
+    <!-- Sous-titre / accroche -->
+    <text x="130" y="220" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#757575">Les chiffres qui dérangent et exigent une réponse.</text>
+  </g>
+
+  <!-- Ligne séparatrice -->
+  <line x1="130" y1="248" x2="1150" y2="248" stroke="#E0E0E0" stroke-width="1"/>
+
+  <!-- Zone contenu gauche (texte / bullets) -->
+  <g>
+    <!-- Bullet 1 -->
+    <circle cx="146" cy="298" r="6" fill="#D97700"/>
+    <text x="166" y="295" font-family="Outfit, Inter, sans-serif" font-size="22" font-weight="600" fill="#1A1A1A">BEPC 2024 : 44% de réussite</text>
+    <text x="166" y="318" font-family="Inter, Arial, sans-serif" font-size="14" fill="#757575">−37 points vs 2023 — chute historique</text>
+
+    <!-- Bullet 2 -->
+    <circle cx="146" cy="368" r="6" fill="#D97700"/>
+    <text x="166" y="365" font-family="Outfit, Inter, sans-serif" font-size="22" font-weight="600" fill="#1A1A1A">BAC 2 2024 : 46,71% de réussite</text>
+    <text x="166" y="388" font-family="Inter, Arial, sans-serif" font-size="14" fill="#757575">Moins d'un bachelier sur deux</text>
+
+    <!-- Bullet 3 -->
+    <circle cx="146" cy="438" r="6" fill="#D97700"/>
+    <text x="166" y="435" font-family="Outfit, Inter, sans-serif" font-size="22" font-weight="600" fill="#1A1A1A">86% des élèves de 10 ans</text>
+    <text x="166" y="458" font-family="Inter, Arial, sans-serif" font-size="14" fill="#757575">ne savent pas lire couramment (Banque Mondiale)</text>
+
+    <!-- Bullet 4 -->
+    <circle cx="146" cy="508" r="6" fill="#D97700"/>
+    <text x="166" y="505" font-family="Outfit, Inter, sans-serif" font-size="22" font-weight="600" fill="#1A1A1A">Aucune solution numérique</text>
+    <text x="166" y="528" font-family="Inter, Arial, sans-serif" font-size="14" fill="#757575">alignée sur le programme MEPST togolais</text>
+
+    <!-- Encadré citation -->
+    <rect x="130" y="568" width="500" height="80" rx="12" fill="#E8F5ED" stroke="#006837" stroke-width="1" stroke-opacity="0.3"/>
+    <rect x="130" y="568" width="4" height="80" rx="2" fill="#006837"/>
+    <text x="148" y="595" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#006837">Source</text>
+    <text x="148" y="618" font-family="Inter, Arial, sans-serif" font-size="12" fill="#1A1A1A">MEPST Togo &amp; Banque Mondiale — Rapport 2024</text>
+  </g>
+
+  <!-- Zone image / visuel droit -->
+  <g>
+    <rect x="680" y="280" width="470" height="320" rx="16" fill="url(#slideImgGrad)" stroke="#E0E0E0" stroke-width="1"/>
+    <!-- Placeholder graphique : barres de stats stylisées -->
+    <text x="700" y="312" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#757575" letter-spacing="1">VISUEL / SCHÉMA</text>
+
+    <!-- Barres statistiques -->
+    <g transform="translate(720, 340)">
+      <!-- Axe Y -->
+      <line x1="0" y1="0" x2="0" y2="220" stroke="#BDBDBD" stroke-width="1"/>
+      <!-- Axe X -->
+      <line x1="0" y1="220" x2="400" y2="220" stroke="#BDBDBD" stroke-width="1"/>
+      <!-- Labels -->
+      <text x="-8" y="5" font-family="Inter, Arial, sans-serif" font-size="10" fill="#757575" text-anchor="end">100%</text>
+      <text x="-8" y="115" font-family="Inter, Arial, sans-serif" font-size="10" fill="#757575" text-anchor="end">50%</text>
+      <text x="-8" y="225" font-family="Inter, Arial, sans-serif" font-size="10" fill="#757575" text-anchor="end">0%</text>
+      <line x1="0" y1="110" x2="400" y2="110" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="2,3"/>
+
+      <!-- Barre 1 : BEPC 2023 -->
+      <rect x="40" y="20" width="60" height="200" fill="#4CAF7A"/>
+      <text x="70" y="14" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1A1A1A" text-anchor="middle">81%</text>
+      <text x="70" y="240" font-family="Inter, Arial, sans-serif" font-size="10" fill="#757575" text-anchor="middle">BEPC 2023</text>
+
+      <!-- Barre 2 : BEPC 2024 -->
+      <rect x="130" y="124" width="60" height="96" fill="#D97700"/>
+      <text x="160" y="118" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1A1A1A" text-anchor="middle">44%</text>
+      <text x="160" y="240" font-family="Inter, Arial, sans-serif" font-size="10" fill="#757575" text-anchor="middle">BEPC 2024</text>
+
+      <!-- Barre 3 : BAC 2 2024 -->
+      <rect x="220" y="116" width="60" height="104" fill="#A85200"/>
+      <text x="250" y="110" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1A1A1A" text-anchor="middle">47%</text>
+      <text x="250" y="240" font-family="Inter, Arial, sans-serif" font-size="10" fill="#757575" text-anchor="middle">BAC 2 2024</text>
+
+      <!-- Barre 4 : Objectif EB -->
+      <rect x="310" y="40" width="60" height="180" fill="none" stroke="#006837" stroke-width="2" stroke-dasharray="4,3"/>
+      <text x="340" y="34" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#006837" text-anchor="middle">75%</text>
+      <text x="340" y="240" font-family="Inter, Arial, sans-serif" font-size="10" fill="#006837" font-weight="600" text-anchor="middle">Cible EB</text>
+    </g>
+    <!-- Légende image -->
+    <text x="915" y="620" font-family="Inter, Arial, sans-serif" font-size="10" fill="#757575" text-anchor="middle" font-style="italic">Taux de réussite aux examens nationaux — source MEPST</text>
+  </g>
+
+  <!-- Footer branding -->
+  <g>
+    <line x1="0" y1="680" x2="1280" y2="680" stroke="#E0E0E0" stroke-width="1"/>
+    <!-- Logo mini -->
+    <circle cx="40" cy="700" r="10" fill="#006837"/>
+    <text x="40" y="704" font-family="Outfit, Inter, sans-serif" font-size="7" font-weight="700" fill="#FFFFFF" text-anchor="middle">EB</text>
+    <!-- Nom projet -->
+    <text x="60" y="704" font-family="Outfit, Inter, sans-serif" font-size="11" font-weight="600" fill="#1A1A1A">ExamBoost Togo</text>
+    <text x="180" y="704" font-family="Inter, Arial, sans-serif" font-size="10" fill="#757575">— Préparation intelligente aux examens nationaux</text>
+    <!-- Mention DJANTA -->
+    <text x="1100" y="704" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#D97700" letter-spacing="1.5">DJANTA TECH HUB 2026</text>
+    <!-- Numéro de slide -->
+    <text x="1260" y="704" font-family="Inter, Arial, sans-serif" font-size="10" fill="#BDBDBD" text-anchor="end">01 / 10</text>
+  </g>
+
+  <!-- Annotations de zones (cadres pointillés rouges) -->
+  <g fill="none" stroke="#C62828" stroke-width="1" stroke-dasharray="4,3" opacity="0.55">
+    <rect x="124" y="52" width="612" height="180" />
+    <rect x="124" y="280" width="510" height="368" />
+    <rect x="676" y="276" width="478" height="328" />
+  </g>
+  <g font-family="Inter, Arial, sans-serif" font-size="9" fill="#C62828" font-weight="600">
+    <text x="124" y="46">[ZONE TITRE — Outfit 42/700]</text>
+    <text x="124" y="274">[ZONE CONTENU — bullets + citation]</text>
+    <text x="676" y="270">[ZONE VISUEL — graphique ou screenshot]</text>
+  </g>
+</svg>
