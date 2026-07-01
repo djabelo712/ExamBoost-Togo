@@ -1,0 +1,5 @@
+# Ce fichier .gitkeep assure que le dossier output/ est suivi par git
+# meme s'il est vide au moment du commit.
+# Le fichier Excel genere (ExamBoost_Financial_Model.xlsx) est cree ici
+# par le script generate_financial_model.py et peut etre regenere a tout moment
+# via : python3 generate_financial_model.py

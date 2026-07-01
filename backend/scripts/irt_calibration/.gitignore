@@ -1,0 +1,10 @@
+# Outputs de calibration (regeneres a chaque run, jamais commites)
+output/
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/

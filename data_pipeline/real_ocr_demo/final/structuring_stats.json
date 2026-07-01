@@ -1,0 +1,47 @@
+{
+  "total_files": 5,
+  "total_exercises": 20,
+  "total_questions": 36,
+  "per_file": [
+    {
+      "txt_name": "bepc_maths_2022.txt",
+      "matiere": "Mathématiques",
+      "annee": 2022,
+      "num_exercises": 4,
+      "num_questions": 8,
+      "output_json": "/home/z/my-project/ExamBoost-Togo/data_pipeline/real_ocr_demo/structured_questions/bepc_maths_2022_questions.json"
+    },
+    {
+      "txt_name": "bepc_francais_2021.txt",
+      "matiere": "Français",
+      "annee": 2021,
+      "num_exercises": 4,
+      "num_questions": 6,
+      "output_json": "/home/z/my-project/ExamBoost-Togo/data_pipeline/real_ocr_demo/structured_questions/bepc_francais_2021_questions.json"
+    },
+    {
+      "txt_name": "bepc_sciences_2023.txt",
+      "matiere": "Sciences Physiques",
+      "annee": 2023,
+      "num_exercises": 4,
+      "num_questions": 8,
+      "output_json": "/home/z/my-project/ExamBoost-Togo/data_pipeline/real_ocr_demo/structured_questions/bepc_sciences_2023_questions.json"
+    },
+    {
+      "txt_name": "bepc_svt_2020.txt",
+      "matiere": "Sciences de la Vie et de la Terre",
+      "annee": 2020,
+      "num_exercises": 4,
+      "num_questions": 7,
+      "output_json": "/home/z/my-project/ExamBoost-Togo/data_pipeline/real_ocr_demo/structured_questions/bepc_svt_2020_questions.json"
+    },
+    {
+      "txt_name": "bepc_histoire_2022.txt",
+      "matiere": "Histoire-Géographie",
+      "annee": 2022,
+      "num_exercises": 4,
+      "num_questions": 7,
+      "output_json": "/home/z/my-project/ExamBoost-Togo/data_pipeline/real_ocr_demo/structured_questions/bepc_histoire_2022_questions.json"
+    }
+  ]
+}

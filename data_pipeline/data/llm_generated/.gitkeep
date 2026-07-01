@@ -1,0 +1,4 @@
+# Placeholder pour garder le dossier dans Git.
+# Les fichiers .json generes par le pipeline LLM ne doivent PAS etre commit
+# (ils peuvent contenir des donnees volumineuses et sont reproductibles).
+# Seul final_questions_to_add.json peut etre commit manuellement apres review.

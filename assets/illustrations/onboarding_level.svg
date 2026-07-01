@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ExamBoost Togo — Onboarding étape 3 : Niveau scolaire
+     4 cartes stylisées (3e, 2nde, 1ère, Terminale), chacune avec une icône
+     différente. Élève pointant vers la carte "Terminale" (mise en valeur).
+     Palette : vert Togo #006837 + orange #D97700 + blanc.
+     Style : flat design moderne. ViewBox 0 0 400 300 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Choisis ton niveau scolaire">
+  <defs>
+    <linearGradient id="bgLevel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F8F9FA"/>
+      <stop offset="100%" stop-color="#E8F5ED"/>
+    </linearGradient>
+    <linearGradient id="cardLevelActive" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#006837"/>
+      <stop offset="100%" stop-color="#004A26"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fond dégradé doux -->
+  <rect x="0" y="0" width="400" height="300" fill="url(#bgLevel)"/>
+
+  <!-- Particules décoratives -->
+  <circle cx="50" cy="50" r="5" fill="#FFB74D" fill-opacity="0.5"/>
+  <circle cx="370" cy="80" r="4" fill="#006837" fill-opacity="0.3"/>
+  <circle cx="380" cy="220" r="6" fill="#D97700" fill-opacity="0.3"/>
+
+  <!-- Titre (optionnel, info visuelle) -->
+  <text x="200" y="50" font-family="Outfit, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#006837" text-anchor="middle">Ton niveau scolaire</text>
+  <line x1="170" y1="58" x2="230" y2="58" stroke="#D97700" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Carte 1 : 3e (BEPC) -->
+  <g transform="translate(40, 100)">
+    <rect x="0" y="0" width="75" height="100" rx="10" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+    <!-- Icône : livre fermé -->
+    <g transform="translate(37.5, 32)">
+      <rect x="-15" y="-12" width="30" height="24" rx="2" fill="#4CAF7A"/>
+      <rect x="-15" y="-12" width="6" height="24" fill="#006837"/>
+      <line x1="-3" y1="-7" x2="10" y2="-7" stroke="#FFFFFF" stroke-width="1"/>
+      <line x1="-3" y1="-3" x2="10" y2="-3" stroke="#FFFFFF" stroke-width="1"/>
+      <line x1="-3" y1="1" x2="10" y2="1" stroke="#FFFFFF" stroke-width="1"/>
+    </g>
+    <text x="37.5" y="78" font-family="Outfit, Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#006837" text-anchor="middle">3e</text>
+    <text x="37.5" y="92" font-family="Outfit, Inter, Arial, sans-serif" font-size="7" fill="#757575" text-anchor="middle">BEPC</text>
+  </g>
+
+  <!-- Carte 2 : 2nde -->
+  <g transform="translate(130, 100)">
+    <rect x="0" y="0" width="75" height="100" rx="10" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+    <!-- Icône : crayon stylisé -->
+    <g transform="translate(37.5, 32) rotate(-20)">
+      <rect x="-3" y="-14" width="6" height="22" fill="#D97700"/>
+      <rect x="-3" y="-14" width="6" height="6" fill="#FFB74D"/>
+      <polygon points="-3,8 3,8 0,14" fill="#1A1A1A"/>
+    </g>
+    <text x="37.5" y="78" font-family="Outfit, Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#006837" text-anchor="middle">2nde</text>
+    <text x="37.5" y="92" font-family="Outfit, Inter, Arial, sans-serif" font-size="7" fill="#757575" text-anchor="middle">Détermin.</text>
+  </g>
+
+  <!-- Carte 3 : 1ère -->
+  <g transform="translate(220, 100)">
+    <rect x="0" y="0" width="75" height="100" rx="10" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+    <!-- Icône : rouleau diplôme -->
+    <g transform="translate(37.5, 32)">
+      <rect x="-14" y="-8" width="28" height="14" rx="2" fill="#4CAF7A"/>
+      <circle cx="-14" cy="-1" r="5" fill="#006837"/>
+      <circle cx="14" cy="-1" r="5" fill="#006837"/>
+      <line x1="0" y1="6" x2="0" y2="14" stroke="#D97700" stroke-width="1.5"/>
+      <line x1="-3" y1="14" x2="3" y2="14" stroke="#D97700" stroke-width="1.5"/>
+    </g>
+    <text x="37.5" y="78" font-family="Outfit, Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#006837" text-anchor="middle">1ère</text>
+    <text x="37.5" y="92" font-family="Outfit, Inter, Arial, sans-serif" font-size="7" fill="#757575" text-anchor="middle">Première</text>
+  </g>
+
+  <!-- Carte 4 : Terminale (mise en valeur — sélectionnée) -->
+  <g transform="translate(310, 95)">
+    <!-- Ombre + bordure verte épaisse -->
+    <rect x="2" y="4" width="75" height="100" rx="10" fill="#006837" fill-opacity="0.18"/>
+    <rect x="0" y="0" width="75" height="100" rx="10" fill="url(#cardLevelActive)"/>
+    <rect x="0" y="0" width="75" height="100" rx="10" fill="none" stroke="#D97700" stroke-width="2"/>
+    <!-- Icône : casquette mortarboard (diplôme) -->
+    <g transform="translate(37.5, 32)">
+      <polygon points="0,-14 16,-6 0,2 -16,-6" fill="#FFB74D"/>
+      <polygon points="0,-14 16,-6 0,-6" fill="#FFFFFF" fill-opacity="0.25"/>
+      <path d="M -8,-2 Q -8,7 0,9 Q 8,7 8,-2" fill="#A85200"/>
+      <path d="M 16,-6 Q 19,-1 18,8" stroke="#FFB74D" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <circle cx="18" cy="10" r="2.4" fill="#FFB74D"/>
+    </g>
+    <text x="37.5" y="78" font-family="Outfit, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">Terminale</text>
+    <text x="37.5" y="92" font-family="Outfit, Inter, Arial, sans-serif" font-size="7" fill="#FFB74D" text-anchor="middle">BAC</text>
+    <!-- Check de sélection -->
+    <circle cx="62" cy="14" r="9" fill="#FFB74D"/>
+    <path d="M 58,14 L 61,17 L 66,11" stroke="#006837" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Élève (en bas à gauche) pointant vers la carte Terminale -->
+  <g transform="translate(80, 240)">
+    <!-- Ombre au sol -->
+    <ellipse cx="0" cy="22" rx="28" ry="4" fill="#000000" fill-opacity="0.1"/>
+    <!-- Corps (tunique) -->
+    <path d="M -18,-12 Q -18,-22 -10,-25 L 10,-25 Q 18,-22 18,-12 L 22,20 Q 0,26 -22,20 Z" fill="#006837"/>
+    <!-- Col V -->
+    <path d="M -5,-25 L 0,-18 L 5,-25 Z" fill="#FFFFFF"/>
+    <!-- Bande décorative -->
+    <rect x="-12" y="-8" width="24" height="3" fill="#D97700"/>
+    <!-- Bras pointant vers la droite (carte Terminale) -->
+    <path d="M 14,-12 Q 60,-30 110,-50" stroke="#006837" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <!-- Main -->
+    <circle cx="113" cy="-52" r="5.5" fill="#A0703D"/>
+    <!-- Index tendu -->
+    <rect x="115" y="-55" width="8" height="3" rx="1.5" fill="#A0703D" transform="rotate(-15 115 -55)"/>
+    <!-- Bras gauche -->
+    <path d="M -14,-10 Q -22,5 -18,18" stroke="#006837" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <!-- Cou -->
+    <rect x="-4" y="-32" width="8" height="10" fill="#A0703D"/>
+    <!-- Tête -->
+    <circle cx="0" cy="-42" r="14" fill="#A0703D"/>
+    <!-- Cheveux -->
+    <path d="M -13,-44 Q -13,-55 0,-57 Q 13,-55 13,-44 Q 11,-50 0,-50 Q -11,-50 -13,-44 Z" fill="#1A1A1A"/>
+    <!-- Yeux -->
+    <circle cx="-5" cy="-42" r="1.2" fill="#1A1A1A"/>
+    <circle cx="5" cy="-42" r="1.2" fill="#1A1A1A"/>
+    <!-- Sourire -->
+    <path d="M -3,-37 Q 0,-34 3,-37" stroke="#1A1A1A" stroke-width="1" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Indicateur étape 3/5 -->
+  <g transform="translate(370, 25)">
+    <circle cx="0" cy="0" r="14" fill="#FFFFFF" stroke="#006837" stroke-width="1.5"/>
+    <text x="0" y="4" font-family="Outfit, Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#006837" text-anchor="middle">3</text>
+  </g>
+</svg>

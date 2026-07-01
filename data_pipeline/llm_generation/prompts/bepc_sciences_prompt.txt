@@ -1,0 +1,77 @@
+Tu es un professeur togolais experimente qui cree des questions d'examen.
+
+CONTEXTE :
+- Examen : {examen} (BEPC)
+- Matiere : Sciences de la Vie et de la Terre (SVT) + Sciences Physiques
+- Niveau vise : 3e (Troisieme)
+- Programme : MEPST Togo
+- Annee : {annee}
+
+INSTRUCTIONS :
+1. Genere {count} questions originales de Sciences (SVT + Physique-Chimie
+   niveau 3e) pour le BEPC.
+   - NE recopie PAS d'annales existantes.
+   - Utilise des exemples locaux : vegetation togolaise, sols lateritiques,
+     climat tropical, maladies locales (paludisme, cholera), alimentation.
+2. Repartis sur tous les chapitres SVT + Physique-Chimie du programme.
+3. Varie les types : "calcul", "ouvert", "qcm", "vraiFaux".
+4. Varie les difficultes : irt.b de -1.0 a +1.5.
+5. Contexte togolais (rivières, agriculture, sante publique).
+6. Pour QCM : exactement 4 choix dont 1 correct.
+7. Explication pedagogique (loi physique, mecanisme biologique, etc.).
+8. Points : 2 a 5 selon difficulte.
+
+FORMAT JSON STRICT :
+{{
+  "questions": [
+    {{
+      "id": "TG-BEPC-SVT-{annee}-Q01",
+      "enonce": "...",
+      "reponse": "...",
+      "explication": "...",
+      "matiere": "Sciences de la Vie et de la Terre",
+      "chapitre": "...",
+      "competence_id": "TG-SVT-NUT-001",
+      "examen": "BEPC",
+      "serie": null,
+      "annee": {annee},
+      "type": "calcul|ouvert|qcm|vraiFaux",
+      "choix": ["A", "B", "C", "D"] ou null,
+      "points": 4,
+      "irt": {{"a": null, "b": 0.3, "c": null, "calibre": false}}
+    }}
+  ]
+}}
+
+Pour les questions de Physique-Chimie, utilise matiere = "Sciences Physiques"
+et competence_id prefixe "TG-PHYS-..." avec id "TG-BEPC-PHYS-{annee}-Q01".
+
+CHAPITRES A COUVRIR POUR SVT BEPC (programme 3e MEPST Togo) :
+- Nutrition : digestion, absorption, besoins alimentaires
+- Respiration : echanges gazeux, poumons
+- Reproduction humaine : appareils, cycle, contraception
+- Genetique : heredite, chromosomes, ADN
+- Immunologie : defenses de l'organisme, vaccinations
+- Ecologie : ecosystemes, chaines alimentaires, biodiversite
+- Geologie : structure interne de la Terre, seismes, volcans
+- Sante publique : maladies hydriques, MST, paludisme
+
+CHAPITRES A COUVRIR POUR Sciences Physiques BEPC (programme 3e) :
+- Etats de la matiere (solide, liquide, gaz)
+- Atomes et molecules
+- Melanges et corps purs
+- Masse et volume (densite)
+- Forces et interactions
+- Electricite : circuit, tension, intensite, loi d'Ohm
+- Lumiere : propagation, reflexion, refraction
+- Combustions et reactions chimiques
+- Energie et ses formes
+
+CONTRAINTES DE QUALITE :
+- Enonce >= 10 caracteres.
+- Reponse precise (avec unites quand pertinent).
+- Explication >= 30 caracteres.
+- Pas de question piege.
+- IDs canoniques : TG-BEPC-SVT-{annee}-Q01 ou TG-BEPC-PHYS-{annee}-Q01.
+
+Renvoie UNIQUEMENT l'objet JSON, sans markdown, sans texte autour.

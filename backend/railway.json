@@ -5,18 +5,31 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "uvicorn main:app --host 0.0.0.0 --port $PORT",
+    "startCommand": "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 4",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 30,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 3
+    "restartPolicyMaxRetries": 3,
+    "numReplicas": 1,
+    "sleepApplication": false
   },
   "environments": {
+    "staging": {
+      "variables": {
+        "DATABASE_URL": "${{Postgres.DATABASE_URL}}",
+        "SECRET_KEY": "${{SECRET_KEY}}",
+        "ENVIRONMENT": "staging",
+        "LOG_LEVEL": "debug",
+        "CORS_ORIGINS": "[\"https://examboost-togo-staging.vercel.app\", \"https://examboost-togo-git-staging.vercel.app\", \"http://localhost:3000\"]"
+      }
+    },
     "production": {
       "variables": {
         "DATABASE_URL": "${{Postgres.DATABASE_URL}}",
         "SECRET_KEY": "${{SECRET_KEY}}",
-        "CORS_ORIGINS": "[\"https://examboost.tg\", \"https://www.examboost.tg\"]"
+        "ENVIRONMENT": "production",
+        "LOG_LEVEL": "info",
+        "CORS_ORIGINS": "[\"https://examboost-togo.vercel.app\", \"https://examboost.tg\", \"https://www.examboost.tg\"]"
       }
     }
   }

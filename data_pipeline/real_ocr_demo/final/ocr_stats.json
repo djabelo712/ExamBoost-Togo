@@ -1,0 +1,54 @@
+{
+  "total_pdfs": 5,
+  "total_pages": 5,
+  "total_chars": 5353,
+  "total_words": 931,
+  "total_duration_sec": 7.24,
+  "pdfs": [
+    {
+      "pdf_name": "bepc_maths_2022_sample.pdf",
+      "num_pages": 1,
+      "num_chars": 1180,
+      "num_words": 223,
+      "duration_sec": 1.62,
+      "output_txt": "/home/z/my-project/ExamBoost-Togo/data_pipeline/real_ocr_demo/extracted_text/bepc_maths_2022.txt",
+      "errors": []
+    },
+    {
+      "pdf_name": "bepc_francais_2021_sample.pdf",
+      "num_pages": 1,
+      "num_chars": 1117,
+      "num_words": 204,
+      "duration_sec": 1.44,
+      "output_txt": "/home/z/my-project/ExamBoost-Togo/data_pipeline/real_ocr_demo/extracted_text/bepc_francais_2021.txt",
+      "errors": []
+    },
+    {
+      "pdf_name": "bepc_sciences_2023_sample.pdf",
+      "num_pages": 1,
+      "num_chars": 1103,
+      "num_words": 195,
+      "duration_sec": 1.42,
+      "output_txt": "/home/z/my-project/ExamBoost-Togo/data_pipeline/real_ocr_demo/extracted_text/bepc_sciences_2023.txt",
+      "errors": []
+    },
+    {
+      "pdf_name": "bepc_svt_2020_sample.pdf",
+      "num_pages": 1,
+      "num_chars": 956,
+      "num_words": 152,
+      "duration_sec": 1.32,
+      "output_txt": "/home/z/my-project/ExamBoost-Togo/data_pipeline/real_ocr_demo/extracted_text/bepc_svt_2020.txt",
+      "errors": []
+    },
+    {
+      "pdf_name": "bepc_histoire_2022_sample.pdf",
+      "num_pages": 1,
+      "num_chars": 997,
+      "num_words": 157,
+      "duration_sec": 1.44,
+      "output_txt": "/home/z/my-project/ExamBoost-Togo/data_pipeline/real_ocr_demo/extracted_text/bepc_histoire_2022.txt",
+      "errors": []
+    }
+  ]
+}

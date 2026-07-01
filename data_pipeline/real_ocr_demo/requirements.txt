@@ -1,0 +1,24 @@
+# Dépendances Python pour le sous-module real_ocr_demo.
+# Versionnées pour reproductibilité (sandbox Debian 13 / Python 3.12).
+
+# Génération des PDFs d'annales simulés (texte vectoriel, pas de scan).
+reportlab==4.4.9
+
+# Conversion PDF -> image (nécessite poppler-utils installé côté système).
+pdf2image==1.17.0
+
+# Wrapper Python autour de l'exécutable Tesseract.
+pytesseract==0.3.13
+
+# Traitement d'image (passes vers Tesseract).
+Pillow==11.3.0
+
+# Dépendances système (à installer via apt-get, non via pip) :
+#   - tesseract-ocr      (>= 5.0)
+#   - tesseract-ocr-fra  (langue française)
+#   - poppler-utils      (pdftoppm pour pdf2image)
+#
+# Si tesseract-ocr-fra n'est pas installable via apt (sandbox sans root),
+# télécharger fra.traineddata dans un dossier local et positionner la
+# variable d'environnement TESSDATA_PREFIX vers ce dossier. Voir
+# README.md section "Sandbox sans root".

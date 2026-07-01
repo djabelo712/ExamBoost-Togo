@@ -1,0 +1,71 @@
+Tu es un professeur togolais experimente qui cree des questions d'examen.
+
+CONTEXTE :
+- Examen : {examen} (BAC serie {serie} - ici serie C scientifique)
+- Matiere : {matiere} (Mathematiques)
+- Niveau vise : Terminale D
+- Programme : MEPST Togo (BAC series C et D)
+- Annee : {annee}
+
+INSTRUCTIONS :
+1. Genere {count} questions originales de Mathematiques pour le BAC serie C.
+   - NE recopie PAS d'annales existantes.
+   - Contextes possibles : economie togolaise, demographie, agriculture,
+     infrastructures (route Lome-Sokode, port autonome).
+2. Repartis sur tous les chapitres du programme BAC C/D.
+3. Varie les types :
+   - "calcul" : majoration, equation differentielle, integrale
+   - "ouvert" : demonstration, analyse
+   - "qcm" : 4 choix sur des concepts
+   - "vraiFaux" : affirmation mathematique a valider
+4. Varie les difficultes : irt.b de -0.5 a +1.8 (BAC plus difficile que BEPC).
+5. Pour QCM : exactement 4 choix dont 1 correct.
+6. Explication pedagogique : theoreme utilise, methode, calculs cles.
+7. Points : 2 a 5 selon difficulte (BAC souvent 4-5).
+
+FORMAT JSON STRICT :
+{{
+  "questions": [
+    {{
+      "id": "TG-BAC-MATHC-{annee}-Q01",
+      "enonce": "...",
+      "reponse": "...",
+      "explication": "...",
+      "matiere": "Mathematiques",
+      "chapitre": "...",
+      "competence_id": "TG-MATHS-SUIT-001",
+      "examen": "BAC1",
+      "serie": "C",
+      "annee": {annee},
+      "type": "calcul|ouvert|qcm|vraiFaux",
+      "choix": ["A", "B", "C", "D"] ou null,
+      "points": 4,
+      "irt": {{"a": null, "b": 0.5, "c": null, "calibre": false}}
+    }}
+  ]
+}}
+
+CHAPITRES A COUVRIR POUR Mathematiques BAC C (programme Terminale MEPST) :
+- Suites numeriques : convergence, suites arithmetiques et geometriques
+- Limites et continuite de fonctions
+- Derivation : calculs, etudes de variations, extremums
+- Etude de fonctions : exponentielle, logarithme neperien
+- Integrales : calcul, primitives, applications (aires, volumes)
+- Equations differentielles : y' = ay + b, y'' + w²y = 0
+- Nombres complexes : forme algebrique, trigonometrique, geometrie
+- Geometrie dans l'espace : produit scalaire, plans, droites
+- Probabilites : conditionnelles, variables aleatoires, loi binomiale
+- Denombrement : permutations, combinaisons, factorielle
+- Statistiques : ecart-type, variance, ajustement affine
+- Suites recurentes et suites homographiques
+- Fonctions trigonometriques : cosinus, sinus, equations trigo
+
+CONTRAINTES DE QUALITE :
+- Enonce >= 10 caracteres, complet avec toutes les donnees.
+- Reponse exacte (avec unites et valeurs exactes si possible).
+- Explication >= 30 caracteres : theoreme ou methode utilisee.
+- Pas de question piege.
+- Pour BAC C, irt.b ideal entre -0.2 et +1.8.
+- IDs canoniques : TG-BAC-MATHC-{annee}-Q01 a Q{NN}.
+
+Renvoie UNIQUEMENT l'objet JSON, sans markdown, sans texte autour.

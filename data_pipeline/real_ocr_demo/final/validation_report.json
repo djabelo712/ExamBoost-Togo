@@ -1,0 +1,61 @@
+{
+  "total": 36,
+  "valid": 33,
+  "warning": 3,
+  "rejected": 0,
+  "by_matiere": {
+    "Mathématiques": 8,
+    "Français": 6,
+    "Sciences Physiques": 8,
+    "Sciences de la Vie et de la Terre": 7,
+    "Histoire-Géographie": 7
+  },
+  "by_status": {
+    "warning": 3,
+    "valid": 33
+  },
+  "by_rule": {
+    "ocr_noise": 4
+  },
+  "rejected_samples": [],
+  "warning_samples": [
+    {
+      "question_id": "TG-BEPC-MATH-2022-OCR-Q01",
+      "issues": [
+        {
+          "severity": "warning",
+          "rule": "ocr_noise",
+          "message": "bruit OCR suspecté : M au lieu de ℝ (symbole math perdu)"
+        },
+        {
+          "severity": "warning",
+          "rule": "ocr_noise",
+          "message": "bruit OCR suspecté : M au lieu de ℝ"
+        }
+      ],
+      "enonce_excerpt": "Résoudre dans M l'équation suivante: 3x + 7 = 22...."
+    },
+    {
+      "question_id": "TG-BEPC-MATH-2022-OCR-Q05",
+      "issues": [
+        {
+          "severity": "warning",
+          "rule": "ocr_noise",
+          "message": "bruit OCR suspecté : S au lieu de 5 (confusion OCR)"
+        }
+      ],
+      "enonce_excerpt": "Dans un repère orthonormé, soient les points A(1; 2) et B(S: 6). Calculer la distance AB...."
+    },
+    {
+      "question_id": "TG-BEPC-MATH-2022-OCR-Q06",
+      "issues": [
+        {
+          "severity": "warning",
+          "rule": "ocr_noise",
+          "message": "bruit OCR suspecté : x2 au lieu de x² (exposant perdu)"
+        }
+      ],
+      "enonce_excerpt": "Factoriser l'expression suivante: x2 - 9...."
+    }
+  ]
+}

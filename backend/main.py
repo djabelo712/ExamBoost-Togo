@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config import settings
 from database import init_db
-from routers import auth, predict, questions, sessions
+from routers import auth, predict, questions, sessions, sync
 
 
 @asynccontextmanager
@@ -86,3 +86,4 @@ app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(questions.router, prefix="/questions", tags=["questions"])
 app.include_router(sessions.router, prefix="/sessions", tags=["sessions"])
 app.include_router(predict.router, tags=["predict"])
+app.include_router(sync.router, prefix="/sync", tags=["sync"])

@@ -10,6 +10,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # ─── i18n FR/EN (165 cles) ────────────────────────────────────
+  flutter_localizations:
+    sdk: flutter
+  # intl: ^0.19.0 est deja declare plus bas (section Utilitaires)
+
   # ─── Navigation ───────────────────────────────────────────────
   go_router: ^13.2.0
 
@@ -63,6 +68,7 @@ dev_dependencies:
   mockito: ^5.4.4
 
 flutter:
+  generate: true                # Active la generation automatique de AppLocalizations
   uses-material-design: true
 
   assets:

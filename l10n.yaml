@@ -1,0 +1,9 @@
+# Configuration l10n — ExamBoost Togo
+# Voir lib/l10n/l10n_config.md pour les details de chaque champ.
+arb-dir: lib/l10n
+template-arb-file: app_fr.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+preferred-supported-locales: [fr, en]
+synthetic-package: true
+nullable-getter: true

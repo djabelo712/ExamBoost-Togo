@@ -1,0 +1,16 @@
+# Dependances specifiques au pipeline de generation LLM.
+# A installer EN PLUS de data_pipeline/requirements.txt.
+
+# LLM SDKs (3 providers pour la cross-validation 2/3)
+anthropic>=0.39.0       # Claude (claude-sonnet-4-6)
+openai>=1.35.10         # GPT-4o (deja dans requirements.txt parent)
+mistralai>=1.0.0        # Mistral Large
+
+# Deduplication / similarite (deja dans requirements.txt parent)
+simhash>=2.1.2
+
+# Validation JSON (deja dans requirements.txt parent)
+jsonschema>=4.23.0
+
+# Chargement .env (deja dans requirements.txt parent)
+python-dotenv>=1.0.1

@@ -1,0 +1,16 @@
+# Procfile - Alternative Railway deployment descriptor.
+#
+# Railway uses railway.json by default. This Procfile is provided as an
+# alternative for teams that prefer the Heroku-style format, or for other
+# PaaS providers that support Procfiles (Render, Scalingo, Fly.io).
+#
+# Usage (Railway): set "builder": "NIXPACKS" in railway.json instead of
+# "DOCKERFILE" to use this Procfile.
+
+# web process: the FastAPI app served by Uvicorn with 4 workers.
+web: uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 4
+
+# release process: runs once per deployment before the web process starts.
+# Seeds the database if empty (idempotent - safe to run on every deploy).
+# Comment out if you prefer to seed manually via scripts/seed_prod_db.sh.
+release: python scripts/seed_db.py || true

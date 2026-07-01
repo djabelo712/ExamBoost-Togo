@@ -1,0 +1,592 @@
+{
+  "rmse": 1.4662041375536392,
+  "mae": 1.1830828442098456,
+  "r2": 0.6633062009013121,
+  "cv_rmse": 1.5101570897555066,
+  "cv_rmse_std": 0.2842769258425512,
+  "best_params": {
+    "learning_rate": 0.01,
+    "max_depth": 3,
+    "n_estimators": 500,
+    "subsample": 0.8
+  },
+  "feature_importances": {
+    "pL_global": 0.6704609394073486,
+    "last_score_simulation": 0.05300576239824295,
+    "pL_francais": 0.04022185876965523,
+    "pL_maths": 0.03323688358068466,
+    "pL_sciences": 0.030877666547894478,
+    "days_to_exam": 0.027695834636688232,
+    "pL_anglais": 0.025336110964417458,
+    "simulations_completed": 0.020370572805404663,
+    "streak_days": 0.020024606958031654,
+    "pL_histoire": 0.016842981800436974,
+    "pL_svt": 0.01679137907922268,
+    "sessions_7j": 0.015541480854153633,
+    "avg_time_per_q": 0.015285221859812737,
+    "total_questions_answered": 0.014308726415038109
+  },
+  "n_samples": 5000,
+  "n_train": 4000,
+  "n_test": 1000,
+  "features": [
+    "pL_global",
+    "pL_maths",
+    "pL_francais",
+    "pL_sciences",
+    "pL_svt",
+    "pL_histoire",
+    "pL_anglais",
+    "sessions_7j",
+    "avg_time_per_q",
+    "simulations_completed",
+    "last_score_simulation",
+    "total_questions_answered",
+    "streak_days",
+    "days_to_exam"
+  ],
+  "target": "score_final",
+  "cv_results_summary": [
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 3,
+        "n_estimators": 100,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.7426512645110104,
+      "rank": 53
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 3,
+        "n_estimators": 100,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.7446750847058852,
+      "rank": 54
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 3,
+        "n_estimators": 200,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5673722496393454,
+      "rank": 17
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 3,
+        "n_estimators": 200,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.5715760128922136,
+      "rank": 18
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 3,
+        "n_estimators": 500,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5101570897555066,
+      "rank": 1
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 3,
+        "n_estimators": 500,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.5144610267629708,
+      "rank": 2
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 5,
+        "n_estimators": 100,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.7197914461470094,
+      "rank": 48
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 5,
+        "n_estimators": 100,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.7252941036889067,
+      "rank": 50
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 5,
+        "n_estimators": 200,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5519824947388108,
+      "rank": 12
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 5,
+        "n_estimators": 200,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.5619385506812553,
+      "rank": 15
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 5,
+        "n_estimators": 500,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5220870304913396,
+      "rank": 5
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 5,
+        "n_estimators": 500,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.533544133464557,
+      "rank": 8
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 7,
+        "n_estimators": 100,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.725279185941756,
+      "rank": 49
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 7,
+        "n_estimators": 100,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.7403066805694647,
+      "rank": 52
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 7,
+        "n_estimators": 200,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5616030144445452,
+      "rank": 14
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 7,
+        "n_estimators": 200,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.581398311294889,
+      "rank": 24
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 7,
+        "n_estimators": 500,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5390860116542835,
+      "rank": 9
+    },
+    {
+      "params": {
+        "learning_rate": 0.01,
+        "max_depth": 7,
+        "n_estimators": 500,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.5639062439065654,
+      "rank": 16
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 100,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5187331290758848,
+      "rank": 3
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 100,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.5198066893561333,
+      "rank": 4
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 200,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.533118892539304,
+      "rank": 7
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 200,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.5324725470115776,
+      "rank": 6
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 500,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5747219561512573,
+      "rank": 20
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 500,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.572170383006752,
+      "rank": 19
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 5,
+        "n_estimators": 100,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5508684239313282,
+      "rank": 11
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 5,
+        "n_estimators": 100,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.5503295987248258,
+      "rank": 10
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 5,
+        "n_estimators": 200,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5789096692197944,
+      "rank": 23
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 5,
+        "n_estimators": 200,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.5772734371379786,
+      "rank": 22
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 5,
+        "n_estimators": 500,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.6276703225172822,
+      "rank": 34
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 5,
+        "n_estimators": 500,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6163532381423735,
+      "rank": 31
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 7,
+        "n_estimators": 100,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5841935708283816,
+      "rank": 25
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 7,
+        "n_estimators": 100,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.5851217381716223,
+      "rank": 26
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 7,
+        "n_estimators": 200,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.6044716951849156,
+      "rank": 28
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 7,
+        "n_estimators": 200,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6030012440714916,
+      "rank": 27
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 7,
+        "n_estimators": 500,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.614004546323796,
+      "rank": 30
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 7,
+        "n_estimators": 500,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6169453984843303,
+      "rank": 32
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 3,
+        "n_estimators": 100,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.5771761608001449,
+      "rank": 21
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 3,
+        "n_estimators": 100,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.560283313644125,
+      "rank": 13
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 3,
+        "n_estimators": 200,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.6243321607681667,
+      "rank": 33
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 3,
+        "n_estimators": 200,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6053115349024838,
+      "rank": 29
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 3,
+        "n_estimators": 500,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.7058893639744406,
+      "rank": 46
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 3,
+        "n_estimators": 500,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6857675222247506,
+      "rank": 41
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 5,
+        "n_estimators": 100,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.6767602425412393,
+      "rank": 40
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 5,
+        "n_estimators": 100,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6416296400267845,
+      "rank": 35
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 5,
+        "n_estimators": 200,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.7100420019690885,
+      "rank": 47
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 5,
+        "n_estimators": 200,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6708107759404267,
+      "rank": 39
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 5,
+        "n_estimators": 500,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.726978885435784,
+      "rank": 51
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 5,
+        "n_estimators": 500,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6893174398843502,
+      "rank": 42
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 7,
+        "n_estimators": 100,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.6935196687662915,
+      "rank": 43
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 7,
+        "n_estimators": 100,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6578061776300708,
+      "rank": 36
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 7,
+        "n_estimators": 200,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.6964564516461755,
+      "rank": 44
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 7,
+        "n_estimators": 200,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6606457505159968,
+      "rank": 37
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 7,
+        "n_estimators": 500,
+        "subsample": 0.8
+      },
+      "mean_test_rmse": 1.6967314316915447,
+      "rank": 45
+    },
+    {
+      "params": {
+        "learning_rate": 0.3,
+        "max_depth": 7,
+        "n_estimators": 500,
+        "subsample": 1.0
+      },
+      "mean_test_rmse": 1.6609572164552397,
+      "rank": 38
+    }
+  ],
+  "training_date": "2026-07-01T09:29:43.893988"
+}

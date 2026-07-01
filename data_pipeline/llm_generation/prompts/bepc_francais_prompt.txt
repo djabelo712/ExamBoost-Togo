@@ -1,0 +1,71 @@
+Tu es un professeur togolais experimente qui cree des questions d'examen.
+
+CONTEXTE :
+- Examen : {examen} (BEPC)
+- Matiere : {matiere}
+- Niveau vise : 3e (Troisieme)
+- Programme : MEPST Togo
+- Annee : {annee}
+
+INSTRUCTIONS :
+1. Genere {count} questions originales de Francais pour le BEPC.
+   - NE recopie PAS d'annales existantes.
+   - Utilise des extraits d'oeuvres togolaises/africaines quand possible
+     (Edem Kodjo, Koffi Gbahi, Felix Couchoro, anon.) ou des textes neutres.
+2. Repartis sur tous les chapitres du programme.
+3. Varie les types :
+   - "ouvert" : question ouverte demandant une analyse ou une redaction courte
+   - "qcm" : 4 choix sur la grammaire/orthographe/conjugaison
+   - "vraiFaux" : affirmation a valider
+   - "redaction" : sujet de redaction (reponse = plan indicatif)
+4. Varie les difficultes : irt.b de -1.0 a +1.5.
+5. Contexte culturel togolais quand pertinent (festivals, proverbes, vie
+   sociale, traditions).
+6. Pour QCM : exactement 4 choix dont 1 correct.
+7. Explication pedagogique (regle de grammaire, methode de lecture, etc.).
+8. Points : 2 a 5 selon difficulte.
+
+FORMAT JSON STRICT :
+{{
+  "questions": [
+    {{
+      "id": "TG-BEPC-FR-{annee}-Q01",
+      "enonce": "...",
+      "reponse": "...",
+      "explication": "...",
+      "matiere": "Francais",
+      "chapitre": "...",
+      "competence_id": "TG-FR-GRAM-001",
+      "examen": "BEPC",
+      "serie": null,
+      "annee": {annee},
+      "type": "ouvert|qcm|vraiFaux|redaction",
+      "choix": ["A", "B", "C", "D"] ou null,
+      "points": 4,
+      "irt": {{"a": null, "b": 0.3, "c": null, "calibre": false}}
+    }}
+  ]
+}}
+
+CHAPITRES A COUVRIR POUR Francais BEPC (programme 3e MEPST Togo) :
+- Grammaire : les classes de mots, les fonctions, la phrase complexe
+- Conjugaison : temps simples et composes, mode conditionnel, subjonctif
+- Orthographe : accords (sujet-verbe, participes), homophones
+- Lexique : synonymes, antonymes, familles de mots, champs lexicaux
+- Figures de style : metaphores, comparaisons, personifications, hyperboles
+- Lecture : comprehension de texte, idee principale, tonalite
+- Expression ecrite : narratif, descriptif, argumentatif
+- Litterature africaine : themes, auteurs, oeuvres au programme
+- Le theatre : comedie, tragedie, didascalies
+- Le roman : personnage, intrigue, narrateur
+- La poesie : rythme, rimes, images
+- Le discours rapporte : direct, indirect
+
+CONTRAINTES DE QUALITE :
+- Enonce >= 10 caracteres.
+- Reponse complete (peut etre un plan pour la redaction).
+- Explication >= 30 caracteres : justification grammaticale ou litteraire.
+- Pas de question piege.
+- IDs canoniques : TG-BEPC-FR-{annee}-Q01 a Q{NN}.
+
+Renvoie UNIQUEMENT l'objet JSON, sans markdown, sans texte autour.

@@ -1,7 +1,8 @@
-# ─── ExamBoost Togo — Backend dependencies (scope reduit) ─────────────
-# Le minimum pour faire tourner l'API FastAPI + les 3 algos ML
-# (IRT 3PL, BKT, SM-2) + JWT + SQLite. La prediction du score utilise
-# une heuristique basee sur BKT (pas de XGBoost requis pour la demo).
+# ─── ExamBoost Togo — Backend dependencies ─────────────────────────────
+# Stack de base : FastAPI + SQLAlchemy 2.x + JWT + SQLite/PostgreSQL.
+# 3 algos ML : IRT 3PL, BKT, SM-2 (numpy seulement en demo ; XGBoost
+# optionnel pour la calibration avancee).
+# Hardening (vague 3, Agent AU) : Alembic + Redis + slowapi.
 
 fastapi==0.111.0
 uvicorn[standard]==0.30.1
@@ -13,6 +14,19 @@ passlib[bcrypt]==1.7.4
 python-multipart==0.0.9
 numpy==1.26.4
 
+# ─── Hardening backend (Agent AU — AU-alembic-redis) ───────────────────
+# Alembic : migrations de schema (alembic upgrade head).
+# Redis   : cache (questions, params IRT, BKT) + stockage rate limiter.
+# slowapi : rate limiting par IP avec fallback memoire si Redis absent.
+alembic==1.13.2
+redis==5.0.7
+slowapi==0.1.9
+
+# ─── Tests & HTTP client (dev seulement, mais pinnes pour reproductibilite) ──
+httpx==0.27.0
+pytest==8.3.1
+pytest-asyncio==0.23.7
+
 # ─── Dependances optionnelles (scripts ML avances, non requises pour /docs) ──
 # Pour activer XGBoost / calibration py-irt / tests, decommenter :
 # xgboost==2.1.0
@@ -20,5 +34,3 @@ numpy==1.26.4
 # pandas==2.2.2
 # joblib==1.4.2
 # py-irt==0.1.5
-# httpx==0.27.0
-# pytest==8.3.1

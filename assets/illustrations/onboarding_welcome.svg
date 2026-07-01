@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ExamBoost Togo — Onboarding étape 1 : Bienvenue
+     Élève togolais souriant tenant un smartphone avec logo ExamBoost,
+     bulles flottantes (livre, crayon, étoile) symbolisant l'apprentissage.
+     Palette : vert Togo #006837 + orange #D97700 + blanc.
+     Style : flat design moderne. ViewBox 0 0 400 300 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Bienvenue sur ExamBoost Togo">
+  <defs>
+    <!-- Dégradé de fond vert Togo -->
+    <linearGradient id="bgWelcome" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#006837"/>
+      <stop offset="100%" stop-color="#4CAF7A"/>
+    </linearGradient>
+    <linearGradient id="capWelcome" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFB74D"/>
+      <stop offset="100%" stop-color="#D97700"/>
+    </linearGradient>
+    <linearGradient id="phoneScreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E8F5ED"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fond dégradé vert -->
+  <rect x="0" y="0" width="400" height="300" fill="url(#bgWelcome)"/>
+
+  <!-- Cercles décoratifs d'ambiance -->
+  <circle cx="60" cy="60" r="40" fill="#FFFFFF" fill-opacity="0.06"/>
+  <circle cx="350" cy="240" r="55" fill="#FFFFFF" fill-opacity="0.05"/>
+  <circle cx="340" cy="50" r="20" fill="#FFB74D" fill-opacity="0.18"/>
+
+  <!-- Bulles flottantes (livre, crayon, étoile) -->
+  <!-- Bulle livre (haut gauche) -->
+  <g transform="translate(50, 70)">
+    <circle cx="0" cy="0" r="26" fill="#FFFFFF" fill-opacity="0.95"/>
+    <!-- Mini livre -->
+    <path d="M -12,-6 L 0,-9 L 12,-6 L 12,8 L 0,11 L -12,8 Z" fill="#006837"/>
+    <line x1="0" y1="-9" x2="0" y2="11" stroke="#FFFFFF" stroke-width="1.4"/>
+    <line x1="-8" y1="-2" x2="-3" y2="-3" stroke="#FFFFFF" stroke-width="0.9"/>
+    <line x1="-8" y1="2" x2="-3" y2="1" stroke="#FFFFFF" stroke-width="0.9"/>
+    <line x1="3" y1="-3" x2="8" y2="-2" stroke="#FFFFFF" stroke-width="0.9"/>
+    <line x1="3" y1="1" x2="8" y2="2" stroke="#FFFFFF" stroke-width="0.9"/>
+  </g>
+
+  <!-- Bulle crayon (haut droite) -->
+  <g transform="translate(330, 95) rotate(35)">
+    <circle cx="0" cy="0" r="24" fill="#FFFFFF" fill-opacity="0.95"/>
+    <!-- Crayon -->
+    <rect x="-3" y="-12" width="6" height="16" fill="#D97700"/>
+    <rect x="-3" y="-12" width="6" height="4" fill="#FFB74D"/>
+    <polygon points="-3,4 3,4 0,11" fill="#1A1A1A"/>
+    <polygon points="-2,9 2,9 0,11" fill="#4CAF7A"/>
+  </g>
+
+  <!-- Bulle étoile (haut centre) -->
+  <g transform="translate(200, 45)">
+    <circle cx="0" cy="0" r="22" fill="#FFB74D" fill-opacity="0.25"/>
+    <polygon points="0,-13 3.5,-4 13,-4 5.5,2 8.5,12 0,6 -8.5,12 -5.5,2 -13,-4 -3.5,-4"
+             fill="#FFB74D"/>
+  </g>
+
+  <!-- Petit point décoratif (particule) -->
+  <circle cx="110" cy="40" r="3" fill="#FFFFFF" fill-opacity="0.7"/>
+  <circle cx="290" cy="160" r="2.5" fill="#FFFFFF" fill-opacity="0.6"/>
+  <circle cx="80" cy="180" r="3.5" fill="#FFB74D" fill-opacity="0.7"/>
+
+  <!-- Personnage : élève togolais (silhouette simplifiée) -->
+  <!-- Ombre au sol -->
+  <ellipse cx="200" cy="270" rx="70" ry="7" fill="#004A26" fill-opacity="0.25"/>
+
+  <!-- Corps (tunique stylisée) -->
+  <path d="M 158,180 Q 160,160 175,155 L 225,155 Q 240,160 242,180 L 248,255 Q 200,265 152,255 Z"
+        fill="#FFFFFF"/>
+  <!-- Col en V de la tunique -->
+  <path d="M 188,155 L 200,175 L 212,155 Z" fill="#006837"/>
+  <!-- Bande de couleur (style dashiki simplifié) -->
+  <rect x="175" y="180" width="50" height="6" fill="#D97700"/>
+  <rect x="175" y="200" width="50" height="3" fill="#D97700" fill-opacity="0.5"/>
+
+  <!-- Bras gauche (tient smartphone) -->
+  <path d="M 165,180 Q 145,200 150,225" stroke="#FFFFFF" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <!-- Bras droit (levé, accueillant) -->
+  <path d="M 235,180 Q 260,170 270,150" stroke="#FFFFFF" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <!-- Main droite ouverte -->
+  <circle cx="272" cy="148" r="9" fill="#8D5524"/>
+
+  <!-- Cou -->
+  <rect x="194" y="135" width="12" height="22" fill="#8D5524"/>
+
+  <!-- Tête (visage) -->
+  <circle cx="200" cy="120" r="28" fill="#A0703D"/>
+  <!-- Cheveux -->
+  <path d="M 174,118 Q 172,98 200,94 Q 228,98 226,118 Q 224,108 200,104 Q 176,108 174,118 Z"
+        fill="#1A1A1A"/>
+  <!-- Yeux -->
+  <circle cx="190" cy="120" r="2" fill="#1A1A1A"/>
+  <circle cx="210" cy="120" r="2" fill="#1A1A1A"/>
+  <!-- Sourire -->
+  <path d="M 192,130 Q 200,136 208,130" stroke="#1A1A1A" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <!-- Joues -->
+  <circle cx="184" cy="128" r="2.5" fill="#D97700" fill-opacity="0.3"/>
+  <circle cx="216" cy="128" r="2.5" fill="#D97700" fill-opacity="0.3"/>
+
+  <!-- Smartphone tenu dans la main gauche -->
+  <g transform="translate(135, 200) rotate(-12)">
+    <rect x="-22" y="-38" width="44" height="78" rx="6" fill="#004A26"/>
+    <rect x="-19" y="-34" width="38" height="70" rx="3" fill="url(#phoneScreen)"/>
+    <!-- Mini logo ExamBoost sur l'écran -->
+    <circle cx="0" cy="-12" r="10" fill="#006837"/>
+    <polygon points="0,-20 7,-16 0,-12 -7,-16" fill="#FFB74D"/>
+    <path d="M -7,-4 L 0,-6 L 7,-4 L 7,6 L 0,8 L -7,6 Z" fill="#FFFFFF"/>
+    <line x1="0" y1="-6" x2="0" y2="8" stroke="#006837" stroke-width="0.7"/>
+    <text x="0" y="22" font-family="Outfit, Inter, Arial, sans-serif" font-size="5" font-weight="700" fill="#006837" text-anchor="middle">EB</text>
+    <!-- Barre de chargement stylisée -->
+    <rect x="-12" y="28" width="24" height="2" rx="1" fill="#E0E0E0"/>
+    <rect x="-12" y="28" width="16" height="2" rx="1" fill="#D97700"/>
+  </g>
+</svg>

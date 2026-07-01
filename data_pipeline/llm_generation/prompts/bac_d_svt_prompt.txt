@@ -1,0 +1,99 @@
+Tu es un professeur togolais experimente qui cree des questions d'examen.
+
+CONTEXTE :
+- Examen : {examen} (BAC serie {serie} - ici serie D)
+- Matiere : {matiere} (Sciences de la Vie et de la Terre - SVT)
+- Niveau vise : Terminale D
+- Programme : MEPST Togo
+- Annee : {annee}
+
+INSTRUCTIONS :
+1. Genere {count} questions originales de SVT pour le BAC serie D.
+   - NE recopie PAS d'annales existantes.
+   - Contextes togolais : sante publique au Togo (paludisme, drépanocytose,
+     VIH/SIDA, bilharziose), agriculture (coton, cafe, cacao), environnement
+     (deboisement, pollution du lac Togo, desertification).
+2. Repartis sur tous les chapitres du programme BAC D.
+3. Varie les types :
+   - "ouvert" : analyse d'un phenomene biologique
+   - "qcm" : 4 choix sur des concepts
+   - "vraiFaux" : affirmation a valider
+   - "calcul" : rare en SVT (ex : frequence allele, ratios mendeliens)
+4. Varie les difficultes : irt.b de -0.5 a +1.8.
+5. Pour QCM : exactement 4 choix dont 1 correct.
+6. Explication pedagogique : mecanisme, loi biologique, raisonnement.
+7. Points : 2 a 5 selon difficulte.
+
+FORMAT JSON STRICT :
+{{
+  "questions": [
+    {{
+      "id": "TG-BAC-SVT-{annee}-Q01",
+      "enonce": "...",
+      "reponse": "...",
+      "explication": "...",
+      "matiere": "Sciences de la Vie et de la Terre",
+      "chapitre": "...",
+      "competence_id": "TG-SVT-GENE-001",
+      "examen": "BAC1",
+      "serie": "D",
+      "annee": {annee},
+      "type": "ouvert|qcm|vraiFaux|calcul",
+      "choix": ["A", "B", "C", "D"] ou null,
+      "points": 4,
+      "irt": {{"a": null, "b": 0.5, "c": null, "calibre": false}}
+    }}
+  ]
+}}
+
+CHAPITRES A COUVRIR POUR SVT BAC D (programme Terminale MEPST Togo) :
+GENETIQUE :
+- DNA, ARN, code genetique
+- Transmission des caracteres : lois de Mendel
+- Mutations et variabilite genetique
+- Genetique humaine : arbres genealogiques, maladies hereditaires
+- Diversite genetique et evolution
+
+IMMUNOLOGIE :
+- Systeme immunitaire : innate et adaptatif
+- Anticorps et antigenes
+- Vaccination et immunite acquise
+- SIDA et defaillance immunitaire
+- Allergies et maladies auto-immunes
+
+NEUROPHYSIOLOGIE :
+- Neurone et influx nerveux
+- Synapse et neurotransmetteurs
+- Systeme nerveux central et peripherique
+- Reflexes et actes volontaires
+- Reception sensorielle (oeil, oreille)
+
+REPRODUCTION :
+- Hormones sexuelles et cycles
+- Fecondation et grossesse
+- Contraception et IST
+- Procreation medicalement assistee
+
+ECOLOGIE :
+- Ecosystemes et biomes
+- Cycles biogeochimiques (carbone, azote, eau)
+- Biodiversite et conservation
+- Pollution et impacts environnementaux
+- Changement climatique et consequences
+
+GEOLOGIE :
+- Structure interne de la Terre
+- Tectonique des plaques
+- Volcans et seismes
+- Erosion et sedimentation
+- Ressources naturelles (eau, minerais)
+
+CONTRAINTES DE QUALITE :
+- Enonce >= 10 caracteres.
+- Reponse precise, scientifiquement exacte.
+- Explication >= 30 caracteres : mecanisme biologique ou raisonnement.
+- Pas de question piege.
+- Pour BAC D, irt.b ideal entre -0.2 et +1.8.
+- IDs canoniques : TG-BAC-SVT-{annee}-Q01 a Q{NN}.
+
+Renvoie UNIQUEMENT l'objet JSON, sans markdown, sans texte autour.

@@ -1,0 +1,40 @@
+=== PAGE 1 ===
+
+RÉPUBLIQUE TOGOLAISE
+
+Travail - Liberté - Patrie
+
+MINISTÈRE DE L'ENSEIGNEMENT SECONDAIRE
+
+Direction des Examens et Concours
+BREVET D'ÉTUDES DU PREMIER CYCLE (BEPC)
+
+Épreuve : Mathématiques
+Session : 2022
+
+Durée : 2 heures — Coefficient : 4
+
+L'usage de la calculatrice non programmable est autorisé.
+
+Exercice 1 (4 points)
+
+1. Résoudre dans M l'équation suivante : 3x + 7 = 22.
+2. Résoudre le système suivant : { 2x+y=7;x-y=2 1}.
+Exercice 2 (4 points)
+1. Calculer l'aire d'un triangle rectangle dont les côtés de l'angle droit mesurent 6 cm et 8 cm.
+
+2. Un commerçant achète un article 15 000 FCFA et le revend avec un bénéfice de 20 %. Quel
+est son prix de vente ?
+
+Exercice 3 (4 points)
+1. Dans un repère orthonormé, soient les points A(1 ; 2) et B(S : 6). Calculer la distance AB.
+2. Factoriser l'expression suivante : x2 - 9.
+
+Exercice 4 (8 points)
+
+Le volume V d'un cylindre de révolution est donné par la formule V = 7 x r2 x h, où r est le rayon de
+la base et h la hauteur.
+
+1. Calculer le volume d'un cylindre de rayon 3 cm et de hauteur 10 cm. On prendra x = 3,14.
+
+2. On double le rayon en gardant la même hauteur. Par combien le volume est-il multiplié ?

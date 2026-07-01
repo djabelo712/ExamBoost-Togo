@@ -20,12 +20,13 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
               // Header
               Row(
                 children: [
@@ -73,7 +74,11 @@ class HomeScreen extends StatelessWidget {
                 title: 'Révision Adaptative',
                 subtitle: 'Questions BEPC et BAC par matière',
                 color: AppColors.primary,
-                onTap: () => context.go('${AppRoutes.revision}/Mathématiques'),
+                // Bug fix : encodage URL de l'accent pour éviter le crash
+                // "invalid arguments" sur /revision/Mathématiques.
+                onTap: () => context.go(
+                  '${AppRoutes.revision}/${Uri.encodeComponent('Mathématiques')}',
+                ),
               ),
               const SizedBox(height: 12),
               _ActionCard(
@@ -94,8 +99,25 @@ class HomeScreen extends StatelessWidget {
                 color: AppColors.info,
                 onTap: () => context.go(AppRoutes.dashboard),
               ),
+              const SizedBox(height: 12),
+              _ActionCard(
+                icon: Icons.groups,
+                title: 'Communauté',
+                subtitle: 'Classements, défis hebdo et entraide entre élèves',
+                color: AppColors.accent,
+                onTap: () => context.go(AppRoutes.community),
+              ),
+              const SizedBox(height: 12),
+              _ActionCard(
+                icon: Icons.settings,
+                title: 'Paramètres',
+                subtitle: 'Langue, thème, compte, données et notifications',
+                color: AppColors.textSecondary,
+                onTap: () => context.go(AppRoutes.settings),
+              ),
             ],
           ),
+        ),
         ),
       ),
     );

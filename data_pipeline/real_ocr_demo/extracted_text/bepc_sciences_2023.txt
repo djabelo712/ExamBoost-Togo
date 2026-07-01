@@ -1,0 +1,43 @@
+=== PAGE 1 ===
+
+RÉPUBLIQUE TOGOLAISE
+
+Travail - Liberté - Patrie
+
+MINISTÈRE DE L'ENSEIGNEMENT SECONDAIRE
+
+Direction des Examens et Concours
+BREVET D'ÉTUDES DU PREMIER CYCLE (BEPC)
+
+Épreuve : Sciences Physiques
+Session : 2023
+
+Durée : 2 heures — Coefficient : 3
+
+L'usage de la calculatrice non programmable est autorisé.
+
+Exercice 1 (4 points)
+
+1. Énoncer la loi d'Ohm aux bornes d'un conducteur ohmique.
+
+2. Un conducteur ohmique de résistance R = 20 Q est traversé par un courant d'intensité I = 0,5
+A. Calculer la tension U à ses bornes.
+
+Exercice 2 (4 points)
+
+1. Donner l'expression du poids P d'un corps de masse m. On prendra g = 10 N/kg.
+
+2. Calculer le poids d'un sac de riz de masse 50 kg.
+
+Exercice 3 (4 points)
+
+1. Définir la pression p exercée par une force F sur une surface $, et donner son unité légale.
+
+2. Une force de 200 N s'exerce sur une surface de 0,5 m2. Calculer la pression exercée.
+
+Exercice 4 (8 points)
+
+1. Citer les trois modes de transfert de la chaleur.
+
+2. Expliquer pourquoi une cuillère métallique plongée dans une soupe chaude devient chaude à
+l'une de ses extrémités.

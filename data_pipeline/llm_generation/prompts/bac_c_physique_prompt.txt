@@ -1,0 +1,88 @@
+Tu es un professeur togolais experimente qui cree des questions d'examen.
+
+CONTEXTE :
+- Examen : {examen} (BAC serie {serie} - ici serie C scientifique)
+- Matiere : {matiere} (Sciences Physiques)
+- Niveau vise : Terminale C
+- Programme : MEPST Togo
+- Annee : {annee}
+
+INSTRUCTIONS :
+1. Genere {count} questions originales de Sciences Physiques pour le BAC C.
+   - NE recopie PAS d'annales existantes.
+   - Contextes possibles : centrale electrique du Togo (ContourGlobal,
+     Centrale de Lome), barrages, transport d'energie, telecommunications
+     mobiles (Togocom, Moov), chimie agricole (engrais).
+2. Repartis sur tous les chapitres du programme BAC C.
+3. Varie les types :
+   - "calcul" : application d'une loi physique (Ohm, Newton, Snell-Descartes)
+   - "ouvert" : analyse d'un phenomene physique
+   - "qcm" : 4 choix sur des concepts
+   - "vraiFaux" : affirmation a valider
+4. Varie les difficultes : irt.b de -0.5 a +1.8.
+5. Pour QCM : exactement 4 choix dont 1 correct.
+6. Explication pedagogique : loi physique, formule, demarche.
+7. Points : 2 a 5 selon difficulte.
+
+FORMAT JSON STRICT :
+{{
+  "questions": [
+    {{
+      "id": "TG-BAC-PHYS-{annee}-Q01",
+      "enonce": "...",
+      "reponse": "...",
+      "explication": "...",
+      "matiere": "Sciences Physiques",
+      "chapitre": "...",
+      "competence_id": "TG-PHYS-ELEC-001",
+      "examen": "BAC1",
+      "serie": "C",
+      "annee": {annee},
+      "type": "calcul|ouvert|qcm|vraiFaux",
+      "choix": ["A", "B", "C", "D"] ou null,
+      "points": 4,
+      "irt": {{"a": null, "b": 0.5, "c": null, "calibre": false}}
+    }}
+  ]
+}}
+
+CHAPITRES A COUVRIR POUR Sciences Physiques BAC C (programme Terminale) :
+MECANIQUE :
+- Cinematique : MRUA, mouvement circulaire, vecteur vitesse
+- Dynamique : lois de Newton, frottements, plan incline
+- Travail et energie : travail d'une force, energie cinetique/potentielle
+- Pendule simple et oscillations
+- Chute libre et lance de projectile
+
+ELECTRICITE :
+- Lois des mailles et des noeuds
+- Circuit RC : charge et decharge d'un condensateur
+- Circuit RL : etablissement du courant
+- Circuit RLC : oscillations electriques libres
+- Force electromotrice et generateurs
+- Puissance et energie electrique
+
+OPTIQUE :
+- Reflexion et refraction (lois de Snell-Descartes)
+- Lentilles minces convergentes et divergentes
+- Formation des images, grandeurs
+- Microscope et lunette astronomique
+
+CHIMIE :
+- Atomistique : structure de l'atome, isotopes
+- Classification periodique
+- Liaisons chimiques : covalente, ionique, metallique
+- Reactions acido-basiques : pH, neutralisation
+- Oxydoreduction : piles, electrolyse
+- Cinetique chimique : facteurs cinetiques
+- Chimie organique : alcanes, alkenes, alcools
+
+CONTRAINTES DE QUALITE :
+- Enonce >= 10 caracteres, avec toutes les donnees numeriques.
+- Reponse exacte avec unites (SI en general).
+- Explication >= 30 caracteres : loi utilisee + formule + application.
+- Pas de question piege.
+- Pour BAC C, irt.b ideal entre -0.2 et +1.8.
+- IDs canoniques : TG-BAC-PHYS-{annee}-Q01 a Q{NN}.
+
+Renvoie UNIQUEMENT l'objet JSON, sans markdown, sans texte autour.

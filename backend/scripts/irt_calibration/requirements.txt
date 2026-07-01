@@ -1,0 +1,24 @@
+# ─── ExamBoost Togo — Calibration IRT 3PL (pipeline standalone) ──────────────
+# Compatible Python 3.11+. Le pipeline fonctionne SANS py-irt grace au
+# fallback numpy MLE, mais py-irt est recommande si une 3PL native est
+# disponible (nouvelle API py_irt.training.IrtModelTraining).
+#
+# Installation :
+#     pip install -r requirements.txt
+#
+# Versions epinglees pour reproductibilite. Sur l'environnement de dev
+# (Python 3.12, numpy 2.x), ces versions sont retro-compatibles.
+
+# py-irt : calibration 3PL native si l'API training.IrtModelTraining existe.
+# NOTE : py-irt 0.1.1 (PyPI actuel) ne fournit que 1PL/2PL via Pyro. Le script
+# calibrate_irt.py detecte automatiquement la presence de l'API 3PL et bascule
+# sur le fallback numpy MLE si necessaire. On laisse la contrainte souple.
+py-irt>=0.1.1
+
+# Calcul numerique + dataframes
+numpy>=1.26.4
+pandas>=2.2.2
+scipy>=1.13.0
+
+# Graphiques ICC + distributions
+matplotlib>=3.9.0

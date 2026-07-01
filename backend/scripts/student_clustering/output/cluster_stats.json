@@ -1,0 +1,126 @@
+{
+  "0": {
+    "size": 433,
+    "pct": 21.65,
+    "mean_pL": {
+      "pL_maths": 0.3055,
+      "pL_francais": 0.3355,
+      "pL_sciences": 0.2834,
+      "pL_svt": 0.2653,
+      "pL_histoire": 0.2986,
+      "pL_anglais": 0.3062
+    },
+    "std_pL": {
+      "pL_maths": 0.0859,
+      "pL_francais": 0.102,
+      "pL_sciences": 0.0686,
+      "pL_svt": 0.0644,
+      "pL_histoire": 0.079,
+      "pL_anglais": 0.0825
+    },
+    "archetype_distribution": {
+      "En_difficulte": 400,
+      "Mixte_atypique": 33
+    }
+  },
+  "1": {
+    "size": 424,
+    "pct": 21.2,
+    "mean_pL": {
+      "pL_maths": 0.6853,
+      "pL_francais": 0.7027,
+      "pL_sciences": 0.6626,
+      "pL_svt": 0.6488,
+      "pL_histoire": 0.6714,
+      "pL_anglais": 0.6669
+    },
+    "std_pL": {
+      "pL_maths": 0.0648,
+      "pL_francais": 0.0662,
+      "pL_sciences": 0.0682,
+      "pL_svt": 0.0662,
+      "pL_histoire": 0.0683,
+      "pL_anglais": 0.066
+    },
+    "archetype_distribution": {
+      "Polyvalent": 398,
+      "Scientifique": 18,
+      "Mixte_atypique": 5,
+      "Litteraire": 3
+    }
+  },
+  "2": {
+    "size": 425,
+    "pct": 21.25,
+    "mean_pL": {
+      "pL_maths": 0.4972,
+      "pL_francais": 0.7897,
+      "pL_sciences": 0.4442,
+      "pL_svt": 0.4733,
+      "pL_histoire": 0.7733,
+      "pL_anglais": 0.7411
+    },
+    "std_pL": {
+      "pL_maths": 0.0846,
+      "pL_francais": 0.1014,
+      "pL_sciences": 0.0824,
+      "pL_svt": 0.0858,
+      "pL_histoire": 0.1024,
+      "pL_anglais": 0.1028
+    },
+    "archetype_distribution": {
+      "Litteraire": 397,
+      "Mixte_atypique": 27,
+      "Polyvalent": 1
+    }
+  },
+  "3": {
+    "size": 218,
+    "pct": 10.9,
+    "mean_pL": {
+      "pL_maths": 0.4558,
+      "pL_francais": 0.4295,
+      "pL_sciences": 0.4601,
+      "pL_svt": 0.5443,
+      "pL_histoire": 0.4556,
+      "pL_anglais": 0.4552
+    },
+    "std_pL": {
+      "pL_maths": 0.2195,
+      "pL_francais": 0.1904,
+      "pL_sciences": 0.2044,
+      "pL_svt": 0.2285,
+      "pL_histoire": 0.1962,
+      "pL_anglais": 0.2045
+    },
+    "archetype_distribution": {
+      "Mixte_atypique": 216,
+      "Scientifique": 2
+    }
+  },
+  "4": {
+    "size": 500,
+    "pct": 25.0,
+    "mean_pL": {
+      "pL_maths": 0.7775,
+      "pL_francais": 0.512,
+      "pL_sciences": 0.7508,
+      "pL_svt": 0.7099,
+      "pL_histoire": 0.4651,
+      "pL_anglais": 0.5402
+    },
+    "std_pL": {
+      "pL_maths": 0.0886,
+      "pL_francais": 0.0806,
+      "pL_sciences": 0.0847,
+      "pL_svt": 0.0938,
+      "pL_histoire": 0.0809,
+      "pL_anglais": 0.0892
+    },
+    "archetype_distribution": {
+      "Scientifique": 480,
+      "Mixte_atypique": 19,
+      "Polyvalent": 1
+    }
+  }
+}
