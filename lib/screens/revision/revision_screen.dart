@@ -3,6 +3,7 @@
 // Branché sur QuestionService (chargement), SrsService (SM-2) et BKT (AppUser)
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +11,7 @@ import '../../models/question.dart';
 import '../../models/user.dart';
 import '../../services/question_service.dart';
 import '../../services/srs_service.dart';
+import '../../theme/adaptive_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/buttons/srs_buttons.dart';
 import '../../widgets/cards/question_card.dart';
@@ -218,7 +220,6 @@ class _RevisionScreenState extends State<RevisionScreen>
     final question = _questions[_currentIndex];
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: _buildAppBar(),
       body: Column(
         children: [
@@ -269,8 +270,9 @@ class _RevisionScreenState extends State<RevisionScreen>
   // ─── AppBar & progression ─────────────────────────────────────
 
   AppBar _buildAppBar() {
+    final l10n = AppLocalizations.of(context)!;
     return AppBar(
-      title: Text(widget.matiere),
+      title: Text(_matiereLabel(context, widget.matiere)),
       leading: IconButton(
         icon: const Icon(Icons.close),
         onPressed: () => _showQuitDialog(),
@@ -282,7 +284,7 @@ class _RevisionScreenState extends State<RevisionScreen>
             child: Text(
               '${_currentIndex + 1} / ${_questions.length}',
               style: AppTextStyles.label.copyWith(
-                color: AppColors.textSecondary,
+                color: AdaptiveColors.textSecondary(context),
                 fontSize: 14,
               ),
             ),
@@ -298,7 +300,7 @@ class _RevisionScreenState extends State<RevisionScreen>
     return LinearProgressIndicator(
       value: progress,
       minHeight: 4,
-      backgroundColor: AppColors.primarySurface,
+      backgroundColor: AdaptiveColors.primarySurface(context),
       valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
     );
   }
@@ -308,7 +310,7 @@ class _RevisionScreenState extends State<RevisionScreen>
   Widget _buildQuestionMeta(Question question) {
     return Row(
       children: [
-        _buildChip(label: question.matiere, color: AppColors.primary),
+        _buildChip(label: _matiereLabel(context, question.matiere), color: AppColors.primary),
         const SizedBox(width: 8),
         _buildChip(
           label: _difficulteLabel(question.difficulte),
@@ -318,7 +320,7 @@ class _RevisionScreenState extends State<RevisionScreen>
           const SizedBox(width: 8),
           _buildChip(
             label: question.annee.toString(),
-            color: AppColors.textSecondary,
+            color: AdaptiveColors.textSecondary(context),
           ),
         ],
       ],
@@ -326,15 +328,17 @@ class _RevisionScreenState extends State<RevisionScreen>
   }
 
   Widget _buildChip({required String label, required Color color}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        label,
-        style: AppTextStyles.label.copyWith(color: color),
+    return Builder(
+      builder: (context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withOpacity(context.isDark ? 0.20 : 0.12),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: AppTextStyles.label.copyWith(color: color),
+        ),
       ),
     );
   }
@@ -342,12 +346,13 @@ class _RevisionScreenState extends State<RevisionScreen>
   // ─── Boutons d'action ─────────────────────────────────────────
 
   Widget _buildVoirReponseButton() {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: _showReponse,
         icon: const Icon(Icons.visibility_outlined, size: 20),
-        label: const Text('Voir la réponse'),
+        label: Text(l10n.revisionSeeAnswer),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -357,14 +362,15 @@ class _RevisionScreenState extends State<RevisionScreen>
   }
 
   Widget _buildPasserButton() {
+    final l10n = AppLocalizations.of(context)!;
     return Align(
       alignment: Alignment.center,
       child: TextButton.icon(
         onPressed: _passerQuestion,
         icon: const Icon(Icons.skip_next, size: 18),
-        label: const Text('Passer la question'),
+        label: Text(l10n.revisionSkip),
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.textSecondary,
+          foregroundColor: AdaptiveColors.textSecondary(context),
           textStyle: AppTextStyles.label.copyWith(fontSize: 13),
         ),
       ),
@@ -374,18 +380,19 @@ class _RevisionScreenState extends State<RevisionScreen>
   // ─── États spéciaux : loading / error / empty ─────────────────
 
   Widget _buildLoadingScreen() {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(title: Text(widget.matiere)),
-      body: const Center(
+      appBar: AppBar(title: Text(_matiereLabel(context, widget.matiere))),
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
             Text(
-              'Chargement des questions...',
-              style: AppTextStyles.bodySmall,
+              l10n.revisionLoading,
+              style: AppTextStyles.bodySmall
+                  .copyWith(color: AdaptiveColors.textSecondary(context)),
             ),
           ],
         ),
@@ -394,9 +401,9 @@ class _RevisionScreenState extends State<RevisionScreen>
   }
 
   Widget _buildErrorScreen() {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(title: Text(widget.matiere)),
+      appBar: AppBar(title: Text(_matiereLabel(context, widget.matiere))),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -406,14 +413,16 @@ class _RevisionScreenState extends State<RevisionScreen>
               const Icon(Icons.error_outline, size: 64, color: AppColors.error),
               const SizedBox(height: 16),
               Text(
-                'Une erreur est survenue',
-                style: AppTextStyles.h2,
+                l10n.commonError,
+                style: AppTextStyles.h2
+                    .copyWith(color: AdaptiveColors.textPrimary(context)),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                _loadingError ?? 'Erreur inconnue',
-                style: AppTextStyles.bodySmall,
+                _loadingError ?? l10n.commonError,
+                style: AppTextStyles.bodySmall
+                    .copyWith(color: AdaptiveColors.textSecondary(context)),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
@@ -426,7 +435,7 @@ class _RevisionScreenState extends State<RevisionScreen>
                   _chargerQuestions();
                 },
                 icon: const Icon(Icons.refresh),
-                label: const Text('Réessayer'),
+                label: Text(l10n.commonRetry),
               ),
             ],
           ),
@@ -436,32 +445,32 @@ class _RevisionScreenState extends State<RevisionScreen>
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(title: Text(widget.matiere)),
+      appBar: AppBar(title: Text(_matiereLabel(context, widget.matiere))),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.inbox,
                 size: 80,
-                color: AppColors.textSecondary,
+                color: AdaptiveColors.textSecondary(context),
               ),
               const SizedBox(height: 24),
               Text(
-                'Aucune question disponible pour ${widget.matiere}',
-                style: AppTextStyles.h2,
+                l10n.revisionNoQuestions(widget.matiere),
+                style: AppTextStyles.h2
+                    .copyWith(color: AdaptiveColors.textPrimary(context)),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                'Pas encore de questions pour cette matière. '
-                'Revenez bientôt réviser !',
+                l10n.revisionNoQuestionsHint,
                 style: AppTextStyles.body.copyWith(
-                  color: AppColors.textSecondary,
+                  color: AdaptiveColors.textSecondary(context),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -469,7 +478,7 @@ class _RevisionScreenState extends State<RevisionScreen>
               ElevatedButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.arrow_back),
-                label: const Text('Retour'),
+                label: Text(l10n.revisionBack),
               ),
             ],
           ),
@@ -481,6 +490,7 @@ class _RevisionScreenState extends State<RevisionScreen>
   // ─── Écran de fin de session ──────────────────────────────────
 
   Widget _buildSessionSummary() {
+    final l10n = AppLocalizations.of(context)!;
     final taux = _sessionsTotales > 0
         ? (_sessionsCorrectes / _sessionsTotales * 100).round()
         : 0;
@@ -501,7 +511,6 @@ class _RevisionScreenState extends State<RevisionScreen>
     final messageMotivant = _messageMotivant(taux);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -513,16 +522,16 @@ class _RevisionScreenState extends State<RevisionScreen>
               const Icon(Icons.emoji_events, size: 80, color: AppColors.accent),
               const SizedBox(height: 24),
               Text(
-                'Session terminée !',
-                style: AppTextStyles.h1,
+                l10n.revisionSessionEnded,
+                style: AppTextStyles.h1
+                    .copyWith(color: AdaptiveColors.textPrimary(context)),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                'Tu as répondu correctement à $_sessionsCorrectes questions '
-                'sur $_sessionsTotales.',
+                l10n.revisionCorrectAnswers(_sessionsCorrectes, _sessionsTotales),
                 style: AppTextStyles.body.copyWith(
-                  color: AppColors.textSecondary,
+                  color: AdaptiveColors.textSecondary(context),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -554,7 +563,7 @@ class _RevisionScreenState extends State<RevisionScreen>
               _buildStatRow(
                 icon: Icons.event_repeat,
                 iconColor: AppColors.accent,
-                label: 'Cartes à revoir demain',
+                label: l10n.revisionDueTomorrow,
                 value: '$aRevoirDemain',
               ),
               const SizedBox(height: 12),
@@ -566,7 +575,7 @@ class _RevisionScreenState extends State<RevisionScreen>
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primarySurface,
+                  color: AdaptiveColors.primarySurface(context),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -582,7 +591,7 @@ class _RevisionScreenState extends State<RevisionScreen>
                         messageMotivant,
                         style: AppTextStyles.body.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
+                          color: AdaptiveColors.primary(context),
                         ),
                       ),
                     ),
@@ -594,7 +603,7 @@ class _RevisionScreenState extends State<RevisionScreen>
               // Boutons de fin
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Retour au tableau de bord'),
+                child: Text(l10n.revisionBackToDashboard),
               ),
               const SizedBox(height: 12),
               TextButton(
@@ -610,7 +619,7 @@ class _RevisionScreenState extends State<RevisionScreen>
                   });
                   _flipController.reset();
                 },
-                child: const Text('Recommencer une session'),
+                child: Text(l10n.revisionRestartSession),
               ),
               const SizedBox(height: 24),
             ],
@@ -629,15 +638,18 @@ class _RevisionScreenState extends State<RevisionScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AdaptiveColors.surface(context),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.divider),
+        border: Border.all(color: AdaptiveColors.divider(context)),
       ),
       child: Row(
         children: [
           Icon(icon, color: iconColor, size: 24),
           const SizedBox(width: 12),
-          Expanded(child: Text(label, style: AppTextStyles.body)),
+          Expanded(
+              child: Text(label,
+                  style: AppTextStyles.body
+                      .copyWith(color: AdaptiveColors.textPrimary(context)))),
           Text(
             value,
             style: AppTextStyles.h3.copyWith(color: iconColor),
@@ -650,17 +662,16 @@ class _RevisionScreenState extends State<RevisionScreen>
   // ─── Dialog quitter la session ────────────────────────────────
 
   void _showQuitDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Quitter la session ?'),
-        content: const Text(
-          'Ta progression dans cette session ne sera pas sauvegardée.',
-        ),
+        title: Text(l10n.revisionQuitTitle),
+        content: Text(l10n.revisionQuitMsg),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Continuer'),
+            child: Text(l10n.commonContinue),
           ),
           ElevatedButton(
             onPressed: () {
@@ -668,7 +679,7 @@ class _RevisionScreenState extends State<RevisionScreen>
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('Quitter'),
+            child: Text(l10n.commonQuit),
           ),
         ],
       ),
@@ -686,27 +697,28 @@ class _RevisionScreenState extends State<RevisionScreen>
   /// Message motivant personnalisé selon la performance.
   /// Inclut toujours la phrase clé "Tu progresses en X ! Continue !"
   String _messageMotivant(int taux) {
-    String prefix;
+    final l10n = AppLocalizations.of(context)!;
+    final matiere = _matiereLabel(context, widget.matiere);
     if (taux >= 80) {
-      prefix = 'Excellent ! ';
+      return l10n.revisionMsgExcellent(matiere);
     } else if (taux >= 50) {
-      prefix = 'Bon travail ! ';
+      return l10n.revisionMsgBonTravail(matiere);
     } else if (taux > 0) {
-      prefix = 'Ne lâche rien ! ';
+      return l10n.revisionMsgNeLacheRien(matiere);
     } else {
-      prefix = "C'est en se trompant qu'on apprend. ";
+      return l10n.revisionMsgApprendre(matiere);
     }
-    return '$prefix Tu progresses en ${widget.matiere} ! Continue !';
   }
 
   String _difficulteLabel(DifficulteNiveau d) {
+    final l10n = AppLocalizations.of(context)!;
     switch (d) {
       case DifficulteNiveau.facile:
-        return 'Facile';
+        return l10n.difficulteFacile;
       case DifficulteNiveau.moyen:
-        return 'Moyen';
+        return l10n.difficulteMoyen;
       case DifficulteNiveau.difficile:
-        return 'Difficile';
+        return l10n.difficulteDifficile;
     }
   }
 
@@ -718,6 +730,31 @@ class _RevisionScreenState extends State<RevisionScreen>
         return AppColors.info;
       case DifficulteNiveau.difficile:
         return AppColors.difficile;
+    }
+  }
+
+  /// Traduit une clé matière (ex : 'Mathématiques') en libellé localisé.
+  String _matiereLabel(BuildContext context, String key) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (key) {
+      case 'Mathématiques':
+        return l10n.subjectMathematiques;
+      case 'Français':
+        return l10n.subjectFrancais;
+      case 'Sciences Physiques':
+        return l10n.subjectSciencesPhysiques;
+      case 'SVT':
+        return l10n.subjectSVT;
+      case 'Histoire-Géographie':
+        return l10n.subjectHistoireGeographie;
+      case 'Anglais':
+        return l10n.subjectAnglais;
+      case 'Philosophie':
+        return l10n.subjectPhilosophie;
+      case 'Économie':
+        return l10n.subjectEconomie;
+      default:
+        return key;
     }
   }
 }

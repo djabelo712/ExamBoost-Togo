@@ -8,6 +8,11 @@
 // Attention : pour fonctionner, l'adaptateur AccessibilitySettingsAdapter doit
 // etre enregistre dans main.dart (Hive.registerAdapter) avant ouverture de la
 // box "accessibility". Voir lib/screens/simulation/README.md pour le wiring.
+//
+// Note typeId : typeId 8 etait utilise ici MAIS entrait en conflit avec
+// BadgeLevel (lib/models/badge.dart) qui utilise aussi typeId 8.
+// On a deplace AccessibilitySettings vers typeId 20 pour eviter le conflit
+// (BadgeCategory et BadgeLevel sont ancrees historiquement sur 7 et 8).
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -20,7 +25,7 @@ part 'accessibility_settings.g.dart';
 ///
 /// Par defaut, TOUTES les options sont desactivees (utilisateur standard sans
 /// besoin specifique). L'eleve active manuellement ce dont il a besoin.
-@HiveType(typeId: 8)
+@HiveType(typeId: 20)
 class AccessibilitySettings extends HiveObject {
   /// Utiliser une police adaptee aux dyslexiques (OpenDyslexic si disponible,
   /// sinon Roboto avec espacement augmente).

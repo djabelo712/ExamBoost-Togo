@@ -3,10 +3,28 @@
 //
 // Used by widget + integration tests to inject predictable data without
 // depending on the bundled assets/data/questions.json (which could evolve).
+//
+// Helpers added by Agent BU (Session 4 — widget tests):
+//   - wrapWithProviders(...) : wrap a widget with all default providers
+//     (UserProvider, LocaleProvider, ThemeProvider, SrsService,
+//     QuestionService) inside a MaterialApp. Lets widget tests stay
+//     one-line: `await tester.pumpWidget(wrapWithProviders(MyScreen()))`.
+//   - mockAppUser(...)        : alias for createMockUser (bktMaitrise preset)
+//   - mockQuestions           : alias for sampleQuestions (10-item pool)
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:examboost_togo/models/question.dart';
 import 'package:examboost_togo/models/review_card.dart';
 import 'package:examboost_togo/models/user.dart';
+import 'package:examboost_togo/providers/locale_provider.dart';
+import 'package:examboost_togo/providers/theme_provider.dart';
+import 'package:examboost_togo/providers/user_provider.dart';
+import 'package:examboost_togo/services/question_service.dart';
+import 'package:examboost_togo/services/srs_service.dart';
+
+import 'mock_services.dart';
 
 /// 10 sample questions covering all combinations in the dataset.
 ///
@@ -271,3 +289,106 @@ AppUser createMockUser({
 
 /// A single ready-to-use mock user with the 4-competence BKT state.
 AppUser get sampleUser => createMockUser();
+
+// ─── Aliases requested by Agent BU (Session 4) ───────────────────
+//
+// Thin wrappers around the existing helpers so widget tests can use a
+// short, intent-revealing name. No behaviour change — these delegate
+// to the canonical implementations above.
+
+/// Alias for [createMockUser] — an AppUser with a preset 4-competence BKT
+/// state. Used by widget tests that need a logged-in user.
+///
+/// Kept as a function (not a top-level getter) so each call returns a
+/// fresh instance — widget tests must not share mutable state.
+AppUser mockAppUser({
+  String id = 'test-user',
+  String nom = 'Doe',
+  String prenom = 'Jane',
+  String niveauScolaire = '3eme',
+  String? serie,
+  Map<String, double>? bktMaitrise,
+  double? thetaIrt,
+}) =>
+    createMockUser(
+      id: id,
+      nom: nom,
+      prenom: prenom,
+      niveauScolaire: niveauScolaire,
+      serie: serie,
+      bktMaitrise: bktMaitrise,
+      thetaIrt: thetaIrt,
+    );
+
+/// Alias for [sampleQuestions] — a 10-item question pool covering all
+/// combinations of examen/serie/type/difficulty in the dataset.
+///
+/// Returned as a function (not a top-level getter) so widget tests can
+/// pass it to MockQuestionService.initialQuestions without copying.
+List<Question> mockQuestions() => List<Question>.from(sampleQuestions);
+
+// ─── Widget test wrapper (Agent BU — Session 4) ───────────────────
+//
+// `wrapWithProviders` returns a MaterialApp pre-wired with the five
+// providers every ExamBoost screen expects:
+//   - UserProvider       (FakeUserProvider — in-memory, no Hive)
+//   - LocaleProvider     (real, FR by default)
+//   - ThemeProvider      (real, system by default)
+//   - SrsService         (MockSrsService — in-memory card store)
+//   - QuestionService    (MockQuestionService — sampleQuestions pool)
+//
+// Each provider can be overridden via the named arguments when a test
+// needs a specific configuration (e.g. an authenticated user, a custom
+// question pool, a failing service).
+//
+// This helper is intentionally additive: it does NOT touch
+// `pumpAppWithProviders` from test_helpers.dart (kept for legacy tests).
+
+/// Wraps [child] in a MaterialApp with the 5 default providers.
+///
+/// Tests can override any provider by passing the matching argument.
+/// Returns the [Widget] ready to be passed to `tester.pumpWidget(...)`.
+///
+/// Example:
+/// ```dart
+/// await tester.pumpWidget(
+///   wrapWithProviders(const HomeScreen(), user: mockAppUser()),
+/// );
+/// ```
+Widget wrapWithProviders(
+  Widget child, {
+  AppUser? user,
+  LocaleProvider? locale,
+  ThemeProvider? theme,
+  SrsService? srsService,
+  QuestionService? questionService,
+  List<Question>? initialQuestions,
+  bool questionServiceShouldFail = false,
+}) {
+  return MaterialApp(
+    home: MultiProvider(
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<UserProvider>.value(
+          value: FakeUserProvider(user: user),
+        ),
+        ChangeNotifierProvider<LocaleProvider>.value(
+          value: locale ?? LocaleProvider(),
+        ),
+        ChangeNotifierProvider<ThemeProvider>.value(
+          value: theme ?? ThemeProvider(),
+        ),
+        Provider<SrsService>.value(
+          value: srsService ?? MockSrsService(),
+        ),
+        Provider<QuestionService>.value(
+          value: questionService ??
+              MockQuestionService(
+                initialQuestions: initialQuestions ?? sampleQuestions,
+                shouldFail: questionServiceShouldFail,
+              ),
+        ),
+      ],
+      child: child,
+    ),
+  );
+}

@@ -4,6 +4,7 @@
 import 'dart:math' show pi;
 import 'package:flutter/material.dart';
 import '../../models/question.dart';
+import '../../theme/adaptive_colors.dart';
 import '../../theme/app_theme.dart';
 
 class QuestionCard extends StatelessWidget {
@@ -31,15 +32,15 @@ class QuestionCard extends StatelessWidget {
             ..setEntry(3, 2, 0.001)
             ..rotateX(isBack ? pi - angle : angle),
           alignment: Alignment.center,
-          child: isBack ? _buildReponse() : _buildQuestion(),
+          child: isBack ? _buildReponse(context) : _buildQuestion(context),
         );
       },
     );
   }
 
-  Widget _buildQuestion() {
+  Widget _buildQuestion(BuildContext context) {
     return _CardBase(
-      color: AppColors.surface,
+      color: AdaptiveColors.surface(context),
       borderColor: AppColors.primary.withOpacity(0.2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +51,7 @@ class QuestionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.primarySurface,
+                  color: AdaptiveColors.primarySurface(context),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -62,7 +63,8 @@ class QuestionCard extends StatelessWidget {
               if (question.points != null)
                 Text(
                   '${question.points} pts',
-                  style: AppTextStyles.bodySmall,
+                  style: AppTextStyles.bodySmall
+                      .copyWith(color: AdaptiveColors.textSecondary(context)),
                 ),
             ],
           ),
@@ -78,7 +80,8 @@ class QuestionCard extends StatelessWidget {
             child: SingleChildScrollView(
               child: Text(
                 question.enonce,
-                style: AppTextStyles.questionText,
+                style: AppTextStyles.questionText.copyWith(
+                    color: AdaptiveColors.textPrimary(context)),
               ),
             ),
           ),
@@ -91,6 +94,7 @@ class QuestionCard extends StatelessWidget {
               'Appuyez sur "Voir la réponse" quand vous êtes prêt',
               style: AppTextStyles.bodySmall.copyWith(
                 fontStyle: FontStyle.italic,
+                color: AdaptiveColors.textSecondary(context),
               ),
               textAlign: TextAlign.center,
             ),
@@ -100,12 +104,12 @@ class QuestionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildReponse() {
+  Widget _buildReponse(BuildContext context) {
     return Transform(
       transform: Matrix4.identity()..rotateX(pi), // retourner le côté verso
       alignment: Alignment.center,
       child: _CardBase(
-        color: AppColors.primarySurface,
+        color: AdaptiveColors.primarySurface(context),
         borderColor: AppColors.primary.withOpacity(0.4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,12 +120,13 @@ class QuestionCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.primary,
+                    color: AdaptiveColors.primary(context),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     'Réponse',
-                    style: AppTextStyles.label.copyWith(color: Colors.white),
+                    style: AppTextStyles.label
+                        .copyWith(color: AdaptiveColors.onPrimary(context)),
                   ),
                 ),
               ],
@@ -141,7 +146,7 @@ class QuestionCard extends StatelessWidget {
                     Text(
                       question.reponse,
                       style: AppTextStyles.questionText.copyWith(
-                        color: AppColors.primary,
+                        color: AdaptiveColors.primary(context),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -152,7 +157,7 @@ class QuestionCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AppColors.surface,
+                          color: AdaptiveColors.surface(context),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: AppColors.primary.withOpacity(0.2),
@@ -164,11 +169,14 @@ class QuestionCard extends StatelessWidget {
                             Text(
                               'Explication',
                               style: AppTextStyles.label.copyWith(
-                                color: AppColors.textSecondary,
+                                color: AdaptiveColors.textSecondary(context),
                               ),
                             ),
                             const SizedBox(height: 6),
-                            Text(question.explication!, style: AppTextStyles.body),
+                            Text(question.explication!,
+                                style: AppTextStyles.body.copyWith(
+                                    color:
+                                        AdaptiveColors.textPrimary(context))),
                           ],
                         ),
                       ),
@@ -207,7 +215,7 @@ class _CardBase extends StatelessWidget {
         border: Border.all(color: borderColor, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: AdaptiveColors.shadow(context),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),

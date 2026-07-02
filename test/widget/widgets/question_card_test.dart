@@ -190,6 +190,43 @@ void main() {
       expect(find.textContaining('pts'), findsNothing);
     });
 
+    // Added by Agent BU2 (Session 4 — reduced widget scope).
+    // Verifies the recto UX affordances: the help icon + the hint text
+    // inviting the student to reveal the answer.
+    testWidgets('Recto : affiche l\'icône d\'aide et l\'indice "Voir la réponse"',
+        (tester) async {
+      final q = createTestQuestion(
+        enonce: 'Q avec indice',
+        reponse: 'R',
+      );
+
+      controller = AnimationController(
+        vsync: tester,
+        duration: const Duration(milliseconds: 200),
+      );
+      animation = Tween<double>(begin: 0, end: 1).animate(controller);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 400,
+              child: QuestionCard(
+                question: q,
+                reponseVisible: false,
+                flipAnimation: animation,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // The recto shows a help_outline icon as a visual cue.
+      expect(find.byIcon(Icons.help_outline), findsOneWidget);
+      // The hint text invites the student to reveal the answer.
+      expect(find.textContaining('Voir la réponse'), findsOneWidget);
+    });
+
     tearDown(() {
       controller.dispose();
     });

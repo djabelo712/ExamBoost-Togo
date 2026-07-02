@@ -120,6 +120,33 @@ void main() {
       expect(find.text('Premier pas'), findsOneWidget);
     });
 
+    // Added by Agent BU2 (Session 4 — reduced widget scope).
+    // Covers the middle level (Argent) which was otherwise untested —
+    // Bronze and Or are already covered above.
+    testWidgets('Badge Argent affiche le label "Argent"', (tester) async {
+      final userBadge = UserBadge(
+        badgeId: streakArgent.id,
+        progress: 30, // required value for streak_7j_argent
+        unlockedAt: DateTime(2026, 2, 10),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: BadgeCard(
+              badge: streakArgent,
+              userBadge: userBadge,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Argent'), findsOneWidget);
+      expect(find.text('Régularité'), findsOneWidget);
+      // Date 10/2/2026 is rendered.
+      expect(find.text('10/2/2026'), findsOneWidget);
+    });
+
     testWidgets('Le tap déclenche le callback', (tester) async {
       int tapCount = 0;
       await tester.pumpWidget(

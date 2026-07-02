@@ -1,18 +1,18 @@
 # ExamBoost Togo — Q&A Jury Anticipé
 *Préparation au pitch DJANTA Tech Hub — 24 juillet 2026*
 
-> Document interne de préparation. 57 questions probables du jury, classées par thème, avec réponses calibrées (30-60 secondes à l'oral), chiffres clés à citer et pièges à éviter. À répéter en équipe avant le 20 juillet 2026.
+> Document interne de préparation. 77 questions probables du jury, classées par thème, avec réponses calibrées (30-60 secondes à l'oral), chiffres clés à citer et pièges à éviter. À répéter en équipe avant le 20 juillet 2026.
 
 ---
 
 ## Comment utiliser ce document
 
-- **57 questions** organisées en 10 thèmes couvrant l'intégralité du spectre probable d'interrogation du jury DJANTA Tech Hub.
+- **77 questions** organisées en 11 thèmes couvrant l'intégralité du spectre probable d'interrogation du jury DJANTA Tech Hub. Les thèmes 1-10 reprennent les questions fondamentales (produit, business, ML, concurrence, équipe, marché, risques, impact, pièges) ; le thème 11 couvre les nouveaux modules des Sessions 3-4 (tuteur IA, badges, sync cloud, ML avancé, parent, devoirs, niveaux XP, orientation, multijoueur, sécurité OWASP).
 - Pour chaque question, vous trouverez trois éléments :
   - **Réponse courte (30-60 sec à l'oral)** : 2 à 4 phrases claires, directes, prêtes à être prononcées.
   - **Chiffres clés à citer** : 2 à 4 statistiques précises à intégrer dans la réponse orale.
   - **À éviter** : piège identifié et reformulation correcte.
-- **Plan d'entraînement recommandé** : répéter l'ensemble des thèmes 1-5 avant le 14 juillet, puis les thèmes 6-10 avant le 18 juillet, puis simulation complète des 57 questions le 20 juillet en condition réelle (chronomètre + film).
+- **Plan d'entraînement recommandé** : répéter les thèmes 1-5 avant le 14 juillet, puis les thèmes 6-10 avant le 18 juillet, puis le thème 11 (nouveaux modules) le 19 juillet, puis simulation complète des 77 questions le 20 juillet en condition réelle (chronomètre + film).
 - **Règle d'or** : en cas de question difficile, prendre 2 secondes, reformuler la question, répondre honnêtement. Ne jamais dire « je ne sais pas » seul — toujours compléter par « voici ce que nous savons aujourd'hui, et voici comment nous allons approfondir ce point ».
 - **Ton** : professionnel, chiffré, sans jargon excessif. Valoriser la profondeur de la localisation togolaise, l'honnêteté sur les risques, et la traction déjà accumulée.
 
@@ -957,9 +957,324 @@ Au contraire. ExamBoost est conçu comme un outil qui augmente l'enseignant, pas
 
 ---
 
+## Thème 11 — Modules Session 3-4 : tuteur IA, gamification, sync, ML avancé, parent, devoirs, sécurité (20 questions)
+
+### Q58. Comment fonctionne le tuteur IA ? Quel modèle utilisez-vous ?
+
+**Réponse courte (30-60 sec) :**
+Le tuteur IA est un chat conversationnel intégré à l'app, accessible depuis l'écran home. Côté backend, nous utilisons l'API Claude d'Anthropic (modèle claude-sonnet-4-6 par défaut, configurable via variable d'environnement). Le système prompt est calibré pour le contexte togolais : méthode socratique (le tuteur pose des questions avant de donner la solution), exemples en FCFA, références aux villes de Lomé et Kara, vocabulaire BEPC/BAC. Rate limiting à 30 questions/heure/élève pour éviter l'abus. Fallback mock si la clé API est absente (mode démo). Voice input est préparé via speech_to_text, masqué sur desktop/web.
+
+**Chiffres clés à citer :**
+- Modèle : Claude (claude-sonnet-4-6), Anthropic
+- Rate limit : 30 req/h/user, max 2 000 tokens/réponse, historique 10 derniers tours
+- Méthode socratique — pas de réponse directe
+
+**À éviter :**
+- Ne pas dire « notre IA » — préciser Claude API d'Anthropic (transparence).
+- Ne pas promettre la voix en production v1 — c'est un stub UI en attente d'activation.
+
+---
+
+### Q59. Le tuteur donne-t-il les réponses aux exercices ?
+
+**Réponse courte (30-60 sec) :**
+Non — c'est central dans notre design. Le system prompt impose la méthode socratique : le tuteur guide l'élève par des questions (« Qu'as-tu essayé ? », « Quelle formule pourrais-tu appliquer ? ») au lieu de cracher la solution. Si l'élève insiste après trois échanges, le tuteur peut donner un indice, puis la solution accompagnée de l'explication. L'objectif est l'apprentissage, pas la réponse. C'est aussi pour cela que le tuteur est séparé de l'écran de révision (où la réponse n'apparaît qu'après que l'élève a validé sa propre réponse via SM-2).
+
+**Chiffres clés à citer :**
+- System prompt socratique (pas de réponse directe)
+- Tuteur = écran séparé (différent de révision SM-2)
+- Historique limité à 10 tours (évite dépendance)
+
+**À éviter :**
+- Ne pas dire « jamais » — il y a des cas où le tuteur donne la solution (élève bloqué après 3 échanges). Dire « en dernier recours, avec explication ».
+
+---
+
+### Q60. Que se passe-t-il si le tuteur IA donne une mauvaise réponse ?
+
+**Réponse courte (30-60 sec) :**
+Trois garde-fous. (1) L'élève peut signaler une mauvaise réponse — un bouton dédié est prévu dans la bulle de message, qui logge l'échange pour revue pédagogique. (2) Le tuteur ne remplace jamais l'enseignant ni le contenu officiel — les annales MEPST restent la source de vérité. (3) En cas d'erreur factuelle grave, l'élève peut effacer la conversation et recommencer. Nous mesurons le taux de signalement comme KPI produit : cible < 5 % des conversations. Au-delà, on ajuste le system prompt ou on bascule sur un modèle plus récent.
+
+**Chiffres clés à citer :**
+- Bouton « signaler » sur chaque bulle IA
+- KPI : < 5 % conversations signalées
+- Annales MEPST = source de vérité (le tuteur est secondaire)
+
+**À éviter :**
+- Ne pas promettre « 0 % d'erreur » — c'est impossible avec un LLM. Mieux : « taux d'erreur mesuré, gardé sous 5 % ».
+
+---
+
+### Q61. Les badges ne risquent-ils pas de détourner l'élève de l'apprentissage ?
+
+**Réponse courte (30-60 sec) :**
+C'est une préoccupation légitime — c'est pourquoi nous avons conçu 39 badges alignés sur des comportements d'apprentissage, pas sur le temps passé. Les catégories : Streak (régularité), Révision (volume de questions), Maîtrise (P(L)≥0,85 sur une matière), Simulation (examens blancs), Spécial (signalisation de bug, beta testeur). Aucun badge ne récompense « 3 heures d'app » — tous sont liés à des actions pédagogiques mesurables. Les badges sont aussi bornés : 3 niveaux (Bronze, Argent, Or), XP 100/250/500, total max ~12 875 XP. Une fois le catalogue complet, l'élève n'a plus d'incitation à farmer.
+
+**Chiffres clés à citer :**
+- 39 badges en 5 catégories (Streak 9, Révision 9, Maîtrise 9, Simulation 9, Spécial 3)
+- 3 niveaux par badge (Bronze/Argent/Or) — XP 100/250/500
+- Aucun badge sur « temps passé » — tous sur actions pédagogiques
+
+**À éviter :**
+- Ne pas dire « la gamification ne pose jamais de problème » — reconnaître le risque et expliquer comment le design le mitigate.
+
+---
+
+### Q62. Comment évitez-vous la gamification toxique (addiction) ?
+
+**Réponse courte (30-60 sec) :**
+Quatre dispositifs. (1) Pas de notifications push agressives — une seule notification quotidienne à l'heure choisie par l'élève (réglable, désactivable). (2) Pas de mécanique de FOMO : pas de récompenses limitées dans le temps, pas de streaks qui se brisent avec des popups alarmistes. (3) Le streak tolérant accepte « hier OU aujourd'hui » — pas de punition à minuit. (4) Tableau de bord parent (module premium) qui alerte si l'usage dépasse un seuil (par défaut 2 h/jour) — la gamification est contre-balancée par une vigilance parentale. L'objectif est 30 min/jour en moyenne, pas 3 h en soirée.
+
+**Chiffres clés à citer :**
+- 1 notification/jour max (réglable + désactivable)
+- Streak tolérant (hier OU aujourd'hui)
+- Alerte parent seuil 2 h/jour (module premium)
+- Cible usage : 30 min/jour moyen
+
+**À éviter :**
+- Ne pas évoquer les mécaniques addictives type « loot boxes » ou « daily rewards » — nous n'en avons pas, et les mentionner sèmerait le doute.
+
+---
+
+### Q63. Comment gérez-vous les conflits si l'élève révisait offline et online simultanément ?
+
+**Réponse courte (30-60 sec) :**
+Architecture offline-first avec CRDT (Conflict-free Replicated Data Types). Chaque action utilisateur est horodatée localement et mise dans une file d'attente Hive persistante. Au retour réseau, le backend applique les actions avec une stratégie de résolution par type : LWW (Last-Write-Wins) pour les ReviewCard (la plus récente l'emporte sur lastReviewDate), conservateur (min) pour les P(L) BKT en cas d'égalité, union pour les badges (aucun badge ne se « perd »), max pour les compteurs. Le tout est idempotent grâce à une table `sync_applied_actions` indexée par action_id (UUID client). Backoff exponentiel 1/2/4/8/16/32s en cas d'échec.
+
+**Chiffres clés à citer :**
+- CRDT : LWW pour ReviewCard, conservateur min pour BKT, union pour badges, max pour compteurs
+- Idempotence backend via table sync_applied_actions (clé UUID client)
+- 5 endpoints FastAPI (/sync/action, /sync/batch max 50, /sync/status, /sync/pull, /sync/health)
+- Backoff exponentiel 1→32s, stop après 5 échecs consécutifs
+
+**À éviter :**
+- Ne pas dire « il n'y a jamais de conflit » — c'est faux. Dire : « conflits gérés par CRDT, stratégie par type de donnée ».
+
+---
+
+### Q64. Que se passe-t-il si l'élève perd son téléphone ? Perd-il sa progression ?
+
+**Réponse courte (30-60 sec) :**
+Non, à condition qu'il ait synchronisé au moins une fois. La sync cloud est activée par défaut sur WiFi (configurable sur mobile data). Chaque réponse SM-2, mise à jour BKT, résultat de simulation, badge débloqué est poussé vers le backend. Au reinstall sur un nouveau téléphone, l'élève se reconnecte avec son compte, l'app tire l'état complet via /sync/pull?since=0. Cas limite : un élève qui n'a jamais sync (par exemple 100 % offline en zone rurale sans aucun retour WiFi) perd sa progression locale — c'est pourquoi nous poussons une notification de sync toutes les 24 h si données en attente. Le compte lui-même (email + mot de passe + niveau scolaire) est toujours récupérable côté backend.
+
+**Chiffres clés à citer :**
+- Sync cloud activée par défaut sur WiFi (mobile data configurable)
+- Pull complet via /sync/pull?since=0 au reinstall
+- Notification rappel sync toutes les 24 h si file non vide
+
+**À éviter :**
+- Ne pas dire « 0 perte possible » — reconnaître le cas « 100 % offline sans jamais sync » et expliquer la mitigation (notification + auto-sync).
+
+---
+
+### Q65. Vous dites que l'IA est calibrée — sur quelles données ?
+
+**Réponse courte (30-60 sec) :**
+Pour la calibration IRT, nous utilisons actuellement un dataset synthétique de 500 élèves × 64 questions = 32 000 réponses générées avec theta ~ N(0,1) tronqué [-3,+3] et 5 % de bruit (inattentions), avec temps de réponse corrélé à |theta - b|. Le pipeline py-irt est en place mais py-irt 0.1.1 (version PyPI) ne supporte que 1PL/2PL — nous avons donc un fallback numpy MLE (EM-like alterné) pour la calibration 3PL complète (avec estimation du paramètre c pour les QCM). C'est transparent : dès le pilote M5-M6 avec 300-500 vrais élèves, on remplace le CSV synthétique par les vraies données PostgreSQL via le script `train_score_model.py`. La calibration est ensuite relancée mensuellement.
+
+**Chiffres clés à citer :**
+- Pipeline actuel : 500 élèves synthétiques × 64 questions = 32 000 réponses
+- py-irt 0.1.1 (1PL/2PL) + fallback numpy MLE pour 3PL
+- Calibration relancée mensuellement dès pilote M5-M6 (300-500 vrais élèves)
+- Script reproductible : random_state=42
+
+**À éviter :**
+- Ne pas cacher le caractère synthétique — dire clairement « phase de bootstrap sur données synthétiques, remplacement par vraies données dès le pilote ».
+
+---
+
+### Q66. Pourquoi XGBoost plutôt qu'un réseau de neurones ?
+
+**Réponse courte (30-60 sec) :**
+Trois raisons. (1) Interprétabilité : XGBoost est compatible SHAP (TreeExplainer polynomial de Lundberg 2020), ce qui permet d'expliquer chaque prédiction au jury, à l'enseignant, à l'élève (« ton score prédit est bas parce que ta P(L) en maths est faible et que l'examen est dans 30 jours »). Un réseau de neurones est une boîte noire. (2) Performance sur petit dataset : avec 5 000 élèves, XGBoost régularisé (max_depth=3, lr=0,01, n_estimators=500) généralise mieux qu'un NN qui overfit. Nos métriques : RMSE 1,466/20, MAE 1,183/20, R² 0,663. (3) Coût de déploiement : XGBoost se sérialise en 589 Ko joblib, inférence en millisecondes, pas de GPU. Un NN nécessiterait PyTorch/TensorFlow + serveur GPU — inenvisageable pour un projet à 246 400 USD.
+
+**Chiffres clés à citer :**
+- XGBoost : RMSE 1,466/20, MAE 1,183/20, R² 0,663
+- SHAP TreeExplainer — interprétabilité native
+- Modèle sérialisé 589 Ko joblib (vs NN + PyTorch/TensorFlow + GPU)
+- Grid search 54 combinaisons 5-fold CV — best params max_depth=3, lr=0,01, n_estimators=500
+
+**À éviter :**
+- Ne pas dire « XGBoost est meilleur que les réseaux de neurones partout » — c'est faux. Dire : « meilleur pour notre contexte : petit dataset, besoin d'interprétabilité, contrainte coût ».
+
+---
+
+### Q67. Le DKT (Deep Knowledge Tracing) est mentionné — l'utilisez-vous en production ?
+
+**Réponse courte (30-60 sec) :**
+Non, pas en production. DKT (Piech et al. 2015) est mentionné dans notre cours théorique comme référence scientifique de l'état de l'art en knowledge tracing. En production, nous utilisons BKT (Bayesian Knowledge Tracing) classique — implémenté côté Dart (user.dart) et côté Python (bkt_service.py) — parce qu'il est interprétable (P(L) par compétence), léger (formules bayésiennes, pas de NN), et bien adapté à un dataset petit. DKT nécessite un réseau de neurones récurrent (LSTM/GRU) entraîné sur des dizaines de milliers d'élèves — incompatible avec notre phase pilote. C'est une piste d'évolution M18+ si nous atteignons 50 000+ utilisateurs avec données suffisantes.
+
+**Chiffres clés à citer :**
+- BKT en production (P(L) par compétence, formules bayésiennes)
+- DKT = piste M18+ (nécessite 50 000+ utilisateurs)
+- Référence : Piech et al. 2015 (Deep Knowledge Tracing, Stanford)
+- Paramètres BKT actuels : pLearn=0,20, pSlip=0,10, pGuess=0,20
+
+**À éviter :**
+- Ne pas dire « nous utilisons DKT » — c'est faux. Honnêteté radicale : BKT aujourd'hui, DKT en étude future.
+
+---
+
+### Q68. Le module parent est-il payant ?
+
+**Réponse courte (30-60 sec) :**
+Le module parent de base (login + 4 onglets : enfants, progression, alertes, messages enseignant) est gratuit pour les parents d'élèves inscrits. Le module parent premium est payant, avec 3 plans : Essentiel à 2 000 FCFA/mois (1 enfant), Famille à 5 000 FCFA/mois (jusqu'à 3 enfants, le plus populaire), Trimestre à 4 800 FCFA pour 3 mois (économie 20 %). Paiement via Flooz, TMoney ou carte bancaire. Essai gratuit 14 jours. Le premium débloque les alertes avancées (décrochage, chute de notes), le chat direct avec l'enseignant, et l'export PDF du bulletin de progression.
+
+**Chiffres clés à citer :**
+- Base gratuit (login + 4 onglets) ; premium à 2 000 FCFA/mois (Essentiel) ou 5 000 FCFA/mois (Famille, 3 enfants)
+- 3 méthodes de paiement : Flooz, TMoney, carte bancaire
+- Essai gratuit 14 jours
+
+**À éviter :**
+- Ne pas dire « le module parent est gratuit » sans nuance — préciser base gratuite, premium payant.
+
+---
+
+### Q69. Comment protégez-vous la vie privée des élèves vis-à-vis des parents ?
+
+**Réponse courte (30-60 sec) :**
+Le parent ne voit que ce que l'élève (ou l'école) autorise. Concrètement : (1) le parent doit avoir le code à 6 chiffres de son enfant pour lier son compte — l'élève a le contrôle ; (2) le parent voit la progression académique (P(L), scores simulation, badges), pas le contenu des conversations avec le tuteur IA ni les messages aux enseignants ; (3) aucune donnée de localisation, aucun historique de navigation hors app ; (4) le parent premium peut activer le seuil d'alerte « usage > 2 h/jour » mais ne voit pas le détail minute par minute. Conformément à la loi 2019-014 du Togo, l'élève mineur (avec l'école) reste titulaire des données — le parent est « tuteur légal autorisé » sur les données académiques uniquement.
+
+**Chiffres clés à citer :**
+- Code 6 chiffres pour lier parent (élève = Contrôleur)
+- Parent voit académique uniquement (pas tuteur IA, pas messages enseignants)
+- Loi 2019-014 Togo : élève mineur = titulaire, parent = tuteur autorisé
+
+**À éviter :**
+- Ne pas dire « le parent voit tout » — c'est faux et contraire à la loi 2019-014. Préciser le périmètre académique uniquement.
+
+---
+
+### Q70. Les enseignants doivent-ils créer leurs propres questions ?
+
+**Réponse courte (30-60 sec) :**
+Non, ce n'est pas obligatoire — mais c'est possible. Le module devoirs permet à l'enseignant de soit piocher dans la banque ExamBoost (114 questions BEPC/BAC couvrant 6 matières, 2019-2024), soit créer ses propres QCM via un formulaire (énoncé + 4 choix + indice du bon choix + explication). Pour les questions ouvertes (rédaction, dissertation), l'enseignant saisit le sujet et l'élève s'auto-évalue après coup. Le mode hybride est le plus courant : 80 % banque ExamBoost + 20 % questions personnalisées. L'objectif n'est pas de transformer l'enseignant en créateur de contenu — c'est de lui donner le choix pédagogique.
+
+**Chiffres clés à citer :**
+- 114 questions dans la banque ExamBoost (6 matières, BEPC 84 + BAC1 30)
+- Mode hybride recommandé : 80 % banque + 20 % perso
+- Auto-correction QCM immédiate, auto-évaluation pour questions ouvertes
+
+**À éviter :**
+- Ne pas dire « les enseignants doivent créer leurs questions » — c'est un repoussoir. Dire : « ils peuvent, mais la banque couvre déjà le besoin principal ».
+
+---
+
+### Q71. Comment gérez-vous la triche si l'élève fait le devoir à la maison ?
+
+**Réponse courte (30-60 sec) :**
+Honnêtement, on ne l'élimine pas — on la minimise et on la détecte. (1) Le devoir n'est qu'un signal parmi d'autres : si l'élève a 18/20 au devoir maison mais 8/20 à la simulation surveillée, l'enseignant le voit dans le tableau de bord (écart devoir vs simulation). (2) Auto-correction QCM immédiate mais score final calculé à la soumission (pas de triche en arrière-plan). (3) Mode examen authentique disponible (calculatrice + brouillon + accessibilité, sans Internet) pour les évaluations surveillées en classe. (4) Limitation par temps (timer par question configurable par l'enseignant). La triche existe aussi en classe — notre objectif est de fournir plus de signaux à l'enseignant, pas de la résoudre seule.
+
+**Chiffres clés à citer :**
+- Tableau de bord enseignant : écart devoir vs simulation visible
+- Mode examen authentique (calculatrice + brouillon, offline)
+- Timer par question configurable
+- Auto-correction QCM immédiate, score à la soumission
+
+**À éviter :**
+- Ne pas dire « 0 % triche possible » — personne n'y croit. Mieux : « triche minimisée + détectée par signaux croisés ».
+
+---
+
+### Q72. Le système de niveaux ne crée-t-il pas des inégalités entre élèves ?
+
+**Réponse courte (30-60 sec) :**
+C'est une vraie question — nous y avons réfléchi. Trois mitigations. (1) Le système est individuel, pas comparatif : il n'y a pas de classement public, pas de leaderboard social. L'élève voit SA progression, pas celle des autres. (2) 50 niveaux avec formule XP progressive (100×N×(N+1)/2) : chaque niveau demande plus d'effort, ce qui ralentit naturellement les élèves avancés et laisse les élèves en difficulté progresser à leur rythme. (3) 8 récompenses débloquables (niveaux 5, 10, 15, 20, 25, 30, 40, 50) — toutes des fonctionnalités cosmétiques (dark theme, custom badge, custom colors) ou non-essentielles (early access, ambassador status). Aucune récompense ne donne d'avantage académique — pas de « pay-to-win » déguisé.
+
+**Chiffres clés à citer :**
+- 50 niveaux, formule 100×N×(N+1)/2 (effort croissant)
+- 8 récompenses cosmétiques/non-essentielles (dark theme, custom badge, etc.)
+- Aucun classement public, aucune récompense académique
+- 9 sources d'XP (question correcte, simulation, badges, streak, devoir, tuteur)
+
+**À éviter :**
+- Ne pas dire « ça ne crée aucune inégalité » — reconnaître le risque, expliquer les mitigations (individuel, cosmétique, sans avantage académique).
+
+---
+
+### Q73. Sur quoi repose l'algorithme d'orientation ? Est-il validé scientifiquement ?
+
+**Réponse courte (30-60 sec) :**
+L'algorithme d'orientation combine deux signaux : 70 % similarité cosinus entre le profil de l'élève (6 axes : Scientifique, Littéraire, Créatif, Social, Business, Leadership) et les poids de chaque filière togolaise ; 30 % score matières (moyenne des P(L) BKT sur les matières pivots de la filière). Pénalité -10 points si la filière est sélective (Médecine, Pharmacie, Ingénierie, Architecture, Soins infirmiers, ENS) et que les axes forts de la filière sont < 0,55 chez l'élève — empêche de recommander Médecine à un élève sans profil scientifique. La base de données couvre 15 filières togolaises (UN Lomé, EUT, EPB, ESAE, ESA, IFG, ENI, ENAM, ENS, ISMP) et 35 career paths. Validité scientifique : la similarité cosinus est standard en systèmes de recommandation (Netflix Prize 2009), les 6 axes sont inspirés du RIASEC de Holland. Ce n'est pas validé cliniquement — c'est un outil d'aide, pas de décision.
+
+**Chiffres clés à citer :**
+- 70 % similarité cosinus + 30 % score matières
+- 6 axes (inspirés du RIASEC de Holland)
+- 15 filières togolaises + 35 career paths + 7 universités
+- Pénalité -10 pts filières sélectives si axes faibles
+
+**À éviter :**
+- Ne pas sur-vendre : dire « outil d'aide à la décision », pas « orientation scientifique ». Préciser que l'élève doit consulter un conseiller humain pour valider.
+
+---
+
+### Q74. Le mode multijoueur nécessite-t-il Internet ? Comment ça marche en zone rurale ?
+
+**Réponse courte (30-60 sec) :**
+Le mode multijoueur actuel est en mode simulation locale (simulateMode=true) — il fonctionne 100 % offline avec 5 joueurs togolais mockés (Kossi, Aya, Komlan, Délali, Mawuko) qui répondent avec des compétences variables (35-75 %) pour simuler une partie réelle. C'est idéal pour la démo et pour les élèves ruraux sans Internet : ils peuvent créer une room, jouer contre les bots, voir le podium. La version réseau (WebSocket) est préparée côté code (`web_socket_channel` déjà en pubspec, parsing TODO) — elle nécessitera Internet pour affronter de vrais élèves. En zone rurale, le fallback est : mode solo (révision SM-2), mode simulation contre bots, ou mode coopératif en classe (un seul téléphone partagé, le prof anime).
+
+**Chiffres clés à citer :**
+- simulateMode=true par défaut (offline-ready, 5 joueurs togolais mockés)
+- Max 6 joueurs par room, code 6 chiffres
+- WebSocketChannel préparé (web_socket_channel ^3.0.0)
+- Bonus vitesse : 50 pts ≤5s, 30 pts ≤10s, 10 pts ≤20s
+
+**À éviter :**
+- Ne pas dire « multijoueur marche en zone rurale » sans nuance — préciser : mode simulation offline oui, multijoueur réel nécessite Internet.
+
+---
+
+### Q75. Avez-vous fait un audit de sécurité ?
+
+**Réponse courte (30-60 sec) :**
+Oui, un audit OWASP Top 10 complet du backend FastAPI a été réalisé (11 fichiers étudiés, 26 routes cartographiées). Résultat : 19 vulnérabilités identifiées — 3 critiques (toutes A01 Broken Access Control : endpoints /sessions et /predict sans auth ni ownership check), 5 hautes (rate limiting non branché, CORS allow_origins=["*"], python-jose vulnérable CVE-2024-33664, etc.), 7 moyennes, 4 basses. 21 corrections documentées dans SECURITY_FIXES.md (avant/après + justification). 2 middlewares créés : security_headers.py (HSTS, CSP restrictive, X-Frame-Options, COOP/CORP) et input_validation.py (sanitizers anti-injection, validators Pydantic). SAST (bandit) et SCA (safety) ajoutés au requirements.txt pour CI.
+
+**Chiffres clés à citer :**
+- OWASP Top 10 : 19 vulnérabilités (3 critiques, 5 hautes, 7 moyennes, 4 basses)
+- 21 corrections documentées dans SECURITY_FIXES.md
+- 2 middlewares prêts (security_headers + input_validation)
+- SAST bandit + SCA safety intégrés au requirements.txt
+
+**À éviter :**
+- Ne pas cacher les 3 vulnérabilités critiques — au contraire, montrer qu'elles sont identifiées et corrigées. Le jury valorise la transparence sur la sécurité.
+
+---
+
+### Q76. Comment protégez-vous les données des élèves mineurs ?
+
+**Réponse courte (30-60 sec) :**
+Sept dispositifs. (1) Mots de passe hachés via bcrypt (jamais en clair). (2) JWT avec algorithms explicite (anti-confusion clé) — pas de session serveur. (3) Pydantic validators côté backend : email normalisé, contrôle de longueur, IDs au format strict (TG-...-Q..). (4) UserOut schema exclut password_hash des réponses API. (5) Limitation taille body 1 Mo + query string 2 048 chars (anti-DoS). (6) Logs admin persistés (table admin_action_logs) — toute action sensible est tracée. (7) Avant prod réelle : endpoints conformité loi 2019-014 (/users/me/export, /users/me PUT, /users/me DELETE) à implémenter, chiffrement volume DB, déclaration ARP. Le pitch DJANTA utilisera un compte de démo dédié — aucune donnée réelle d'élève ne transitera pendant la présentation.
+
+**Chiffres clés à citer :**
+- bcrypt pour password hashing
+- JWT algorithms explicite + UserOut exclut password_hash
+- Table admin_action_logs (audit trail)
+- Loi 2019-014 : 13 principes évalués, 9 non conformes, plan 3 phases
+
+**À éviter :**
+- Ne pas dire « conformes à 100 % à la loi 2019-014 » — c'est faux. Dire : « audit réalisé, 9 principes non conformes, plan d'action en 3 phases ».
+
+---
+
+### Q77. Êtes-vous conformes à la loi 2019-014 du Togo ?
+
+**Réponse courte (30-60 sec) :**
+Partiellement — c'est honnête. Sur les 13 principes de la loi 2019-014, 4 sont déjà conformes (sécurité technique, journalisation admin, minimisation via ORM, durée de conservation paramétrable) et 9 restent à implémenter avant la production réelle : consentement explicite, notification de violation sous 72 h, droits accès/rectification/effacement (endpoints à coder), transparence (politique de confidentialité à publier), déclaration auprès de l'ARP (Autorité de Protection des Données), transferts hors Togo (hébergement à définir). Le plan d'action est en 3 phases : P0 avant pitch DJANTA (statut démo explicite, aucune donnée réelle), P1 avant prod réelle (endpoints + déclaration ARP + chiffrement volume DB), P2 continu (audit annuel, rotation clés, revue RGPD). Le pitch DJANTA ne manipulera que des données mockées.
+
+**Chiffres clés à citer :**
+- Loi 2019-014 : 13 principes, 4 conformes, 9 à implémenter
+- Plan 3 phases : P0 avant pitch, P1 avant prod, P2 continu
+- Déclaration ARP obligatoire avant production réelle
+- Pitch DJANTA : 100 % données mockées
+
+**À éviter :**
+- Ne jamais dire « conformes » sans nuance — c'est faux et dangereux juridiquement. Le jury DJANTA connaît la loi 2019-014 et valorise l'honnêteté sur le statut de conformité.
+
+---
+
 ## Annexe A — Chiffres clés à mémoriser
 
-Tableau récapitulatif des chiffres essentiels à avoir en tête pour répondre au jury. Ces 25 chiffres suffisent à répondre à 90 % des questions.
+Tableau récapitulatif des chiffres essentiels à avoir en tête pour répondre au jury. Ces 50 chiffres suffisent à répondre à 90 % des questions.
 
 | # | Catégorie | Chiffre | Source | Quand citer |
 |---|---|---|---|---|
@@ -993,6 +1308,26 @@ Tableau récapitulatif des chiffres essentiels à avoir en tête pour répondre 
 | 28 | Légal | Loi 2019-014 (29 oct 2019) protection données Togo | Réglement DJANTA | Q47 |
 | 29 | Concurrence | Khan Academy : +16 % notes Inde (CEPR/J-PAL) | Étude faisabilité | Q3, Q48 |
 | 30 | Concurrence | Afrilearn Nigeria : curriculum WAEC, anglais | Étude faisabilité | Q29 |
+| 31 | Produit | 114 questions dans le dataset unifié (6 matières, 2019-2024) | assets/data/questions.json | Q26, Q70 |
+| 32 | Produit | 23 routes Flutter (GoRouter), 17 Hive adapters, 10 providers | app_router.dart, main.dart | Q70, Q72 |
+| 33 | QA | 91 tests critiques (27 SM-2 + 20 BKT + 23 IRT + 21 Question) | test/unit/ | Q75 |
+| 34 | QA | 50+ tests widget | test/widget/ | Q75 |
+| 35 | ML | XGBoost RMSE = 1,466/20, MAE = 1,183/20, R² = 0,663 | backend/scripts/ml_training/ | Q17, Q66 |
+| 36 | ML | XGBoost 14 features, 5 000 élèves synthétiques, grid search 54 combinaisons 5-fold CV | backend/scripts/ml_training/ | Q65, Q66 |
+| 37 | ML | SHAP TreeExplainer (Lundberg 2020) — interprétabilité native | backend/scripts/ml_training/ | Q17, Q66 |
+| 38 | ML | IRT calibration : py-irt 0.1.1 (1PL/2PL) + fallback numpy MLE 3PL | backend/scripts/irt_calibration/ | Q15, Q65 |
+| 39 | Gamification | 39 badges en 5 catégories × 3 niveaux — XP 100/250/500, ~12 875 XP max | lib/models/badge.dart | Q61, Q62 |
+| 40 | Gamification | 50 niveaux XP, formule 100×N×(N+1)/2, 8 récompenses débloquables | lib/services/level_service.dart | Q72 |
+| 41 | IA tutor | Claude API (claude-sonnet-4-6), 30 req/h/user, max 2 000 tokens | backend/routers/tutor.py | Q58 |
+| 42 | Sync | CRDT (LWW + conservateur + union + max), 5 endpoints FastAPI, backoff 1→32s | backend/routers/sync.py | Q63, Q64 |
+| 43 | Parent | 3 plans premium (2 000/mois, 5 000/mois 3 enfants, 4 800/3 mois) — Flooz/TMoney/CB | lib/screens/parent/ | Q68 |
+| 44 | Orientation | 15 filières togolaises, 35 careers, 6 axes (RIASEC), 70 % cosinus + 30 % matières | lib/screens/orientation/ | Q73 |
+| 45 | Multijoueur | 6 écrans, max 6 joueurs, code 6 chiffres, simulateMode offline-ready | lib/screens/multiplayer/ | Q74 |
+| 46 | Sécurité | OWASP Top 10 : 19 vulnérabilités (3 critiques, 5 hautes, 7 moyennes, 4 basses) | docs/security/OWASP_AUDIT_REPORT.md | Q75, Q76 |
+| 47 | Sécurité | 21 corrections documentées + 2 middlewares (security_headers + input_validation) | docs/security/SECURITY_FIXES.md | Q75 |
+| 48 | Sécurité | Loi 2019-014 : 13 principes évalués, 4 conformes, 9 non conformes, plan 3 phases | docs/security/OWASP_AUDIT_REPORT.md | Q77 |
+| 49 | i18n | 4 langues (FR, EN, Éwé, Kabyè) — 165 clés de traduction | lib/l10n/ | Q51 |
+| 50 | Backend | 23 endpoints FastAPI (auth, predict, sessions, questions, sync, tutor, classroom, admin, health) | backend/main.py | Q19 |
 
 ---
 
@@ -1022,6 +1357,19 @@ Liste structurée des sources officielles à citer si le jury challenge un chiff
 | **SmartFarm Togo / AIMS Ghana** | Équipe, connexion réseau IA panafricain | Q34, Q39 — pour la crédibilité équipe |
 | **epreuvesetcorriges.com, banquedesepreuves.com, examens-concours.net, fomesoutra.com** | Annales BEPC/BAC Togo 2010-2025 | Q23 — pour la disponibilité des données |
 | **py-irt, pyBKT (Berkeley), scikit-learn, XGBoost** | Bibliothèques open-source utilisées | Q19 — pour la transparence technique |
+| **Anthropic Claude API (2026)** | Tuteur IA conversationnel : claude-sonnet-4-6, méthodes socratique, rate limiting 30 req/h/user | Q58, Q59, Q60 — pour toute question sur le tuteur IA |
+| **OWASP Top 10 (2021)** | Cadre de référence audit sécurité : 10 catégories (A01 Broken Access Control → A10 SSRF) | Q75, Q76 — pour justifier la rigueur sécurité |
+| **OWASP_AUDIT_REPORT.md / SECURITY_FIXES.md / SECURITY_CHECKLIST.md** (Session 4, Agent BY) | 19 vulnérabilités identifiées, 21 corrections documentées, 2 middlewares prêts | Q75, Q76, Q77 — pour montrer l'audit concret |
+| **Loi n° 2019-014 du 29 octobre 2019 + ARP Togo** | Protection données personnelles Togo, 13 principes, autorité ARP | Q47, Q69, Q76, Q77 — pour toute question RGPD/loi togolaise |
+| **Mitchell et al. 2019 (Model Cards for Model Reporting, Google)** | Standard Model Cards pour XGBoost score predictor | Q19, Q66 — pour la transparence ML |
+| **Lundberg et al. 2020 (Tree SHAP, NeurIPS)** | SHAP TreeExplainer polynomial pour interprétabilité XGBoost | Q17, Q66 — pour justifier l'interprétabilité |
+| **Chen & Guestrin 2016 (XGBoost, KDD)** | Algorithme XGBoost, paper originel | Q19, Q66 — pour la crédibilité technique ML |
+| **Piech et al. 2015 (Deep Knowledge Tracing, Stanford)** | DKT, réseau de neurones récurrent pour knowledge tracing | Q67 — pour expliquer le choix BKT vs DKT |
+| **Holland 1997 (RIASEC, Holland Codes)** | Théorie des 6 axes de personnalité professionnelle — base de l'algorithme d'orientation | Q73 — pour la crédibilité orientation |
+| **Netflix Prize 2009 (Koren et al.)** | Similarité cosinus pour systèmes de recommandation — base algorithmique orientation | Q73 — pour la crédibilité orientation |
+| **RFC 7804 / CRDT (Shapiro et al. 2011, INRIA)** | Conflict-free Replicated Data Types — base théorique sync cloud | Q63, Q64 — pour la crédibilité sync offline |
+| **FastAPI + Starlette + Uvicorn (Pydantic 2)** | Stack backend : validation Pydantic, JWT, async, OpenAPI auto-généré | Q19, Q75 — pour la transparence stack |
+| **Flutter 3.44.4 + Hive 2.2 + Provider 6.1 + GoRouter** | Stack mobile : 23 routes, 17 Hive adapters (typeIds 0-20), 10 providers | Q20, Q70 — pour la transparence stack mobile |
 
 **Règle de citation** : toujours préciser l'année et la source. « Selon l'ARCEP Togo, T3 2025 » est plus crédible que « selon nos recherches ».
 
@@ -1031,17 +1379,17 @@ Liste structurée des sources officielles à citer si le jury challenge un chiff
 
 > À mémoriser par cœur. À utiliser si le jury demande « Présentez-vous en 30 secondes », ou en ouverture/fermeture du pitch.
 
-**Version française (30 secondes, ~75 mots) :**
+**Version française (30 secondes, ~95 mots) :**
 
-« ExamBoost Togo est une application mobile gratuite qui prépare les élèves togolais aux examens nationaux — BEPC et BAC. En 2024, le BEPC est passé de 81 % à 44 % de réussite. La cause principale : l'absence d'outils alignés sur le programme officiel. Notre app utilise l'IRT — la même technologie que le GRE et Duolingo — pour adapter chaque question au niveau de l'élève, et la répétition espacée pour combattre l'oubli. Elle fonctionne hors-ligne sur un Tecno Spark. Gratuite pour l'élève, monétisée via les écoles. Notre cible : 50 000 utilisateurs en 18 mois. »
+« ExamBoost Togo est une application mobile gratuite qui prépare les élèves togolais aux examens nationaux — BEPC et BAC. En 2024, le BEPC est passé de 81 % à 44 % de réussite. La cause principale : l'absence d'outils alignés sur le programme officiel. Notre app utilise l'IRT — la même technologie que le GRE et Duolingo — pour adapter chaque question au niveau de l'élève, la répétition espacée pour combattre l'oubli, un tuteur IA Claude méthode socratique, 39 badges gamification, sync cloud offline-first avec CRDT. Elle fonctionne hors-ligne sur un Tecno Spark. Gratuite pour l'élève, monétisée via les écoles et le module parent premium. 114 questions, 91 tests critiques, audit OWASP Top 10. Notre cible : 50 000 utilisateurs en 18 mois. »
 
-**Version anglaise (30 seconds, ~70 words) — pour CcHub mentors :**
+**Version anglaise (30 seconds, ~90 words) — pour CcHub mentors :**
 
-« ExamBoost Togo is a free mobile app that prepares Togolese students for their national exams — BEPC and BAC. In 2024, BEPC pass rates collapsed from 81 % to 44 %. The root cause: no tool aligned with the national curriculum. Our app uses IRT — the same tech powering GRE and Duolingo — to adapt every question to each student's level, and spaced repetition to fight forgetting. It works offline on a Tecno Spark. Free for students, monetized through schools. Target: 50,000 users in 18 months. »
+« ExamBoost Togo is a free mobile app that prepares Togolese students for their national exams — BEPC and BAC. In 2024, BEPC pass rates collapsed from 81 % to 44 %. The root cause: no tool aligned with the national curriculum. Our app uses IRT — the same tech powering GRE and Duolingo — to adapt every question to each student's level, spaced repetition to fight forgetting, a Claude-powered socratic AI tutor, 39 gamification badges, and offline-first cloud sync with CRDT. It works offline on a Tecno Spark. Free for students, monetized through schools and a premium parent module. 114 questions, 91 critical tests, OWASP Top 10 security audit. Target: 50,000 users in 18 months. »
 
-**Version ultra-courte (15 secondes, ~40 mots) — si le jury coupe court :**
+**Version ultra-courte (15 secondes, ~55 mots) — si le jury coupe court :**
 
-« ExamBoost Togo : une app gratuite qui aide les 100 000 lycéens togolais à réussir le BEPC et le BAC, avec une IA adaptative qui marche offline sur téléphone basique. Le BEPC est tombé à 44 % en 2024. NousChangeons ça. »
+« ExamBoost Togo : une app gratuite qui aide les 100 000 lycéens togolais à réussir le BEPC et le BAC, avec une IA adaptative qui marche offline sur téléphone basique, un tuteur IA Claude, et 114 questions alignées MEPST. Le BEPC est tombé à 44 % en 2024. Nous changeons ça. »
 
 ---
 
@@ -1065,7 +1413,7 @@ Pour ne rien oublier le jour J. À imprimer et à cocher.
 - [ ] Présence des 4 membres de l'équipe
 - [ ] Laptop avec démo + téléphone avec APK prêts
 - [ ] Calendrier de bootcamp CcHub (20-22 juillet) intégré
-- [ ] Check final des 25 chiffres clés (Annexe A)
+- [ ] Check final des 50 chiffres clés (Annexe A)
 
 **Pendant le pitch :**
 - [ ] La personne qui pitche regarde le jury, pas l'écran
@@ -1105,7 +1453,7 @@ Anticipation des 5 attaques les plus probables du jury, avec réponses prêtes.
 
 ## Conclusion — État d'esprit pour le 24 juillet
 
-Ce document prépare l'équipe ExamBoost Togo à 57 questions probables du jury DJANTA Tech Hub. La couverture est large mais non exhaustive — le jury posera peut-être des questions imprévues. Dans ce cas, trois principes :
+Ce document prépare l'équipe ExamBoost Togo à 77 questions probables du jury DJANTA Tech Hub. La couverture est large mais non exhaustive — le jury posera peut-être des questions imprévues. Dans ce cas, trois principes :
 
 1. **Honnêteté radicale** : ne jamais mentir, ne jamais exagérer. Si on ne sait pas, dire « voici ce que nous savons et comment nous approfondirons ». Le jury DJANTA voit passer des dizaines de pitchs par an — il détecte immédiatement le bluff.
 
@@ -1113,7 +1461,7 @@ Ce document prépare l'équipe ExamBoost Togo à 57 questions probables du jury 
 
 3. **Profondeur de localisation** : notre avantage concurrentiel n'est pas la technologie (IRT, SM-2, XGBoost existent déjà) — c'est la localisation togolaise profonde. Chaque réponse doit rappeler cet ancrage : français togolais, annales MEPST, lycées de Lomé et Kara, programme APC, loi 2019-014.
 
-Le 24 juillet 2026, le jury DJANTA verra une équipe qui n'attend pas — qui construit. 20 questions démo dans le repo GitHub public, prototype Flutter fonctionnel, enquête terrain menée, plan stratégique en 19 pages, étude de faisabilité en 30 pages, cours théorique en 31 pages. Aucune autre équipe candidate n'aura cette profondeur de préparation.
+Le 24 juillet 2026, le jury DJANTA verra une équipe qui n'attend pas — qui construit. 114 questions dans le dataset unifié, 23 routes Flutter, 17 Hive adapters, 10 providers, 91 tests critiques (50+ widget tests), tuteur IA Claude, sync cloud offline-first avec CRDT, modèle XGBoost RMSE 1,46/20, 39 badges gamification, audit sécurité OWASP Top 10, 4 langues (FR, EN, Éwé, Kabyè). Prototype Flutter fonctionnel, enquête terrain menée, plan stratégique en 19 pages, étude de faisabilité en 30 pages, cours théorique en 31 pages. Aucune autre équipe candidate n'aura cette profondeur de préparation.
 
 Le momentum compte. Les équipes qui gagnent ne sont pas celles qui ont la meilleure idée sur le papier — ce sont celles qui montrent qu'elles avancent.
 

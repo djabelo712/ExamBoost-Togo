@@ -14,6 +14,7 @@
 // Identité : SharedPreferences "current_user_id" (défaut : "user_demo")
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -27,6 +28,7 @@ import '../../models/review_card.dart';
 import '../../models/user.dart';
 import '../../services/question_service.dart';
 import '../../services/srs_service.dart';
+import '../../theme/adaptive_colors.dart';
 import '../../theme/app_theme.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -95,10 +97,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // ─── Build ─────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Tableau de bord'),
+        title: Text(l10n.dashboardTitle),
         automaticallyImplyLeading: false,
       ),
       body: _loading
@@ -156,6 +158,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // ─── 1. Header personnalisé + streak ───────────────────────────
   Widget _buildHeader(AppUser user) {
+    final l10n = AppLocalizations.of(context)!;
     final prenom =
         (user.prenom.isNotEmpty ? user.prenom : 'Élève').trim();
     final init1 = prenom.isNotEmpty ? prenom[0].toUpperCase() : 'E';
@@ -165,7 +168,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final streak = _computeStreak(_cards);
     final streakColor =
-        streak >= 3 ? AppColors.accent : AppColors.textSecondary;
+        streak >= 3 ? AppColors.accent : AdaptiveColors.textSecondary(context);
 
     return Row(
       children: [
@@ -188,15 +191,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Bonjour, $prenom !',
-                style: AppTextStyles.h2,
+                // Salutation localisée
+                l10n.welcomeGreeting(prenom),
+                style: AppTextStyles.h2
+                    .copyWith(color: AdaptiveColors.textPrimary(context)),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 2),
               Text(
                 _formatToday(),
-                style: AppTextStyles.bodySmall,
+                style: AppTextStyles.bodySmall
+                    .copyWith(color: AdaptiveColors.textSecondary(context)),
               ),
             ],
           ),
@@ -205,7 +211,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-            color: streakColor.withOpacity(0.12),
+            color: streakColor.withOpacity(context.isDark ? 0.20 : 0.12),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
@@ -230,6 +236,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // ─── 2. Carte Score global + prédiction BEPC ──────────────────
   Widget _buildScoreCard(AppUser user) {
+    final l10n = AppLocalizations.of(context)!;
     final score = user.scoreGlobal; // 0-100
     final scoreColor = _scoreColor(score);
     final competencesCount = user.bktMaitrise.length;
@@ -242,9 +249,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         children: [
           Text(
-            'Score global de maîtrise',
+            l10n.dashboardGlobalScore,
             style: AppTextStyles.h3.copyWith(
-              color: AppColors.textSecondary,
+              color: AdaptiveColors.textSecondary(context),
               fontSize: 15,
             ),
           ),
@@ -262,12 +269,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 Text(
                   'maîtrise',
-                  style: AppTextStyles.bodySmall.copyWith(fontSize: 11),
+                  style: AppTextStyles.bodySmall.copyWith(
+                      fontSize: 11,
+                      color: AdaptiveColors.textSecondary(context)),
                 ),
               ],
             ),
             progressColor: scoreColor,
-            backgroundColor: scoreColor.withOpacity(0.12),
+            backgroundColor: scoreColor.withOpacity(context.isDark ? 0.20 : 0.12),
             circularStrokeCap: CircularStrokeCap.round,
             animation: true,
             animationDuration: 800,
@@ -276,7 +285,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Text(
             'Basé sur $competencesCount compétence${competencesCount > 1 ? "s" : ""} '
             'suivie${competencesCount > 1 ? "s" : ""}',
-            style: AppTextStyles.bodySmall,
+            style: AppTextStyles.bodySmall
+                .copyWith(color: AdaptiveColors.textSecondary(context)),
           ),
           const SizedBox(height: 10),
           // Prédiction score BEPC (mock : moyenne des P(L) × 20)
@@ -284,7 +294,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             padding:
                 const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.accentSurface,
+              color: AdaptiveColors.accentSurface(context),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -309,6 +319,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // ─── 3. Progression par matière ────────────────────────────────
   Widget _buildMatiereProgress(BuildContext context, AppUser user) {
+    final l10n = AppLocalizations.of(context)!;
     final qs = Provider.of<QuestionService>(context, listen: false);
     final matieres = qs.matieres;
     final maitrise = _maitriseByMatiere(user, qs);
@@ -320,14 +331,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Progression par matière', style: AppTextStyles.h3),
+          Text(l10n.dashboardSubjectsProgress,
+              style: AppTextStyles.h3
+                  .copyWith(color: AdaptiveColors.textPrimary(context))),
           const SizedBox(height: 14),
           if (maitrise.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 'Commence à réviser pour voir ta progression par matière.',
-                style: AppTextStyles.bodySmall,
+                style: AppTextStyles.bodySmall
+                    .copyWith(color: AdaptiveColors.textSecondary(context)),
               ),
             )
           else
@@ -349,7 +363,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Expanded(
                             child: Text(
                               e.key,
-                              style: AppTextStyles.body,
+                              style: AppTextStyles.body.copyWith(
+                                  color:
+                                      AdaptiveColors.textPrimary(context)),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -370,7 +386,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         lineHeight: 8,
                         percent: e.value.clamp(0.0, 1.0),
                         progressColor: color,
-                        backgroundColor: color.withOpacity(0.12),
+                        backgroundColor:
+                            color.withOpacity(context.isDark ? 0.20 : 0.12),
                         barRadius: const Radius.circular(6),
                         animation: true,
                         animationDuration: 700,
@@ -386,7 +403,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.only(top: 4),
               child: Text(
                 'Matières disponibles : ${matieres.join(", ")}',
-                style: AppTextStyles.bodySmall.copyWith(fontSize: 11),
+                style: AppTextStyles.bodySmall.copyWith(
+                    fontSize: 11,
+                    color: AdaptiveColors.textSecondary(context)),
               ),
             ),
         ],
@@ -396,6 +415,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // ─── 4. Carte de chaleur : chapitres faibles ──────────────────
   Widget _buildWeakChapters(BuildContext context, AppUser user) {
+    final l10n = AppLocalizations.of(context)!;
     final qs = Provider.of<QuestionService>(context, listen: false);
     final weak = _weakestChapters(user, qs, limit: 5);
 
@@ -411,7 +431,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               const Icon(Icons.priority_high,
                   color: AppColors.error, size: 20),
               const SizedBox(width: 6),
-              Text('Chapitres à travailler', style: AppTextStyles.h3),
+              Text(l10n.dashboardWeakChapters,
+                  style: AppTextStyles.h3
+                      .copyWith(color: AdaptiveColors.textPrimary(context))),
             ],
           ),
           const SizedBox(height: 14),
@@ -420,7 +442,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
                 'Continue à réviser pour voir tes points faibles !',
-                style: AppTextStyles.bodySmall,
+                style: AppTextStyles.bodySmall
+                    .copyWith(color: AdaptiveColors.textSecondary(context)),
               ),
             )
           else
@@ -445,7 +468,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 Text(
                   w.chapitre,
-                  style: AppTextStyles.body,
+                  style: AppTextStyles.body.copyWith(
+                      color: AdaptiveColors.textPrimary(context)),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -455,7 +479,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   lineHeight: 5,
                   percent: w.pL.clamp(0.0, 1.0),
                   progressColor: color,
-                  backgroundColor: color.withOpacity(0.15),
+                  backgroundColor:
+                      color.withOpacity(context.isDark ? 0.20 : 0.15),
                   barRadius: const Radius.circular(4),
                   animation: true,
                   animationDuration: 700,
@@ -486,6 +511,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // ─── 5. Statistiques SRS (3 cartes en row) ────────────────────
   Widget _buildSrsStats(BuildContext context, String userId) {
+    final l10n = AppLocalizations.of(context)!;
     final srs = Provider.of<SrsService>(context, listen: false);
     final stats = srs.getStats(userId);
 
@@ -495,10 +521,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: _buildStatCard(
             icon: Icons.calendar_today,
             value: stats.dueToday,
-            label: 'À réviser\naujourd\'hui',
+            label: l10n.dashboardDueToday,
             color: stats.dueToday > 0
                 ? AppColors.error
-                : AppColors.textSecondary,
+                : AdaptiveColors.textSecondary(context),
           ),
         ),
         const SizedBox(width: 10),
@@ -506,7 +532,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: _buildStatCard(
             icon: Icons.check_circle,
             value: stats.mastered,
-            label: 'Cartes\nmaîtrisées',
+            label: l10n.dashboardMastered,
             color: AppColors.success,
           ),
         ),
@@ -515,7 +541,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: _buildStatCard(
             icon: Icons.school,
             value: stats.learning,
-            label: 'En\napprentissage',
+            label: l10n.dashboardLearning,
             color: AppColors.accent,
           ),
         ),
@@ -544,8 +570,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Text(
             label,
             textAlign: TextAlign.center,
-            style: AppTextStyles.bodySmall
-                .copyWith(fontSize: 11, height: 1.2),
+            style: AppTextStyles.bodySmall.copyWith(
+                fontSize: 11,
+                height: 1.2,
+                color: AdaptiveColors.textSecondary(context)),
           ),
         ],
       ),
@@ -554,6 +582,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // ─── 6. Activité des 7 derniers jours (LineChart fl_chart) ────
   Widget _buildWeeklyActivity() {
+    final l10n = AppLocalizations.of(context)!;
     final counts = _computeWeeklyActivity(_cards);
     final maxVal = counts.fold<int>(0, (a, b) => a > b ? a : b);
     final hasActivity = counts.any((v) => v > 0);
@@ -569,11 +598,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Activité de la semaine', style: AppTextStyles.h3),
+          Text(l10n.dashboardActivity7days,
+              style: AppTextStyles.h3
+                  .copyWith(color: AdaptiveColors.textPrimary(context))),
           const SizedBox(height: 4),
           Text(
             'Questions répondues ces 7 derniers jours',
-            style: AppTextStyles.bodySmall,
+            style: AppTextStyles.bodySmall
+                .copyWith(color: AdaptiveColors.textSecondary(context)),
           ),
           const SizedBox(height: 16),
           if (!hasActivity)
@@ -582,13 +614,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Center(
                 child: Column(
                   children: [
-                    const Icon(Icons.show_chart,
-                        color: AppColors.textDisabled, size: 36),
+                    Icon(Icons.show_chart,
+                        color: AdaptiveColors.textDisabled(context),
+                        size: 36),
                     const SizedBox(height: 8),
                     Text(
                       'Pas encore d\'activité cette semaine.\nCommence aujourd\'hui !',
                       textAlign: TextAlign.center,
-                      style: AppTextStyles.bodySmall,
+                      style: AppTextStyles.bodySmall
+                          .copyWith(color: AdaptiveColors.textSecondary(context)),
                     ),
                   ],
                 ),
@@ -604,7 +638,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     drawVerticalLine: false,
                     horizontalInterval: yInterval,
                     getDrawingHorizontalLine: (v) => FlLine(
-                      color: AppColors.divider,
+                      color: AdaptiveColors.divider(context),
                       strokeWidth: 1,
                       dashArray: [4, 4],
                     ),
@@ -624,8 +658,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             padding: const EdgeInsets.only(right: 6),
                             child: Text(
                               v.toInt().toString(),
-                              style: AppTextStyles.bodySmall
-                                  .copyWith(fontSize: 10),
+                              style: AppTextStyles.bodySmall.copyWith(
+                                  fontSize: 10,
+                                  color: AdaptiveColors.textSecondary(context)),
                               textAlign: TextAlign.right,
                             ),
                           );
@@ -646,8 +681,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(
                               days[i],
-                              style: AppTextStyles.bodySmall
-                                  .copyWith(fontSize: 11),
+                              style: AppTextStyles.bodySmall.copyWith(
+                                  fontSize: 11,
+                                  color: AdaptiveColors.textSecondary(context)),
                             ),
                           );
                         },
@@ -668,7 +704,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           FlSpot(i.toDouble(), counts[i].toDouble()),
                       ],
                       isCurved: true,
-                      color: AppColors.primary,
+                      color: AdaptiveColors.primary(context),
                       barWidth: 3,
                       isStrokeCapRound: true,
                       dotData: FlDotData(
@@ -676,14 +712,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         getDotPainter: (spot, _, __, ___) =>
                             FlDotCirclePainter(
                           radius: 4,
-                          color: AppColors.primary,
+                          color: AdaptiveColors.primary(context),
                           strokeWidth: 2,
-                          strokeColor: Colors.white,
+                          strokeColor: AdaptiveColors.surface(context),
                         ),
                       ),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: AppColors.primary.withOpacity(0.12),
+                        color: AdaptiveColors.primary(context)
+                            .withOpacity(0.12),
                       ),
                     ),
                   ],
@@ -697,6 +734,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // ─── 7. Actions rapides ────────────────────────────────────────
   Widget _buildQuickActions(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Expanded(
@@ -704,7 +742,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () => context.go(
                 '/revision/${Uri.encodeComponent("Mathématiques")}'),
             icon: const Icon(Icons.menu_book, size: 20),
-            label: const Text('Réviser'),
+            label: Text(l10n.dashboardReviseNow),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
@@ -718,7 +756,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () => context.go('/simulation',
                 extra: {'examen': 'BEPC', 'serie': null}),
             icon: const Icon(Icons.timer, size: 20),
-            label: const Text('Examen blanc'),
+            label: Text(l10n.dashboardMockExam),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accent,
               foregroundColor: Colors.white,
@@ -741,14 +779,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const Icon(Icons.waving_hand,
                 size: 72, color: AppColors.primary),
             const SizedBox(height: 24),
-            Text('Bienvenue !', style: AppTextStyles.h1),
+            Text('Bienvenue !',
+                style: AppTextStyles.h1
+                    .copyWith(color: AdaptiveColors.textPrimary(context))),
             const SizedBox(height: 8),
             Text(
               'Commence ta première révision pour voir tes statistiques '
               'apparaître ici.',
               textAlign: TextAlign.center,
               style: AppTextStyles.body.copyWith(
-                color: AppColors.textSecondary,
+                color: AdaptiveColors.textSecondary(context),
               ),
             ),
             const SizedBox(height: 32),
@@ -882,11 +922,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   BoxDecoration _cardDecoration() => BoxDecoration(
-        color: AppColors.surface,
+        color: AdaptiveColors.surface(context),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AdaptiveColors.shadow(context),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

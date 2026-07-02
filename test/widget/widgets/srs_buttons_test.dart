@@ -147,5 +147,23 @@ void main() {
         findsOneWidget,
       );
     });
+
+    // Added by Agent BU2 (Session 4 — reduced widget scope).
+    // Verifies the explanatory sublabel under each button label, so a
+    // student who taps the wrong quality knows what to look for next time.
+    testWidgets('Affiche les 4 sous-libellés explicatifs', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SrsButtons(onQualitySelected: (_) {}),
+          ),
+        ),
+      );
+
+      expect(find.text('Réponse immédiate'), findsOneWidget);
+      expect(find.text('Légère hésitation'), findsOneWidget);
+      expect(find.text('Réponse trouvée'), findsOneWidget);
+      expect(find.text('Mauvaise réponse'), findsOneWidget);
+    });
   });
 }

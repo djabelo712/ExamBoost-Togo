@@ -65,7 +65,7 @@ class BadgeService {
     required SrsStats srsStats,
   }) async {
     if (!_initialized) {
-      AppLogger.warning('BadgeService pas initialisé — checkAndUnlock ignoré');
+      AppLogger.warn('BadgeService pas initialisé — checkAndUnlock ignoré');
       return const [];
     }
 
@@ -256,7 +256,7 @@ class BadgeService {
         return _metric('bug_reported', 0);
 
       default:
-        AppLogger.warning('Badge inconnu dans _computeProgress : ${badge.id}');
+        AppLogger.warn('Badge inconnu dans _computeProgress : ${badge.id}');
         return 0;
     }
   }

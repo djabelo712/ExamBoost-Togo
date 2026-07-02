@@ -10,6 +10,7 @@ normalisation pour dedup, etc.).
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from unittest.mock import patch
 
@@ -415,3 +416,429 @@ def test_estimate_irt_uses_history_when_available():
     # b doit etre ~ inv_norm(0.2) ~ -0.84
     assert qs[0]["irt"]["b"] < 0
     assert abs(qs[0]["irt"]["b"] - (-0.842)) < 0.05
+
+
+# ─── Extensions: structure_one_file, normalize edge cases ─────────────────
+
+
+def test_parse_ocr_filename_bepc_toutes_series():
+    """BEPC files use 'TOUTES' which is normalized to None."""
+    meta = parse_ocr_filename("banquedesepreuves_BEPC_Histoire Geographie_2020_TOUTES.txt")
+    assert meta["source"] == "banquedesepreuves"
+    assert meta["examen"] == "BEPC"
+    assert meta["matiere"] == "Histoire Geographie"
+    assert meta["annee"] == 2020
+    assert meta["serie"] is None
+
+
+def test_parse_ocr_filename_bac2_serie_d():
+    meta = parse_ocr_filename("epreuvesetcorriges_BAC2_Sciences Physiques_2022_D.txt")
+    assert meta["examen"] == "BAC2"
+    assert meta["serie"] == "D"
+    assert meta["matiere"] == "Sciences Physiques"
+    assert meta["annee"] == 2022
+
+
+def test_parse_ocr_filename_probatoire():
+    meta = parse_ocr_filename("epreuvesetcorriges_Probatoire_Mathematiques_2023_C.txt")
+    assert meta["examen"] == "Probatoire"
+    assert meta["serie"] == "C"
+
+
+def test_parse_ocr_filename_no_serie_for_bepc():
+    """BEPC filenames may omit the serie part entirely."""
+    meta = parse_ocr_filename("epreuvesetcorriges_BEPC_Francais_2021.txt")
+    assert meta is not None
+    assert meta["examen"] == "BEPC"
+    assert meta["serie"] is None
+
+
+def test_parse_ocr_filename_rejects_bad_examen():
+    """An unknown examen keyword returns None."""
+    assert parse_ocr_filename("src_CONCOURS_Mathematiques_2022_C.txt") is None
+
+
+def test_parse_ocr_filename_rejects_missing_year():
+    assert parse_ocr_filename("src_BEPC_Mathematiques_C.txt") is None
+
+
+def test_parse_ocr_filename_rejects_wrong_extension():
+    assert parse_ocr_filename("src_BEPC_Mathematiques_2022_C.json") is None
+
+
+def test_normalize_questions_assigns_sequential_ids():
+    """normalize_questions rebuilds ids with sequential Q01, Q02, ..."""
+    raw = [
+        {"enonce": "Q1 enonce", "reponse": "r1", "matiere": "Mathématiques",
+         "chapitre": "C1", "examen": "BEPC", "annee": 2022, "type": "calcul",
+         "choix": None, "points": 4, "irt": {}},
+        {"enonce": "Q2 enonce", "reponse": "r2", "matiere": "Mathématiques",
+         "chapitre": "C2", "examen": "BEPC", "annee": 2022, "type": "calcul",
+         "choix": None, "points": 4, "irt": {}},
+        {"enonce": "Q3 enonce", "reponse": "r3", "matiere": "Mathématiques",
+         "chapitre": "C3", "examen": "BEPC", "annee": 2022, "type": "calcul",
+         "choix": None, "points": 4, "irt": {}},
+    ]
+    out = normalize_questions(raw, "BEPC", "Mathématiques", 2022, None)
+    ids = [q["id"] for q in out]
+    assert ids == [
+        "TG-BEPC-MATHS-2022-Q01",
+        "TG-BEPC-MATHS-2022-Q02",
+        "TG-BEPC-MATHS-2022-Q03",
+    ]
+
+
+def test_normalize_questions_filters_non_dict_entries():
+    """Non-dict entries (strings, None) in raw_questions are skipped."""
+    raw = [
+        {"enonce": "Q1 enonce", "reponse": "r1", "matiere": "Mathématiques",
+         "chapitre": "C1", "examen": "BEPC", "annee": 2022, "type": "calcul",
+         "choix": None, "points": 4, "irt": {}},
+        "not a dict",
+        None,
+        42,
+    ]
+    out = normalize_questions(raw, "BEPC", "Mathématiques", 2022, None)
+    assert len(out) == 1
+
+
+def test_normalize_questions_forces_bepc_serie_null():
+    """Even if the LLM returns a serie for BEPC, normalize_questions
+    forces it to None (authoritative metadata wins)."""
+    raw = [{
+        "enonce": "Q1 enonce", "reponse": "r1", "matiere": "Mathématiques",
+        "chapitre": "C1", "examen": "BEPC", "annee": 2022, "type": "calcul",
+        "choix": None, "points": 4, "serie": "C",  # LLM hallucinated serie
+        "irt": {},
+    }]
+    out = normalize_questions(raw, "BEPC", "Mathématiques", 2022, None)
+    assert out[0]["serie"] is None
+
+
+def test_normalize_questions_bac_keeps_provided_serie():
+    """For BAC, normalize_questions uses the serie from the filename."""
+    raw = [{
+        "enonce": "Q1 enonce", "reponse": "r1", "matiere": "Mathématiques",
+        "chapitre": "C1", "examen": "BAC1", "annee": 2023, "type": "calcul",
+        "choix": None, "points": 4,
+        "irt": {},
+    }]
+    out = normalize_questions(raw, "BAC1", "Mathématiques", 2023, "D")
+    assert out[0]["serie"] == "D"
+
+
+def test_normalize_questions_bac_falls_back_to_llm_serie():
+    """If the filename has no serie but the LLM provided one, use it."""
+    raw = [{
+        "enonce": "Q1 enonce", "reponse": "r1", "matiere": "Mathématiques",
+        "chapitre": "C1", "examen": "BAC1", "annee": 2023, "type": "calcul",
+        "choix": None, "points": 4, "serie": "C",
+        "irt": {},
+    }]
+    out = normalize_questions(raw, "BAC1", "Mathématiques", 2023, None)
+    assert out[0]["serie"] == "C"
+
+
+def test_normalize_questions_clears_choix_for_non_qcm_types():
+    """For 'calcul' / 'ouvert' / 'redaction' types, choix is forced to None."""
+    for qtype in ("calcul", "ouvert", "redaction"):
+        raw = [{
+            "enonce": "Q1 enonce", "reponse": "r1", "matiere": "Mathématiques",
+            "chapitre": "C1", "examen": "BEPC", "annee": 2022, "type": qtype,
+            "choix": ["A", "B", "C", "D"],  # should be cleared
+            "points": 4, "irt": {},
+        }]
+        out = normalize_questions(raw, "BEPC", "Mathématiques", 2022, None)
+        assert out[0]["choix"] is None
+
+
+def test_normalize_questions_keeps_choix_for_qcm():
+    raw = [{
+        "enonce": "Q1 enonce", "reponse": "r1", "matiere": "Mathématiques",
+        "chapitre": "C1", "examen": "BEPC", "annee": 2022, "type": "qcm",
+        "choix": ["A", "B", "C", "D"],
+        "points": 4, "irt": {},
+    }]
+    out = normalize_questions(raw, "BEPC", "Mathématiques", 2022, None)
+    assert out[0]["choix"] == ["A", "B", "C", "D"]
+
+
+def test_normalize_questions_clears_choix_when_qcm_has_empty_list():
+    """QCM with empty choix => set to None (avoids validation failure)."""
+    raw = [{
+        "enonce": "Q1 enonce", "reponse": "r1", "matiere": "Mathématiques",
+        "chapitre": "C1", "examen": "BEPC", "annee": 2022, "type": "qcm",
+        "choix": [],
+        "points": 4, "irt": {},
+    }]
+    out = normalize_questions(raw, "BEPC", "Mathématiques", 2022, None)
+    assert out[0]["choix"] is None
+
+
+def test_normalize_questions_ensures_irt_dict_keys():
+    """If irt is partially filled, normalize_questions ensures all 4 keys
+    are present (a, b, c, calibre)."""
+    raw = [{
+        "enonce": "Q1 enonce", "reponse": "r1", "matiere": "Mathématiques",
+        "chapitre": "C1", "examen": "BEPC", "annee": 2022, "type": "calcul",
+        "choix": None, "points": 4,
+        "irt": {"b": 0.5},  # missing a, c, calibre
+    }]
+    out = normalize_questions(raw, "BEPC", "Mathématiques", 2022, None)
+    irt = out[0]["irt"]
+    assert set(irt.keys()) == {"a", "b", "c", "calibre"}
+    assert irt["b"] == 0.5  # preserved
+    assert irt["a"] is None
+    assert irt["c"] is None
+    assert irt["calibre"] is False
+
+
+def test_structure_one_file_unparsable_filename_returns_empty(tmp_path):
+    """structure_one_file returns ([], []) when the filename is not parsable."""
+    from structure_questions import structure_one_file
+
+    bad = tmp_path / "random_file.txt"
+    bad.write_text("some OCR text", encoding="utf-8")
+    valid, invalid = structure_one_file(bad)
+    assert valid == []
+    assert invalid == []
+
+
+def test_structure_one_file_empty_text_returns_empty(tmp_path, monkeypatch):
+    """When the OCR text file is empty, structure_one_file returns ([], [])."""
+    from structure_questions import structure_one_file
+
+    # Patch is_openai_configured so we don't raise OpenAIConfigError early.
+    import structure_questions as struct_mod
+    monkeypatch.setattr(struct_mod, "is_openai_configured", lambda: True)
+
+    f = tmp_path / "src_BEPC_Mathematiques_2022.txt"
+    f.write_text("   \n  \n   ", encoding="utf-8")
+    valid, invalid = structure_one_file(f)
+    assert valid == []
+    assert invalid == []
+
+
+def test_structure_one_file_raises_when_openai_not_configured(
+    tmp_path, monkeypatch,
+):
+    """When OpenAI is not configured, structure_one_file raises
+    OpenAIConfigError (instead of silently producing nothing)."""
+    from structure_questions import structure_one_file
+    import structure_questions as struct_mod
+    from utils.openai_utils import OpenAIConfigError
+
+    monkeypatch.setattr(struct_mod, "is_openai_configured", lambda: False)
+
+    f = tmp_path / "src_BEPC_Mathematiques_2022.txt"
+    f.write_text("OCR text content", encoding="utf-8")
+
+    with pytest.raises(OpenAIConfigError):
+        structure_one_file(f)
+
+
+def test_structure_one_file_with_mocked_openai(tmp_path, monkeypatch):
+    """Full structure_one_file flow with a mocked OpenAI client."""
+    from structure_questions import structure_one_file
+    import structure_questions as struct_mod
+
+    monkeypatch.setattr(struct_mod, "is_openai_configured", lambda: True)
+
+    # Mock openai_structure_questions to return raw questions.
+    # NOTE: matiere must match an entry in MATIERES (with accents), and
+    # competence_id is required by the schema.
+    raw_questions = [{
+        "enonce": "Calculer 2+2 (enonce de test suffisamment long)",
+        "reponse": "4",
+        "explication": "car 2+2=4",
+        "matiere": "Mathématiques",
+        "chapitre": "Additions",
+        "competence_id": "TG-MATHS-ADD-001",
+        "examen": "BEPC",
+        "annee": 2022,
+        "type": "calcul",
+        "choix": None,
+        "points": 4,
+        "irt": {},
+    }]
+    monkeypatch.setattr(
+        struct_mod,
+        "openai_structure_questions",
+        lambda **kw: raw_questions,
+    )
+
+    # Patch PATHS.structured_questions so save_questions writes to tmp.
+    from config import Paths
+    fake_paths = Paths(
+        root=tmp_path,
+        raw_pdfs=tmp_path / "raw",
+        extracted_text=tmp_path / "txt",
+        structured_questions=tmp_path / "q",
+        final=tmp_path / "final",
+        cache=tmp_path / "cache",
+    )
+    fake_paths.structured_questions.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(struct_mod, "PATHS", fake_paths)
+    # json_utils also imported PATHS at top-level? No, it imports from config.
+    # save_questions uses the path arg directly, so we're fine.
+
+    f = tmp_path / "src_BEPC_Mathématiques_2022.txt"
+    f.write_text("OCR text content for the structure phase", encoding="utf-8")
+
+    valid, invalid = structure_one_file(f)
+    assert len(valid) == 1
+    assert valid[0]["id"] == "TG-BEPC-MATHS-2022-Q01"
+    assert valid[0]["serie"] is None
+    assert invalid == []
+
+    # Verify the output JSON file was saved.
+    out_files = list(fake_paths.structured_questions.glob("*.json"))
+    assert len(out_files) == 1
+    assert "2022_Mathématiques" in out_files[0].name
+
+
+def test_structure_one_file_separates_invalid(tmp_path, monkeypatch):
+    """When the LLM returns a question with a short enonce (invalid), it
+    goes to the invalid list and is saved in a separate _invalid.json file."""
+    from structure_questions import structure_one_file
+    import structure_questions as struct_mod
+
+    monkeypatch.setattr(struct_mod, "is_openai_configured", lambda: True)
+
+    raw_questions = [
+        # Valid question.
+        {
+            "enonce": "Calculer 2+2 (enonce de test suffisamment long)",
+            "reponse": "4", "explication": "ok",
+            "matiere": "Mathématiques", "chapitre": "Additions",
+            "competence_id": "TG-MATHS-ADD-001",
+            "examen": "BEPC", "annee": 2022, "type": "calcul",
+            "choix": None, "points": 4, "irt": {},
+        },
+        # Invalid: short enonce (< 10 chars).
+        {
+            "enonce": "ok",  # too short
+            "reponse": "6", "explication": "ok",
+            "matiere": "Mathématiques", "chapitre": "Additions",
+            "competence_id": "TG-MATHS-ADD-002",
+            "examen": "BEPC", "annee": 2022, "type": "calcul",
+            "choix": None, "points": 4, "irt": {},
+        },
+    ]
+    monkeypatch.setattr(
+        struct_mod,
+        "openai_structure_questions",
+        lambda **kw: raw_questions,
+    )
+
+    from config import Paths
+    fake_paths = Paths(
+        root=tmp_path,
+        raw_pdfs=tmp_path / "raw",
+        extracted_text=tmp_path / "txt",
+        structured_questions=tmp_path / "q",
+        final=tmp_path / "final",
+        cache=tmp_path / "cache",
+    )
+    fake_paths.structured_questions.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(struct_mod, "PATHS", fake_paths)
+
+    f = tmp_path / "src_BEPC_Mathématiques_2022.txt"
+    f.write_text("OCR text", encoding="utf-8")
+
+    valid, invalid = structure_one_file(f)
+    assert len(valid) == 1
+    assert len(invalid) == 1
+    assert invalid[0]["enonce"] == "ok"
+    assert "_validation_errors" in invalid[0]
+
+    # Both valid and invalid output files should exist.
+    out_files = sorted(
+        fake_paths.structured_questions.glob("*.json"),
+        key=lambda p: p.name,
+    )
+    # 1 valid + 1 _invalid.
+    assert len(out_files) == 2
+    invalid_files = [f for f in out_files if "_invalid" in f.name]
+    assert len(invalid_files) == 1
+
+
+# ─── Extensions: completeness_score edge cases ────────────────────────────
+
+
+def test_completeness_score_with_partial_irt():
+    """irt dict present but b=None => irt score NOT awarded."""
+    q = {
+        "enonce": "x", "reponse": "4", "explication": "ok",
+        "points": 4, "irt": {"b": None},
+    }
+    assert completeness_score(q) == 4
+
+
+def test_completeness_score_with_none_values():
+    """points=None => points score NOT awarded."""
+    q = {
+        "enonce": "x", "reponse": "4", "explication": "ok",
+        "points": None,
+    }
+    assert completeness_score(q) == 3
+
+
+# ─── Extensions: deduplicate cluster edge cases ───────────────────────────
+
+
+def test_deduplicate_three_distinct_topics_no_clusters():
+    qs = [
+        _make_q("Q1", "Calculer la somme 1 + 2 + 3 + 4."),
+        _make_q("Q2", "Quelle est la capitale du Togo en Afrique ?"),
+        _make_q("Q3", "Definir la photosynthese chez les vegetaux verts."),
+    ]
+    kept, result = deduplicate_questions(qs)
+    assert len(kept) == 3
+    assert result.clusters == []
+    assert result.duplicates_dropped == 0
+
+
+def test_deduplicate_preserves_question_dict_reference():
+    """The kept question is the SAME dict object as the input (not a copy)."""
+    q = _make_q("Q1", "Calculer la somme 1 + 2 + 3 + 4.")
+    kept, _ = deduplicate_questions([q])
+    assert kept[0] is q
+
+
+# ─── Extensions: inv_norm extreme values ─────────────────────────────────
+
+
+def test_inv_norm_extreme_values_are_finite():
+    """inv_norm(0.001) and inv_norm(0.999) should both be finite (clamped)."""
+    assert math.isfinite(inv_norm(0.001))
+    assert math.isfinite(inv_norm(0.999))
+    # inv_norm(0.001) is very negative; inv_norm(0.999) very positive.
+    assert inv_norm(0.001) < -2.0
+    assert inv_norm(0.999) > 2.0
+
+
+def test_inv_norm_extreme_clamping_does_not_return_inf():
+    """p=0 and p=1 would normally return -inf and +inf; the function clamps."""
+    assert inv_norm(0.0) == inv_norm(0.001)  # both clamped
+    assert inv_norm(1.0) == inv_norm(0.999)
+
+
+# ─── Extensions: estimate_irt_for_questions with mixed states ────────────
+
+
+def test_estimate_irt_for_questions_mixed_states():
+    """A list with one already-set b and one missing b: only the latter is
+    modified."""
+    qs = [
+        {"id": "Q1", "type": "calcul", "examen": "BEPC", "points": 4,
+         "serie": None, "explication": "ok",
+         "irt": {"a": None, "b": 0.99, "c": None, "calibre": False}},
+        {"id": "Q2", "type": "calcul", "examen": "BEPC", "points": 4,
+         "serie": None, "explication": "ok",
+         "irt": {"a": None, "b": None, "c": None, "calibre": False}},
+    ]
+    estimate_irt_for_questions(qs)
+    assert qs[0]["irt"]["b"] == 0.99  # unchanged
+    assert qs[1]["irt"]["b"] is not None  # newly estimated
+    assert qs[1]["irt"]["b"] == 0.5  # heuristic for BEPC calcul no bonus

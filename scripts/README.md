@@ -695,3 +695,370 @@ rendu reste net car vectoriel). Si flou persistant, utiliser `logo_examboost.svg
 - [ ] Build iOS OK (icône visible dans le simulateur + Springboard)
 - [ ] Ajouter `app_icons/` au `.gitignore` (outputs générés, ne pas committer)
 
+---
+
+# Scripts de build APK + Web + CI — Agent BF (task `BF-build-apk-script`)
+
+Cette section documente les 7 scripts bash et les 3 workflows GitHub
+Actions qui automatisent la génération des binaires (APK debug, APK
+release, bundle web) ainsi que la vérification de la contrainte
+« APK < 25 Mo » imposée par le plan de distribution Togo.
+
+## Pré-requis
+
+| Outil        | Version min.   | Usage                                  |
+|--------------|----------------|----------------------------------------|
+| Flutter SDK  | 3.32.0 (stable)| Build APK + web                        |
+| Dart SDK     | 3.3.0+         | (livré avec Flutter)                   |
+| Android SDK  | API 28+        | Build APK + émulateur bas de gamme     |
+| `adb`        | 1.0.41+        | Install/test sur device / émulateur    |
+| `emulator`   | (Android SDK)  | Test sur device bas de gamme           |
+| `avdmanager` | (Android SDK)  | Création AVD low-end                   |
+| `python3`    | 3.10+          | Serveur HTTP local pour test web       |
+| `bc` / `awk` | standard       | Calculs de taille dans les scripts     |
+
+Aucun de ces scripts ne modifie le code source Flutter. Tous les
+fichiers générés (APK, bundles web, copies horodatées) sont placés à
+la racine du repo ou dans `build/` (déjà dans `.gitignore`).
+
+## Liste des scripts
+
+| Script                  | Rôle                                                      |
+|-------------------------|-----------------------------------------------------------|
+| `build_apk_debug.sh`    | Build APK debug + copie horodatée                         |
+| `build_apk_release.sh`  | Build 3 APK release split per ABI + vérif taille < 25 Mo  |
+| `build_web.sh`          | Build web bundle (renderer html) + instructions serveur   |
+| `build_all.sh`          | Orchestre les 3 builds à la suite                         |
+| `optimize_apk.sh`       | Audit assets + suggestions d'optimisation (read-only)     |
+| `check_apk_size.sh`     | Vérifie qu'un APK < 25 Mo (exit 1 sinon)                  |
+| `test_on_low_end.sh`    | Lance un émulateur Tecno Spark 4 + smoke test + memory    |
+
+## Démarrage rapide
+
+```bash
+# 1. Build APK debug pour tester sur ton téléphone
+./scripts/build_apk_debug.sh
+adb install -r examboost-debug-*.apk
+
+# 2. Build APK release (3 APK plus légers, pour distribution)
+./scripts/build_apk_release.sh
+./scripts/check_apk_size.sh build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+
+# 3. Build web pour démo navigateur
+./scripts/build_web.sh
+cd build/web && python3 -m http.server 8080
+# Ouvre http://localhost:8080
+
+# 4. Tout en un
+./scripts/build_all.sh
+```
+
+## Détail des scripts
+
+### `build_apk_debug.sh`
+
+```bash
+./scripts/build_apk_debug.sh
+```
+
+Étapes :
+1. Vérifie que Flutter est installé.
+2. `flutter clean` puis `flutter pub get`.
+3. `dart run build_runner build --delete-conflicting-outputs`
+   (régénère `*.g.dart`, `*.freezed.dart`, `*.mocks.dart`).
+4. `flutter build apk --debug`.
+5. Copie `app-debug.apk` en `examboost-debug-<YYYYMMDD-HHMMSS>.apk`
+   à la racine du repo pour faciliter le partage.
+
+Sortie :
+- `build/app/outputs/flutter-apk/app-debug.apk`
+- `examboost-debug-<timestamp>.apk` (racine du repo)
+
+### `build_apk_release.sh`
+
+```bash
+./scripts/build_apk_release.sh
+```
+
+Étapes :
+1. Clean + deps + codegen (idem debug).
+2. `flutter build apk --release --split-per-abi` → 3 APK :
+   - `app-arm64-v8a-release.apk` (téléphones modernes — recommandé)
+   - `app-armeabi-v7a-release.apk` (téléphones anciens / entrée de gamme)
+   - `app-x86_64-release.apk` (émulateurs)
+3. Affiche la taille de chaque APK.
+4. Vérifie que chaque APK < 25 Mo (contrainte Togo) — avertissement si
+   dépassement, sans faire échouer le build.
+5. Copie chaque APK en `examboost-v<version>-<abi>.apk` (version lue
+   depuis `pubspec.yaml`).
+
+Sortie :
+- 3 fichiers `build/app/outputs/flutter-apk/app-*-release.apk`
+- 3 fichiers `examboost-v<version>-<abi>.apk` à la racine du repo
+
+### `build_web.sh`
+
+```bash
+./scripts/build_web.sh
+```
+
+Étapes :
+1. Clean + deps + codegen.
+2. `flutter build web --release --web-renderer html` — le renderer
+   **html** est préféré à **CanvasKit** car il produit un bundle
+   initial plus léger, important pour les connections data limitées
+   au Togo. Switch vers `--web-renderer canvaskit` pour un rendu
+   pixel-perfect au prix d'un bundle plus gros (~2 Mo CanvasKit).
+3. Affiche la taille du bundle et les instructions pour servir en
+   local avec `python3 -m http.server`.
+
+Sortie : `build/web/` (fichiers statiques).
+
+### `build_all.sh`
+
+```bash
+./scripts/build_all.sh
+```
+
+Orchestre les 3 builds (debug, release, web) en séquence. Utile pour
+vérifier que toutes les cibles compilent avant de tagger une release.
+
+### `optimize_apk.sh`
+
+```bash
+./scripts/optimize_apk.sh
+```
+
+Audit **read-only** (ne modifie aucun fichier) qui :
+- Liste les 10 assets les plus lourds.
+- Liste les polices (`.ttf` / `.otf`) avec leur taille.
+- Compte les images par format (PNG / WebP / JPG / SVG).
+- Affiche la taille des APK debug + release actuels.
+- Propose 8 suggestions concrètes d'optimisation (WebP, R8, etc.).
+
+À exécuter si `check_apk_size.sh` échoue, puis appliquer les
+optimisations manuellement et rebuilder.
+
+### `check_apk_size.sh`
+
+```bash
+./scripts/check_apk_size.sh                                              # APK release par défaut
+./scripts/check_apk_size.sh build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+./scripts/check_apk_size.sh path/to/file.apk 15                          # limite custom (Mo)
+```
+
+Vérifie qu'un APK est sous la limite (25 Mo par défaut, configurable).
+Exit codes :
+- `0` — APK sous la limite
+- `1` — APK au-dessus de la limite (ou fichier introuvable)
+
+Utilisé par les workflows GitHub Actions et par `build_apk_release.sh`.
+
+### `test_on_low_end.sh`
+
+```bash
+./scripts/test_on_low_end.sh
+MONITOR_SECONDS=120 ./scripts/test_on_low_end.sh    # monitorer plus longtemps
+```
+
+Simule un **Tecno Spark 4** (téléphone entrée de gamme courant au
+Togo : Android 9, 2 Go RAM, 16 Go stockage, écran 720x1560, ABI
+armeabi-v7a).
+
+Étapes :
+1. Vérifie `emulator`, `adb`, `avdmanager` dans le PATH.
+2. Crée l'AVD `examboost_low_end` si elle n'existe pas (image
+   `system-images;android-28;default;armeabi-v7a`, device Nexus 4).
+3. Lance l'émulateur headless avec `-memory 2048`.
+4. Attend que `sys.boot_completed=1` (jusqu'à 240s).
+5. Build + installe l'APK debug.
+6. Lance l'activité principale.
+7. Snapshot mémoire à T0 (`dumpsys meminfo`).
+8. Simule des taps toutes les 5s pendant 60s (configurable via
+   `MONITOR_SECONDS`).
+9. Snapshot mémoire à T0+60s.
+10. Vérifie l'absence de crash (`adb logcat -b crash`).
+11. Tue l'émulateur proprement (trap EXIT).
+
+Pré-requis pour le système d'image Android :
+
+```bash
+sdkmanager "system-images;android-28;default;armeabi-v7a"
+sdkmanager --licenses
+```
+
+## Workflows GitHub Actions
+
+3 workflows vivent dans `.github/workflows/` :
+
+| Fichier          | Déclencheur                      | But                                  |
+|------------------|----------------------------------|--------------------------------------|
+| `build_apk.yml`  | push/PR sur `main`, `workflow_dispatch` | Build APK debug (toujours) + release APKs (sur push main) |
+| `build_web.yml`  | push/PR sur `main`, `workflow_dispatch` | Build web bundle + deploy GitHub Pages (sur push main) |
+| `release_apk.yml`| push d'un tag `v*`               | Build 3 APK release + créer une GitHub Release avec notes auto |
+
+> **Note** — ces 3 workflows coexistent avec les workflows historiques
+> `flutter_ci.yml` (analyze + test + build-apk-debug + build-web en
+> pipeline complet) et `flutter_release.yml` (release sur tag `v*`).
+> Les nouveaux workflows sont plus ciblés et incluent la vérification
+> de la contrainte « APK < 25 Mo ». Pour éviter la duplication, vous
+> pouvez désactiver `flutter_ci.yml` et `flutter_release.yml` via
+> l'onglet Actions du repo GitHub (voir `workflows/README.md`).
+
+### Voir les builds dans GitHub
+
+1. Aller sur https://github.com/djabelo712/ExamBoost-Togo
+2. Cliquer l'onglet **Actions**
+3. Sélectionner le workflow dans la sidebar gauche :
+   - **Build APK** pour les builds debug + release
+   - **Build Web** pour les builds web + déploiement Pages
+   - **Release APK** pour les releases taggées
+4. Cliquer sur un run pour voir les logs de chaque job / step
+5. Scroller en bas du run pour télécharger les artifacts (APK, web bundle)
+
+### Télécharger un artifact
+
+1. Ouvrir le run dans l'onglet **Actions**
+2. Scroller en bas de la page du run (ou cliquer le job, puis scroller)
+3. Sous **Artifacts**, cliquer le nom :
+   - `examboost-debug-apk` — APK debug
+   - `examboost-release-apks` — 3 APK release (zip)
+   - `examboost-web` — bundle web (zip)
+   - `examboost-release-v<version>` — APK de la release taggée
+4. Le ZIP se télécharge. Pour un APK release, dézipper puis `adb install -r app-arm64-v8a-release.apk`
+
+### Créer une release
+
+```bash
+# 1. Mettre à jour la version dans pubspec.yaml
+#    version: 0.2.0+1
+
+# 2. Commit + tag
+git add pubspec.yaml
+git commit -m "chore: bump version to 0.2.0"
+git tag v0.2.0
+git push origin main --tags
+
+# 3. Le workflow release_apk.yml se déclenche automatiquement
+#    → build 3 APK + crée une GitHub Release avec notes auto
+
+# 4. Vérifier sur https://github.com/djabelo712/ExamBoost-Togo/releases
+```
+
+### Déployer le web bundle sur GitHub Pages
+
+Le workflow `build_web.yml` déploie automatiquement le bundle web sur
+la branche `gh-pages` à chaque push sur `main`. Pour activer GitHub Pages :
+
+1. Aller dans **Settings > Pages** du repo
+2. Source : **Deploy from a branch**
+3. Branch : `gh-pages` / dossier `/ (root)`
+4. Sauvegarder
+5. L'app sera disponible sur
+   `https://djabelo712.github.io/ExamBoost-Togo/`
+
+> Le `--base-href "/ExamBoost-Togo/"` est déjà configuré dans le
+> workflow pour fonctionner avec GitHub Pages sous-subpath.
+
+## Optimisation de la taille APK
+
+Si `check_apk_size.sh` ou le workflow GitHub échoue (APK > 25 Mo) :
+
+1. **Lancer l'audit** :
+   ```bash
+   ./scripts/optimize_apk.sh
+   ```
+2. **Compresser les images PNG en WebP** (gain typique 50-70 %) :
+   ```bash
+   for f in assets/images/*.png; do
+     cwebp -q 80 "$f" -o "${f%.png}.webp"
+     rm "$f"
+   done
+   # Mettre à jour les références .png → .webp dans le code Dart
+   ```
+3. **Activer R8/ProGuard** dans `android/app/build.gradle` :
+   ```gradle
+   android {
+     buildTypes {
+       release {
+         minifyEnabled true
+         shrinkResources true
+         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+       }
+     }
+   }
+   ```
+4. **Retirer les assets non utilisés** :
+   ```bash
+   dart pub global activate dependency_validator
+   dart pub global run dependency_validator:unused assets
+   ```
+5. **Réduire les polices** : préférer Material Symbols à un set
+   iconique complet (~1 Mo). Une police typique pèse 200-500 Ko.
+6. **Alléger les Lottie** : compresser le JSON avec `jq -c` :
+   ```bash
+   jq -c . lib/lottie/loading.json > lib/lottie/loading.min.json
+   ```
+7. **Rebuilder et vérifier** :
+   ```bash
+   ./scripts/build_apk_release.sh
+   ./scripts/check_apk_size.sh build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+   ```
+
+## Créer l'AVD low-end manuellement
+
+Le script `test_on_low_end.sh` crée l'AVD automatiquement si elle
+n'existe pas. Pour la créer manuellement :
+
+```bash
+# 1. Installer l'image système Android 9 (API 28) armeabi-v7a
+sdkmanager "system-images;android-28;default;armeabi-v7a"
+sdkmanager --licenses
+
+# 2. Créer l'AVD
+avdmanager create avd \
+  -n examboost_low_end \
+  -k "system-images;android-28;default;armeabi-v7a" \
+  -d "Nexus 4"
+
+# 3. Lancer
+emulator -avd examboost_low_end -memory 2048 -no-window -no-audio
+
+# 4. Lancer le test
+./scripts/test_on_low_end.sh
+```
+
+Pour supprimer l'AVD :
+
+```bash
+avdmanager delete avd -n examboost_low_end
+```
+
+## Conventions
+
+- **Shebang** : `#!/usr/bin/env bash` pour la portabilité.
+- **Set options** : `set -euo pipefail` (fail-fast + erreurs sur
+  variables non définies + pipeline en échec).
+- **Répertoire de travail** : `cd "$(dirname "$0")/.."` au début de
+  chaque script pour se placer à la racine du repo, indépendamment du
+  répertoire d'où le script est lancé.
+- **Aucune modification du code source Flutter** : tous les scripts ne
+  font que lire les sources et écrire dans `build/` ou à la racine.
+- **Emojis autorisés dans les `echo`** pour la lisibilité (pas dans le
+  code source Flutter, conformément à la convention du projet).
+- **Idempotence** : `flutter clean` au début de chaque build garantit
+  un état reproductible.
+
+## Production — checklist
+
+- [ ] `./scripts/build_apk_release.sh` sans erreur
+- [ ] `./scripts/check_apk_size.sh build/app/outputs/flutter-apk/app-arm64-v8a-release.apk` OK
+- [ ] `./scripts/check_apk_size.sh build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk` OK
+- [ ] `./scripts/check_apk_size.sh build/app/outputs/flutter-apk/app-x86_64-release.apk` OK
+- [ ] `./scripts/build_web.sh` sans erreur
+- [ ] `./scripts/test_on_low_end.sh` — pas de crash, mémoire < 300 Mo
+- [ ] Tag `v<x.y.z>` poussé → workflow `release_apk.yml` déclenché
+- [ ] GitHub Release créée avec les 3 APK attachés
+- [ ] Web bundle déployé sur `gh-pages` (Pages activé dans Settings)
+- [ ] APK installé et testé sur un vrai téléphone Android 9+
+

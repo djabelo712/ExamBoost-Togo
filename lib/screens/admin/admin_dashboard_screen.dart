@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../../theme/adaptive_colors.dart';
 import '../../theme/app_theme.dart';
 import 'students_tab.dart';
 import 'alerts_tab.dart';
@@ -463,10 +464,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Espace Directeur'),
-        backgroundColor: AppColors.surface,
+        backgroundColor: AdaptiveColors.surface(context),
         elevation: 0,
         actions: [
           IconButton(
@@ -514,11 +514,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   // ─── TabBar ────────────────────────────────────────────────────
   Widget _buildTabBar() {
     return Container(
-      color: AppColors.surface,
+      color: AdaptiveColors.surface(context),
       child: TabBar(
         controller: _tabController,
         labelColor: AppColors.primary,
-        unselectedLabelColor: AppColors.textSecondary,
+        unselectedLabelColor: AdaptiveColors.textSecondary(context),
         indicatorColor: AppColors.primary,
         indicatorSize: TabBarIndicatorSize.label,
         labelStyle: const TextStyle(
@@ -537,7 +537,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   // ─── Header établissement + 4 KPI ──────────────────────────────
   Widget _buildHeaderSection() {
     return Container(
-      color: AppColors.surface,
+      color: AdaptiveColors.surface(context),
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -558,7 +558,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: AppColors.primarySurface,
+            color: AdaptiveColors.primarySurface(context),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: AppColors.primaryLight, width: 1),
           ),
@@ -571,7 +571,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
             children: [
               Text(
                 AdminMockData.etablissementNom,
-                style: AppTextStyles.h2,
+                style: AppTextStyles.h2.copyWith(
+                    color: AdaptiveColors.textPrimary(context)),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -582,17 +583,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                 children: [
                   _buildChip(
                     AdminMockData.etablissementType,
-                    AppColors.primarySurface,
-                    AppColors.primaryDark,
+                    AdaptiveColors.primarySurface(context),
+                    AdaptiveColors.primary(context),
                   ),
                   _buildChip(
                     '${AdminMockData.effectifTotal} élèves',
-                    AppColors.surfaceVariant,
-                    AppColors.textSecondary,
+                    AdaptiveColors.surfaceVariant(context),
+                    AdaptiveColors.textSecondary(context),
                   ),
                   _buildChip(
                     AdminMockData.licenceStatut,
-                    const Color(0xFFE8F5E9),
+                    AdaptiveColors.primarySurface(context),
                     AppColors.success,
                   ),
                 ],
@@ -699,12 +700,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AdaptiveColors.surface(context),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.divider, width: 1),
+        border: Border.all(color: AdaptiveColors.divider(context), width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: AdaptiveColors.shadow(context),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -720,10 +721,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
               Expanded(
                 child: Text(
                   data.title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondary,
+                    color: AdaptiveColors.textSecondary(context),
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -734,19 +735,19 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
           const SizedBox(height: 8),
           Text(
             data.value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: AdaptiveColors.textPrimary(context),
               height: 1.1,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             data.subtitle,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
-              color: AppColors.textSecondary,
+              color: AdaptiveColors.textSecondary(context),
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

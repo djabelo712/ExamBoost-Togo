@@ -25,6 +25,7 @@ import '../../models/user.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
+import '../../theme/adaptive_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/app_router.dart';
 
@@ -91,7 +92,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Parametres'),
         leading: IconButton(
@@ -164,7 +164,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               'Le francais est la langue par defaut (langue d\'enseignement '
               'au Togo). L\'anglais sert pour le programme DJANTA et les '
               'eleves anglophones de la CEDEAO.',
-              style: AppTextStyles.bodySmall,
+              style: AppTextStyles.bodySmall
+                  .copyWith(color: AdaptiveColors.textSecondary(context)),
             ),
           ],
         );
@@ -230,7 +231,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               'Le mode sombre reduit la fatigue oculaire en environnement '
               'faiblement eclaire. "Systeme" suit automatiquement les '
               'reglages de ton telephone.',
-              style: AppTextStyles.bodySmall,
+              style: AppTextStyles.bodySmall
+                  .copyWith(color: AdaptiveColors.textSecondary(context)),
             ),
           ],
         );
@@ -339,7 +341,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
         ListTile(
-          leading: const Icon(Icons.gavel, color: AppColors.textSecondary),
+          leading:
+              Icon(Icons.gavel, color: AdaptiveColors.textSecondary(context)),
           title: const Text('Mentions legales'),
           trailing: const Icon(Icons.chevron_right),
           onTap: () => _showInfo(
@@ -738,7 +741,8 @@ class _SectionCard extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.12),
+                    color: AppColors.primary
+                        .withOpacity(context.isDark ? 0.20 : 0.12),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(icon, color: AppColors.primary, size: 22),
@@ -748,9 +752,15 @@ class _SectionCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(title, style: AppTextStyles.h3.copyWith(fontSize: 16)),
+                      Text(title,
+                          style: AppTextStyles.h3.copyWith(
+                            fontSize: 16,
+                            color: AdaptiveColors.textPrimary(context),
+                          )),
                       const SizedBox(height: 2),
-                      Text(subtitle, style: AppTextStyles.bodySmall),
+                      Text(subtitle,
+                          style: AppTextStyles.bodySmall.copyWith(
+                              color: AdaptiveColors.textSecondary(context))),
                     ],
                   ),
                 ),
@@ -785,14 +795,18 @@ class _InfoRow extends StatelessWidget {
             flex: 2,
             child: Text(
               label,
-              style: AppTextStyles.bodySmall,
+              style: AppTextStyles.bodySmall
+                  .copyWith(color: AdaptiveColors.textSecondary(context)),
             ),
           ),
           Expanded(
             flex: 3,
             child: Text(
               value,
-              style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w500),
+              style: AppTextStyles.body.copyWith(
+                fontWeight: FontWeight.w500,
+                color: AdaptiveColors.textPrimary(context),
+              ),
               textAlign: TextAlign.right,
             ),
           ),

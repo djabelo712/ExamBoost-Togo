@@ -3,6 +3,7 @@
 // S'affichent après que l'élève a vu la réponse
 
 import 'package:flutter/material.dart';
+import '../../theme/adaptive_colors.dart';
 import '../../theme/app_theme.dart';
 
 class SrsButtons extends StatelessWidget {
@@ -16,7 +17,10 @@ class SrsButtons extends StatelessWidget {
       children: [
         Text(
           'Comment tu t\'en es sorti ?',
-          style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w500),
+          style: AppTextStyles.bodySmall.copyWith(
+            fontWeight: FontWeight.w500,
+            color: AdaptiveColors.textSecondary(context),
+          ),
         ),
         const SizedBox(height: 12),
         // Ligne 1 : Facile + Correct
@@ -97,17 +101,20 @@ class _SrsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: color.withOpacity(0.10),
+      color: color.withOpacity(context.isDark ? 0.20 : 0.10),
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         onTap: () => onTap(quality),
         borderRadius: BorderRadius.circular(14),
-        splashColor: color.withOpacity(0.2),
+        splashColor: color.withOpacity(0.3),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: color.withOpacity(0.35), width: 1.5),
+            border: Border.all(
+              color: color.withOpacity(context.isDark ? 0.50 : 0.35),
+              width: 1.5,
+            ),
           ),
           child: Column(
             children: [
@@ -120,7 +127,7 @@ class _SrsButton extends StatelessWidget {
               Text(
                 sublabel,
                 style: AppTextStyles.label.copyWith(
-                  color: color.withOpacity(0.75),
+                  color: color.withOpacity(context.isDark ? 0.85 : 0.75),
                   fontSize: 10,
                 ),
                 textAlign: TextAlign.center,

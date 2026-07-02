@@ -58,7 +58,9 @@ class TypewriterText extends StatefulWidget {
 class _TypewriterTextState extends State<TypewriterText> {
   late final ValueNotifier<int> _charCount;
   late final ValueNotifier<bool> _cursorVisible;
-  int _currentLength = 0;
+  // Note BE2 : l'ancien champ `int _currentLength = 0` etait declare et mis a
+  // jour dans _startTyping mais jamais lu (le rendu utilise _charCount.value).
+  // Supprime pour eviter le warning analyzer 'unused_field'.
 
   @override
   void initState() {
@@ -73,7 +75,6 @@ class _TypewriterTextState extends State<TypewriterText> {
     for (int i = 1; i <= widget.text.length; i++) {
       await Future.delayed(widget.speed);
       if (!mounted) return;
-      _currentLength = i;
       _charCount.value = i;
     }
     if (mounted) widget.onComplete?.call();

@@ -59,7 +59,9 @@ class _BounceButtonState extends State<BounceButton>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
-  bool _isDown = false;
+  // Note BE2 : l'ancien champ `bool _isDown` etait declare et mis a jour dans
+  // _onTapDown / _reset mais jamais lu. Supprime pour eviter le warning
+  // analyzer 'unused_field' (la logique d'animation repose sur _controller).
 
   @override
   void initState() {
@@ -75,7 +77,6 @@ class _BounceButtonState extends State<BounceButton>
 
   void _onTapDown(TapDownDetails _) {
     if (widget.onPressed == null) return;
-    setState(() => _isDown = true);
     _controller.duration = widget.downDuration;
     _controller.forward();
   }
@@ -90,7 +91,6 @@ class _BounceButtonState extends State<BounceButton>
   }
 
   void _reset() {
-    setState(() => _isDown = false);
     _controller.duration = widget.upDuration;
     // On joue l'animation inverse avec une courbe spring pour l'effet bounce.
     _controller.reverse();

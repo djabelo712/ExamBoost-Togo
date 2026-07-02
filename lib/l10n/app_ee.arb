@@ -1,0 +1,1371 @@
+{
+  "@@locale": "ee",
+  "@@translator": "Agent BZ (general-purpose, ExamBoost Togo Session 4 Wave 3)",
+  "@@lastModified": "2026-01-15",
+  "@@translatorNotes": "Ewe translations are best-effort approximations. // TODO: validate with native Ewe speaker from southern Togo (Maritime, Plateaux regions). Brand names (ExamBoost Togo, BEPC, BAC), exam names, and technical terms (SRS, BKT, JSON, GitHub, Vercel) kept as-is. Some descriptive texts preserve French terminology for educational continuity.",
+  "appTitle": "ExamBoost Togo",
+  "@appTitle": {
+    "description": "Titre de l'application affiché dans l'AppBar et l'onboarding"
+  },
+  "welcomeGreeting": "Ŋdi, {name}!",
+  "@welcomeGreeting": {
+    "description": "Salutation personnalisée sur l'écran d'accueil",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeGreetingWithLevel": "Ŋdi, {name} · {level}",
+  "@welcomeGreetingWithLevel": {
+    "description": "Salutation personnalisée avec niveau scolaire (ex : 1ère C)",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "homeWhatDoYouWant": "Nùka gbɔna wò dzi?",
+  "@homeWhatDoYouWant": {
+    "description": "Titre de la section actions sur l'écran d'accueil"
+  },
+  "homeRevisionAdaptive": "Xexexe me ƒe nɔnɔme",
+  "@homeRevisionAdaptive": {
+    "description": "Titre carte révision"
+  },
+  "homeRevisionAdaptiveSubtitle": "Biyas ƒe biyia BEPC kple BAC le mɔ vovovo me",
+  "@homeRevisionAdaptiveSubtitle": {
+    "description": "Sous-titre carte révision"
+  },
+  "homeSimulation": "Se ƒe dɔwɔwɔ",
+  "@homeSimulation": {
+    "description": "Titre carte simulation"
+  },
+  "homeSimulationSubtitle": "Bia wɔ dɔ abe ɖoɖo ene",
+  "@homeSimulationSubtitle": {
+    "description": "Sous-titre carte simulation"
+  },
+  "homeDashboard": "Nye ƒe nya me",
+  "@homeDashboard": {
+    "description": "Titre carte dashboard"
+  },
+  "homeDashboardSubtitle": "Kpɔ nye ƒe progression kple nye ƒe statistiques",
+  "@homeDashboardSubtitle": {
+    "description": "Sous-titre carte dashboard"
+  },
+  "homeProfileTitle": "Nye ƒe profil",
+  "@homeProfileTitle": {
+    "description": "Titre du dialog profil"
+  },
+  "homeProfileLevel": "Nɔnɔme: {level}",
+  "@homeProfileLevel": {
+    "description": "Ligne niveau scolaire dans le profil",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "homeProfileSerie": "Série {serie}",
+  "@homeProfileSerie": {
+    "description": "Série affichée dans le profil",
+    "placeholders": {
+      "serie": {
+        "type": "String"
+      }
+    }
+  },
+  "homeProfileSchool": "Sukuu: {school}",
+  "@homeProfileSchool": {
+    "description": "Ligne établissement dans le profil",
+    "placeholders": {
+      "school": {
+        "type": "String"
+      }
+    }
+  },
+  "homeProfileCity": "Duku: {city}",
+  "@homeProfileCity": {
+    "description": "Ligne ville dans le profil",
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "homeProfileRegisteredSince": "Woda asi na {date}",
+  "@homeProfileRegisteredSince": {
+    "description": "Date d'inscription dans le profil",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "homeNoProfileLoaded": "Profil o",
+  "@homeNoProfileLoaded": {
+    "description": "Message si aucun utilisateur connecté"
+  },
+  "homeLogout": "Tsi tre eŋu",
+  "@homeLogout": {
+    "description": "Bouton déconnexion"
+  },
+  "onboardingWelcomeTitle": "ExamBoost Togo",
+  "@onboardingWelcomeTitle": {
+    "description": "Titre écran bienvenue onboarding"
+  },
+  "onboardingWelcomeSlogan": "Tsɔ eŋu na wò ƒe sɔhɛ exams le mɔ nyui me.",
+  "@onboardingWelcomeSlogan": {
+    "description": "Slogan écran bienvenue"
+  },
+  "onboardingWelcomeSubtitle": "BEPC · BAC · Wɔ ɖe Togo ƒe programme ŋu · 100% offline",
+  "@onboardingWelcomeSubtitle": {
+    "description": "Sous-titre écran bienvenue"
+  },
+  "onboardingStartButton": "Dze egɔme",
+  "@onboardingStartButton": {
+    "description": "Bouton démarrer onboarding"
+  },
+  "onboardingIdentityTitle": "Ŋkɔ",
+  "@onboardingIdentityTitle": {
+    "description": "Titre étape identité"
+  },
+  "onboardingIdentityHint": "Gbla na mí tso wò ŋu be míawɔ wò ƒe parcours ɖe wò ŋu.",
+  "@onboardingIdentityHint": {
+    "description": "Sous-titre étape identité"
+  },
+  "onboardingFirstname": "Gbe ƒe ŋkɔ *",
+  "@onboardingFirstname": {
+    "description": "Label champ prénom"
+  },
+  "onboardingFirstnameHint": "Abe: Kofi",
+  "@onboardingFirstnameHint": {
+    "description": "Hint champ prénom"
+  },
+  "onboardingLastname": "Ƒome ƒe ŋkɔ *",
+  "@onboardingLastname": {
+    "description": "Label champ nom"
+  },
+  "onboardingLastnameHint": "Abe: Komla",
+  "@onboardingLastnameHint": {
+    "description": "Hint champ nom"
+  },
+  "onboardingSchool": "Sukuu (ne le o)",
+  "@onboardingSchool": {
+    "description": "Label champ établissement"
+  },
+  "onboardingSchoolHint": "Abe: Lycée de Tokoin",
+  "@onboardingSchoolHint": {
+    "description": "Hint champ établissement"
+  },
+  "onboardingCity": "Duku (ne le o)",
+  "@onboardingCity": {
+    "description": "Label champ ville"
+  },
+  "onboardingCityHint": "Abe: Lomé",
+  "@onboardingCityHint": {
+    "description": "Hint champ ville"
+  },
+  "onboardingNextButton": "Yi edzi",
+  "@onboardingNextButton": {
+    "description": "Bouton suivant onboarding"
+  },
+  "onboardingPreviousButton": "Trɔ yi",
+  "@onboardingPreviousButton": {
+    "description": "Bouton précédent onboarding"
+  },
+  "onboardingLevelTitle": "Wò ƒe sukuu ƒe nɔnɔme",
+  "@onboardingLevelTitle": {
+    "description": "Titre étape niveau"
+  },
+  "onboardingLevelHint": "Tia wò ƒe klas si sɔ ɖe wò ƒe nɔnɔme ŋu.",
+  "@onboardingLevelHint": {
+    "description": "Sous-titre étape niveau"
+  },
+  "onboardingLevel3eme": "3ème",
+  "@onboardingLevel3eme": {
+    "description": "Niveau 3ème"
+  },
+  "onboardingLevel3emeDesc": "Tsɔ eŋu na BEPC",
+  "@onboardingLevel3emeDesc": {
+    "description": "Description niveau 3ème"
+  },
+  "onboardingLevel2nde": "2nde",
+  "@onboardingLevel2nde": {
+    "description": "Niveau 2nde"
+  },
+  "onboardingLevel2ndeDesc": "Tsɔ eŋu na BAC (commun)",
+  "@onboardingLevel2ndeDesc": {
+    "description": "Description niveau 2nde"
+  },
+  "onboardingLevel1ere": "1ère",
+  "@onboardingLevel1ere": {
+    "description": "Niveau 1ère"
+  },
+  "onboardingLevel1ereDesc": "Tsɔ eŋu na BAC (Probatoire)",
+  "@onboardingLevel1ereDesc": {
+    "description": "Description niveau 1ère"
+  },
+  "onboardingLevelTerminale": "Terminale",
+  "@onboardingLevelTerminale": {
+    "description": "Niveau Terminale"
+  },
+  "onboardingLevelTerminaleDesc": "Tsɔ eŋu na BAC (BAC final)",
+  "@onboardingLevelTerminaleDesc": {
+    "description": "Description niveau Terminale"
+  },
+  "onboardingSerieTitle": "Wò ƒe série",
+  "@onboardingSerieTitle": {
+    "description": "Titre étape série"
+  },
+  "onboardingSerieHint": "Tia wò ƒe série si le sciences alo lettres me.",
+  "@onboardingSerieHint": {
+    "description": "Sous-titre étape série"
+  },
+  "onboardingSerieA": "Série A — Lettres",
+  "@onboardingSerieA": {
+    "description": "Série A"
+  },
+  "onboardingSerieB": "Série B — Sciences Économiques",
+  "@onboardingSerieB": {
+    "description": "Série B"
+  },
+  "onboardingSerieC": "Série C — Maths kple Sciences Physiques",
+  "@onboardingSerieC": {
+    "description": "Série C"
+  },
+  "onboardingSerieD": "Série D — Sciences Naturelles",
+  "@onboardingSerieD": {
+    "description": "Série D"
+  },
+  "onboardingSerieF": "Série F — Technique",
+  "@onboardingSerieF": {
+    "description": "Série F"
+  },
+  "onboardingSubjectsTitle": "Wò lɔlɔ ƒe matières",
+  "@onboardingSubjectsTitle": {
+    "description": "Titre étape matières"
+  },
+  "onboardingSubjectsHint": "Tia matières 1 va 3 be nàdze egɔme",
+  "@onboardingSubjectsHint": {
+    "description": "Sous-titre étape matières"
+  },
+  "onboardingSubjectsCount": "{count} / 3 wo tia",
+  "@onboardingSubjectsCount": {
+    "description": "Compteur de matières sélectionnées",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingCreateProfile": "Wɔ nye ƒe profil",
+  "@onboardingCreateProfile": {
+    "description": "Bouton final création profil"
+  },
+  "onboardingProfileCreated": "Profil wɔe!",
+  "@onboardingProfileCreated": {
+    "description": "Message écran succès création"
+  },
+  "onboardingProfileError": "Vɔ na wɔwɔ ƒe profil: {error}",
+  "@onboardingProfileError": {
+    "description": "Message d'erreur création profil",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "revisionSeeAnswer": "Kpɔ gbãla",
+  "@revisionSeeAnswer": {
+    "description": "Bouton flip carte flashcard"
+  },
+  "revisionHowDidYouDo": "Aleke nè wɔe?",
+  "@revisionHowDidYouDo": {
+    "description": "Titre section auto-évaluation"
+  },
+  "revisionEasy": "Bɔbɔe",
+  "@revisionEasy": {
+    "description": "Bouton qualité SM-2 = 5"
+  },
+  "revisionEasySub": "Gba ɖe enu",
+  "@revisionEasySub": {
+    "description": "Sous-titre bouton Facile"
+  },
+  "revisionCorrect": "Nyui",
+  "@revisionCorrect": {
+    "description": "Bouton qualité SM-2 = 4"
+  },
+  "revisionCorrectSub": "Susue nɔ anyi",
+  "@revisionCorrectSub": {
+    "description": "Sous-titre bouton Correct"
+  },
+  "revisionHard": "Dzɔe",
+  "@revisionHard": {
+    "description": "Bouton qualité SM-2 = 3"
+  },
+  "revisionHardSub": "Nya la gbɔe",
+  "@revisionHardSub": {
+    "description": "Sous-titre bouton Difficile"
+  },
+  "revisionForgotten": "Mexe be Manye",
+  "@revisionForgotten": {
+    "description": "Bouton qualité SM-2 = 0/1/2"
+  },
+  "revisionForgottenSub": "Gbagbɔ nyagbɔgɔ o",
+  "@revisionForgottenSub": {
+    "description": "Sous-titre bouton Oublié"
+  },
+  "revisionSkip": "Bu biyia ŋu",
+  "@revisionSkip": {
+    "description": "Bouton skip question"
+  },
+  "revisionSessionEnded": "Session xɔe!",
+  "@revisionSessionEnded": {
+    "description": "Titre écran fin de session"
+  },
+  "revisionCorrectAnswers": "Nèɖo {correct} biyia ƒe nyagbɔgɔ vovovo {total} me",
+  "@revisionCorrectAnswers": {
+    "description": "Bilan session révision",
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "revisionBackToDashboard": "Trɔ yi dashboard",
+  "@revisionBackToDashboard": {
+    "description": "Bouton retour dashboard"
+  },
+  "revisionRestartSession": "Wɔ session yeye",
+  "@revisionRestartSession": {
+    "description": "Bouton recommencer session"
+  },
+  "revisionNoQuestions": "Biyia o na {matiere}",
+  "@revisionNoQuestions": {
+    "description": "État vide banque questions",
+    "placeholders": {
+      "matiere": {
+        "type": "String"
+      }
+    }
+  },
+  "revisionNoQuestionsHint": "Biyia o na matière sia",
+  "@revisionNoQuestionsHint": {
+    "description": "Sous-titre état vide"
+  },
+  "revisionBack": "Trɔ yi",
+  "@revisionBack": {
+    "description": "Bouton retour générique"
+  },
+  "revisionQuitTitle": "Tsi tre le session ŋu?",
+  "@revisionQuitTitle": {
+    "description": "Titre dialog quitter session"
+  },
+  "revisionQuitMsg": "Wò ƒe progression ana xɔ asi.",
+  "@revisionQuitMsg": {
+    "description": "Message dialog quitter session"
+  },
+  "revisionLoading": "Wole biyia ƒe nɔnɔme wɔm...",
+  "@revisionLoading": {
+    "description": "Message de chargement"
+  },
+  "revisionDueTomorrow": "Karta si woawɔ evelɛ",
+  "@revisionDueTomorrow": {
+    "description": "Label estimation fin de session"
+  },
+  "revisionMsgExcellent": "Nyui! Nè trɔe esi {matiere}! Yim edzi!",
+  "@revisionMsgExcellent": {
+    "description": "Message motivant score excellent",
+    "placeholders": {
+      "matiere": {
+        "type": "String"
+      }
+    }
+  },
+  "revisionMsgBonTravail": "Dɔ nyui! Nè trɔe esi {matiere}! Yim edzi!",
+  "@revisionMsgBonTravail": {
+    "description": "Message motivant bon score",
+    "placeholders": {
+      "matiere": {
+        "type": "String"
+      }
+    }
+  },
+  "revisionMsgNeLacheRien": "Mada wò asi! Nè trɔe esi {matiere}! Yim edzi!",
+  "@revisionMsgNeLacheRien": {
+    "description": "Message motivant score moyen",
+    "placeholders": {
+      "matiere": {
+        "type": "String"
+      }
+    }
+  },
+  "revisionMsgApprendre": "Mɔna ye nye susu manɔmee la. Nè trɔe esi {matiere}! Yim edzi!",
+  "@revisionMsgApprendre": {
+    "description": "Message motivant score faible",
+    "placeholders": {
+      "matiere": {
+        "type": "String"
+      }
+    }
+  },
+  "simulationConfig": "Exam ƒe nɔnɔme",
+  "@simulationConfig": {
+    "description": "Titre étape configuration simulation"
+  },
+  "simulationExamType": "Exam ƒe subɔ",
+  "@simulationExamType": {
+    "description": "Label type d'examen"
+  },
+  "simulationBEPC": "BEPC",
+  "@simulationBEPC": {
+    "description": "Examen BEPC"
+  },
+  "simulationBAC1": "BAC 1",
+  "@simulationBAC1": {
+    "description": "Examen BAC 1ère"
+  },
+  "simulationBAC2": "BAC 2",
+  "@simulationBAC2": {
+    "description": "Examen BAC Terminale"
+  },
+  "simulationProbatoire": "Probatoire",
+  "@simulationProbatoire": {
+    "description": "Probatoire (1ère)"
+  },
+  "simulationSerie": "Série",
+  "@simulationSerie": {
+    "description": "Label série"
+  },
+  "simulationNbQuestions": "Biyia ƒe xexlẽme",
+  "@simulationNbQuestions": {
+    "description": "Label nb questions"
+  },
+  "simulationDuration": "Ðoɣe",
+  "@simulationDuration": {
+    "description": "Label durée"
+  },
+  "simulationStandard": "Standard",
+  "@simulationStandard": {
+    "description": "Durée standard"
+  },
+  "simulationQuickMode": "Quick mode 30 min",
+  "@simulationQuickMode": {
+    "description": "Mode rapide 30 minutes"
+  },
+  "simulationStart": "Dze exam gɔme",
+  "@simulationStart": {
+    "description": "Bouton démarrer examen"
+  },
+  "simulationReadyPrompt": "Esi nè ɖo?",
+  "@simulationReadyPrompt": {
+    "description": "Prompt prêt à démarrer"
+  },
+  "simulationWillAnswer": "Àɖo {count} biyia le {minutes} minutes me.",
+  "@simulationWillAnswer": {
+    "description": "Résumé config simulation",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "simulationExamSummary": "Exam: {exam} (Série {serie})",
+  "@simulationExamSummary": {
+    "description": "Résumé examen choisi",
+    "placeholders": {
+      "exam": {
+        "type": "String"
+      },
+      "serie": {
+        "type": "String"
+      }
+    }
+  },
+  "simulationNoQuestionsTitle": "Biyia o",
+  "@simulationNoQuestionsTitle": {
+    "description": "Titre dialog pas de questions"
+  },
+  "simulationNoQuestionsMsg": "Biyia me le nɔnɔme sia me o.",
+  "@simulationNoQuestionsMsg": {
+    "description": "Message dialog pas de questions"
+  },
+  "simulationQuestion": "Biyia {current} / {total}",
+  "@simulationQuestion": {
+    "description": "Compteur questions",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "simulationAnswered": "Woɖo",
+  "@simulationAnswered": {
+    "description": "Badge questions répondues"
+  },
+  "simulationFlagged": "Wo da asi ɖe eŋu",
+  "@simulationFlagged": {
+    "description": "Badge questions marquées"
+  },
+  "simulationTimeLeft": "Ðoɣe si ku",
+  "@simulationTimeLeft": {
+    "description": "Label temps restant"
+  },
+  "simulationPrevious": "Si do ŋgɔ",
+  "@simulationPrevious": {
+    "description": "Bouton précédent"
+  },
+  "simulationNext": "Si kplɔe",
+  "@simulationNext": {
+    "description": "Bouton suivant"
+  },
+  "simulationFinish": "Nu enu",
+  "@simulationFinish": {
+    "description": "Bouton terminer examen"
+  },
+  "simulationFlagForReview": "Da asi ɖe eŋu be nàkpɔ",
+  "@simulationFlagForReview": {
+    "description": "Bouton drapeau marquer"
+  },
+  "simulationExamPlan": "Exam ƒe mɔfiame",
+  "@simulationExamPlan": {
+    "description": "Titre bottom-sheet plan"
+  },
+  "simulationConfirmFinish": "Nu exam enu?",
+  "@simulationConfirmFinish": {
+    "description": "Titre dialog confirmation terminer"
+  },
+  "simulationConfirmFinishMsg": "Biyia {remaining} le asi wò si si me nèɖo o. Nu enu?",
+  "@simulationConfirmFinishMsg": {
+    "description": "Message dialog confirmation terminer",
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "simulationQuitTitle": "Tsi tre le exam ŋu?",
+  "@simulationQuitTitle": {
+    "description": "Titre dialog quitter examen"
+  },
+  "simulationQuitMsg": "Wò ƒe progression ana xɔ asi eye exam ma na xɔ le.",
+  "@simulationQuitMsg": {
+    "description": "Message dialog quitter examen"
+  },
+  "simulationReportTitle": "Exam ƒe nyaa",
+  "@simulationReportTitle": {
+    "description": "Titre rapport fin d'examen"
+  },
+  "simulationScore": "Score: {score} / 20",
+  "@simulationScore": {
+    "description": "Affichage score final",
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "simulationTimeUsed": "Ðoɣe si wozã",
+  "@simulationTimeUsed": {
+    "description": "Label temps utilisé"
+  },
+  "simulationAvgTimePerQ": "Ðoɣe si wozã na biyia ɖeɖi",
+  "@simulationAvgTimePerQ": {
+    "description": "Label temps moyen par question"
+  },
+  "simulationCompletionRate": "Nɔnɔme si wò nu",
+  "@simulationCompletionRate": {
+    "description": "Label taux d'achèvement"
+  },
+  "simulationBySubject": "Nya me ɖe matière ɖeɖi",
+  "@simulationBySubject": {
+    "description": "Titre section analyse matière"
+  },
+  "simulationRecommendations": "Mɔfiame",
+  "@simulationRecommendations": {
+    "description": "Titre section recommandations"
+  },
+  "simulationSeeCorrections": "Kpɔ corrections ƒe nya me",
+  "@simulationSeeCorrections": {
+    "description": "Bouton corrections détaillées"
+  },
+  "simulationRedoExam": "Wɔ exam yeye",
+  "@simulationRedoExam": {
+    "description": "Bouton refaire examen"
+  },
+  "simulationBackHome": "Trɔ yi aƒe",
+  "@simulationBackHome": {
+    "description": "Bouton retour accueil"
+  },
+  "simulationCorrectAnswer": "Nyagbɔgɔ nyui",
+  "@simulationCorrectAnswer": {
+    "description": "Label bonne réponse corrections"
+  },
+  "simulationYourAnswer": "Wò ƒe nyagbɔgɔ",
+  "@simulationYourAnswer": {
+    "description": "Label ta réponse corrections"
+  },
+  "simulationExplanation": "Mɔfiame",
+  "@simulationExplanation": {
+    "description": "Label explication corrections"
+  },
+  "simulationGotItRight": "Medo nyagbɔgɔ",
+  "@simulationGotItRight": {
+    "description": "Bouton auto-évaluation juste"
+  },
+  "simulationGotItWrong": "Medo nyagbɔgɔ o",
+  "@simulationGotItWrong": {
+    "description": "Bouton auto-évaluation faux"
+  },
+  "dashboardTitle": "Dashboard",
+  "@dashboardTitle": {
+    "description": "Titre écran dashboard"
+  },
+  "dashboardGlobalScore": "Masterie ƒe score",
+  "@dashboardGlobalScore": {
+    "description": "Label score global"
+  },
+  "dashboardPredictedBepc": "BEPC ƒe prediction: ~{score} / 20",
+  "@dashboardPredictedBepc": {
+    "description": "Carte prédiction score BEPC",
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboardBasedOnXSkills": "Ɖo {count} compétences ŋu",
+  "@dashboardBasedOnXSkills": {
+    "description": "Sous-titre score global",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardSubjectsProgress": "Progression le matières me",
+  "@dashboardSubjectsProgress": {
+    "description": "Titre section progression matière"
+  },
+  "dashboardWeakChapters": "Chapitres si woawɔ",
+  "@dashboardWeakChapters": {
+    "description": "Titre section chapitres faibles"
+  },
+  "dashboardKeepRevising": "Yim edzi nàxexeme be nàkpɔ wò ƒe chapitres siwo me wò me nɔ o va do ŋgɔ.",
+  "@dashboardKeepRevising": {
+    "description": "Message état vide chapitres faibles"
+  },
+  "dashboardSrsStats": "Xexexe ƒe statistiques",
+  "@dashboardSrsStats": {
+    "description": "Titre section stats SRS"
+  },
+  "dashboardDueToday": "Siawɔ egbe",
+  "@dashboardDueToday": {
+    "description": "Label cartes dues aujourd'hui"
+  },
+  "dashboardMastered": "Si wo master",
+  "@dashboardMastered": {
+    "description": "Label cartes maîtrisées"
+  },
+  "dashboardLearning": "Si wole xexem",
+  "@dashboardLearning": {
+    "description": "Label cartes en apprentissage"
+  },
+  "dashboardActivity7days": "Ða 7 si wo va yi ƒe dɔwɔwɔ",
+  "@dashboardActivity7days": {
+    "description": "Titre section activité 7 jours"
+  },
+  "dashboardNoActivity": "Dɔwɔwɔ o egbe ƒe ɖokui si. Dze egɔme egbe!",
+  "@dashboardNoActivity": {
+    "description": "Message état vide activité"
+  },
+  "dashboardQuickActions": "Mɔ vovovo",
+  "@dashboardQuickActions": {
+    "description": "Titre section actions rapides"
+  },
+  "dashboardReviseNow": "Xexe egbe",
+  "@dashboardReviseNow": {
+    "description": "Bouton réviser"
+  },
+  "dashboardMockExam": "Wɔ exam blanc",
+  "@dashboardMockExam": {
+    "description": "Bouton examen blanc"
+  },
+  "dashboardEmptyState": "Woezɔ! Dze wò ƒe xexexe gɔme be nàkpɔ wò ƒe statistiques do ŋgɔ.",
+  "@dashboardEmptyState": {
+    "description": "Message état vide dashboard"
+  },
+  "dashboardStartFirstRevision": "Dze nye ƒe xexexe gɔme",
+  "@dashboardStartFirstRevision": {
+    "description": "Bouton démarrer première révision"
+  },
+  "dashboardRevise": "Xexe",
+  "@dashboardRevise": {
+    "description": "Bouton réviser court"
+  },
+  "commonLoading": "Wole wɔm...",
+  "@commonLoading": {
+    "description": "Message chargement générique"
+  },
+  "commonError": "Vɔ na dɔwɔwɔ",
+  "@commonError": {
+    "description": "Message erreur générique"
+  },
+  "commonRetry": "Tɔ gbe",
+  "@commonRetry": {
+    "description": "Bouton réessayer"
+  },
+  "commonCancel": "Tsi tre",
+  "@commonCancel": {
+    "description": "Bouton annuler"
+  },
+  "commonConfirm": "Kafu",
+  "@commonConfirm": {
+    "description": "Bouton confirmer"
+  },
+  "commonSave": "Ŋlɔ ɖe",
+  "@commonSave": {
+    "description": "Bouton sauvegarder"
+  },
+  "commonClose": "Ʋu",
+  "@commonClose": {
+    "description": "Bouton fermer"
+  },
+  "commonOk": "OK",
+  "@commonOk": {
+    "description": "Bouton OK"
+  },
+  "commonYes": "Ɛ",
+  "@commonYes": {
+    "description": "Bouton Oui"
+  },
+  "commonNo": "Ao",
+  "@commonNo": {
+    "description": "Bouton Non"
+  },
+  "subjectMathematiques": "Mathématiques",
+  "@subjectMathematiques": {
+    "description": "Matière Mathématiques"
+  },
+  "subjectFrancais": "Français",
+  "@subjectFrancais": {
+    "description": "Matière Français"
+  },
+  "subjectSciencesPhysiques": "Sciences Physiques",
+  "@subjectSciencesPhysiques": {
+    "description": "Matière Sciences Physiques"
+  },
+  "subjectSVT": "SVT",
+  "@subjectSVT": {
+    "description": "Matière SVT"
+  },
+  "subjectHistoireGeographie": "Histoire-Géographie",
+  "@subjectHistoireGeographie": {
+    "description": "Matière Histoire-Géographie"
+  },
+  "subjectAnglais": "Anglais",
+  "@subjectAnglais": {
+    "description": "Matière Anglais"
+  },
+  "subjectPhilosophie": "Philosophie",
+  "@subjectPhilosophie": {
+    "description": "Matière Philosophie"
+  },
+  "subjectEconomie": "Économie",
+  "@subjectEconomie": {
+    "description": "Matière Économie"
+  },
+  "niveau3eme": "3ème",
+  "@niveau3eme": {
+    "description": "Niveau 3ème court"
+  },
+  "niveau2nde": "2nde",
+  "@niveau2nde": {
+    "description": "Niveau 2nde"
+  },
+  "niveau1ere": "1ère",
+  "@niveau1ere": {
+    "description": "Niveau 1ère court"
+  },
+  "niveauTerminale": "Term",
+  "@niveauTerminale": {
+    "description": "Niveau Terminale abrégé"
+  },
+  "homeCommunity": "Ha ƒe duku",
+  "@homeCommunity": {
+    "description": "Titre carte communauté sur l'accueil"
+  },
+  "homeCommunitySubtitle": "Classements, defis le ɖokui si kple kpekpeɖeŋu hena sukuuviwo me",
+  "@homeCommunitySubtitle": {
+    "description": "Sous-titre carte communauté"
+  },
+  "homeSettings": "Mɔfiame",
+  "@homeSettings": {
+    "description": "Titre carte paramètres sur l'accueil"
+  },
+  "homeSettingsSubtitle": "Gbe, theme, account, data kple notifications",
+  "@homeSettingsSubtitle": {
+    "description": "Sous-titre carte paramètres"
+  },
+  "onboardingWelcomeUser": "Woezɔ, {name}!",
+  "@onboardingWelcomeUser": {
+    "description": "Message de bienvenue personnalisé après création du profil",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingRedirecting": "Trɔ yi aƒe...",
+  "@onboardingRedirecting": {
+    "description": "Message redirection après création profil"
+  },
+  "commonContinue": "Yim edzi",
+  "@commonContinue": {
+    "description": "Bouton continuer"
+  },
+  "commonQuit": "Tsi tre",
+  "@commonQuit": {
+    "description": "Bouton quitter"
+  },
+  "commonStay": "Nɔ anyi",
+  "@commonStay": {
+    "description": "Bouton rester"
+  },
+  "commonReset": "Trɔ yi de te",
+  "@commonReset": {
+    "description": "Bouton réinitialiser"
+  },
+  "commonDelete": "Ɖe asi",
+  "@commonDelete": {
+    "description": "Bouton supprimer"
+  },
+  "difficulteFacile": "Bɔbɔe",
+  "@difficulteFacile": {
+    "description": "Niveau difficulté Facile (puce)"
+  },
+  "difficulteMoyen": "Titina",
+  "@difficulteMoyen": {
+    "description": "Niveau difficulté Moyen (puce)"
+  },
+  "difficulteDifficile": "Dzɔe",
+  "@difficulteDifficile": {
+    "description": "Niveau difficulté Difficile (puce)"
+  },
+  "cardTapToSeeAnswer": "Da \"Kpɔ gbãla\" ne nè ɖo",
+  "@cardTapToSeeAnswer": {
+    "description": "Indice bas de flashcard question"
+  },
+  "cardAnswer": "Nyagbɔgɔ",
+  "@cardAnswer": {
+    "description": "Étiquette côté réponse de la flashcard"
+  },
+  "simulationChooseExam": "Tia wò ƒe exam",
+  "@simulationChooseExam": {
+    "description": "Titre phase configuration"
+  },
+  "simulationChooseExamHint": "Tia exam si nè didi be yea simuler, emegbe tito ɖoɖoawo trɔ.",
+  "@simulationChooseExamHint": {
+    "description": "Sous-titre phase configuration"
+  },
+  "simulationSerieBac": "Série (BAC)",
+  "@simulationSerieBac": {
+    "description": "Label section série BAC"
+  },
+  "simulationSerieX": "Série {s}",
+  "@simulationSerieX": {
+    "description": "Puce série (Série A, Série B...)",
+    "placeholders": {
+      "s": {
+        "type": "String"
+      }
+    }
+  },
+  "simulationNQuestions": "{n} biyia",
+  "@simulationNQuestions": {
+    "description": "Puce nombre de questions",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "simulationStandardDuration": "Standard ({duration})",
+  "@simulationStandardDuration": {
+    "description": "Puce durée standard avec valeur",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "simulationResume": "Kpɔe yia",
+  "@simulationResume": {
+    "description": "Titre carte résumé configuration"
+  },
+  "simulationAllAnswered": "Nèɖo biyia katã. Nè didi be yea nu enu?",
+  "@simulationAllAnswered": {
+    "description": "Message confirmation terminer quand tout est répondu"
+  },
+  "simulationNonRepondue": "Si meɖo o",
+  "@simulationNonRepondue": {
+    "description": "Légende plan examen non répondue"
+  },
+  "simulationRepondue": "Si woɖo",
+  "@simulationRepondue": {
+    "description": "Légende plan examen répondue"
+  },
+  "simulationMarquee": "Si wo da asi ɖe eŋu",
+  "@simulationMarquee": {
+    "description": "Légende plan examen marquée"
+  },
+  "simulationTerminerExamen": "Nu exam enu",
+  "@simulationTerminerExamen": {
+    "description": "Bouton terminer dans le plan d'examen"
+  },
+  "simulationExamTermine": "Exam xɔe!",
+  "@simulationExamTermine": {
+    "description": "Titre rapport score"
+  },
+  "simulationMsgExcellent": "Dɔ nyui! Nè ɖo na exam.",
+  "@simulationMsgExcellent": {
+    "description": "Message score excellent"
+  },
+  "simulationMsgBonDebut": "Gɔme nyui, gake mɔ na yi le.",
+  "@simulationMsgBonDebut": {
+    "description": "Message score bon début"
+  },
+  "simulationMsgDoitReviser": "Èɖo be nàxexe chapitres aɖewo wu.",
+  "@simulationMsgDoitReviser": {
+    "description": "Message score moyen"
+  },
+  "simulationMsgCourage": "Tsi nyui! Dze gɔme eye nàwɔe tɔgbe.",
+  "@simulationMsgCourage": {
+    "description": "Message score faible"
+  },
+  "simulationTempsMoyenQ": "Ðoɣe na biyia",
+  "@simulationTempsMoyenQ": {
+    "description": "Label temps moyen par question (court)"
+  },
+  "simulationAchevement": "Nu enu",
+  "@simulationAchevement": {
+    "description": "Label achèvement (court)"
+  },
+  "simulationPasMatiere": "Matière o na xexe.",
+  "@simulationPasMatiere": {
+    "description": "État vide analyse matière"
+  },
+  "simulationFelicitationsAucune": "Nu wò, matière o si nàxexe!",
+  "@simulationFelicitationsAucune": {
+    "description": "Message recommandations vides"
+  },
+  "simulationBesoinReviser": "Èɖo be nàxexe:",
+  "@simulationBesoinReviser": {
+    "description": "Intro liste recommandations"
+  },
+  "simulationCorrectionsDetaillees": "Corrections ƒe nya me",
+  "@simulationCorrectionsDetaillees": {
+    "description": "Titre bottom-sheet corrections"
+  },
+  "simulationSansReponse": "(nyagbɔgɔ o)",
+  "@simulationSansReponse": {
+    "description": "Placeholder sans réponse dans corrections"
+  },
+  "simulationAutoEvaluation": "Ðoɖo ɖe wò ŋu",
+  "@simulationAutoEvaluation": {
+    "description": "Titre bloc auto-évaluation corrections"
+  },
+  "simulationCompareReponse": "Kpɔ wò ƒe nyagbɔgɔ kple nyagbɔgɔ nyui eye nàɖo wò ŋu.",
+  "@simulationCompareReponse": {
+    "description": "Sous-titre bloc auto-évaluation"
+  },
+  "simulationChooseAnswer": "Tia nyagbɔgɔ nyui:",
+  "@simulationChooseAnswer": {
+    "description": "Instruction QCM"
+  },
+  "simulationSaisisCalcul": "Ŋlɔ wò ƒe nyagbɔgɔ (gbla calcul):",
+  "@simulationSaisisCalcul": {
+    "description": "Instruction question calcul"
+  },
+  "simulationSaisisReponse": "Ŋlɔ wò ƒe nyagbɔgɔ:",
+  "@simulationSaisisReponse": {
+    "description": "Instruction question ouverte"
+  },
+  "simulationEcrisReponse": "Ŋlɔ wò ƒe nyagbɔgɔ afi...",
+  "@simulationEcrisReponse": {
+    "description": "Hint champ réponse texte"
+  },
+  "simulationCorrigeePlusTard": "Biyia sia la na correcting le rapport ƒe evelɛ me.",
+  "@simulationCorrigeePlusTard": {
+    "description": "Note bas du champ réponse texte"
+  },
+  "simulationTypeQcm": "QCM",
+  "@simulationTypeQcm": {
+    "description": "Type QCM"
+  },
+  "simulationTypeVraiFaux": "Nyate / Nyagbe",
+  "@simulationTypeVraiFaux": {
+    "description": "Type Vrai/Faux"
+  },
+  "simulationTypeCalcul": "Calcul",
+  "@simulationTypeCalcul": {
+    "description": "Type Calcul"
+  },
+  "simulationTypeOuvert": "Biyia si wo ʋu",
+  "@simulationTypeOuvert": {
+    "description": "Type Question ouverte"
+  },
+  "simulationTypeRedaction": "Ŋɔŋlɔ",
+  "@simulationTypeRedaction": {
+    "description": "Type Rédaction"
+  },
+  "simulationVrai": "Nyate",
+  "@simulationVrai": {
+    "description": "Bouton Vrai"
+  },
+  "simulationFaux": "Nyagbe",
+  "@simulationFaux": {
+    "description": "Bouton Faux"
+  },
+  "simulationBepcDesc": "Brevet d'études",
+  "@simulationBepcDesc": {
+    "description": "Description courte BEPC"
+  },
+  "simulationBac1Desc": "Ɔkpa gbãtɔ",
+  "@simulationBac1Desc": {
+    "description": "Description courte BAC 1"
+  },
+  "simulationBac2Desc": "Baccalauréat",
+  "@simulationBac2Desc": {
+    "description": "Description courte BAC 2"
+  },
+  "simulationProbatoireDesc": "Trɔ yi Terminale",
+  "@simulationProbatoireDesc": {
+    "description": "Description courte Probatoire"
+  },
+  "dashboardMaitrise": "masterie",
+  "@dashboardMaitrise": {
+    "description": "Légende sous le pourcentage de maîtrise"
+  },
+  "dashboardCommenceReviser": "Dze xexexe gɔme be nàkpɔ wò ƒe progression le matières me.",
+  "@dashboardCommenceReviser": {
+    "description": "État vide progression matière"
+  },
+  "dashboardMatieresDispos": "Matières siwo le: {matieres}",
+  "@dashboardMatieresDispos": {
+    "description": "Liste matières disponibles",
+    "placeholders": {
+      "matieres": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboardContinuePointsFaibles": "Yim edzi nàxexe be nàkpɔ wò ƒe points faibles!",
+  "@dashboardContinuePointsFaibles": {
+    "description": "État vide chapitres faibles"
+  },
+  "dashboardBienvenue": "Woezɔ!",
+  "@dashboardBienvenue": {
+    "description": "Titre état vide dashboard"
+  },
+  "dashboardQuestions7jours": "Biyia si woɖo le ɖa 7 si va yi me",
+  "@dashboardQuestions7jours": {
+    "description": "Sous-titre activité 7 jours"
+  },
+  "dashboardStreakJours": "{n} ɖ",
+  "@dashboardStreakJours": {
+    "description": "Badge streak (jours consécutifs)",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardExamenBlanc": "Exam blanc",
+  "@dashboardExamenBlanc": {
+    "description": "Bouton court examen blanc"
+  },
+  "settingsTitle": "Mɔfiame",
+  "@settingsTitle": {
+    "description": "Titre écran paramètres"
+  },
+  "settingsLangueTitle": "Gbe",
+  "@settingsLangueTitle": {
+    "description": "Titre section langue"
+  },
+  "settingsLangueSubtitle": "Tia app ƒe gbe",
+  "@settingsLangueSubtitle": {
+    "description": "Sous-titre section langue"
+  },
+  "settingsFrancais": "Français",
+  "@settingsFrancais": {
+    "description": "Libellé langue française"
+  },
+  "settingsAnglais": "Anglais",
+  "@settingsAnglais": {
+    "description": "Libellé langue anglaise"
+  },
+  "settingsLangueHint": "Français nye gbe si wo zãna (sukuu ƒe gbe le Togo). Anglais na programme DJANTA kple sukuuviwo siwo le CEDEAO me.",
+  "@settingsLangueHint": {
+    "description": "Aide section langue"
+  },
+  "settingsThemeTitle": "Theme",
+  "@settingsThemeTitle": {
+    "description": "Titre section thème"
+  },
+  "settingsThemeSubtitle": "Yeyu, yeyu ƒe sui alo systeme",
+  "@settingsThemeSubtitle": {
+    "description": "Sous-titre section thème"
+  },
+  "settingsClair": "Yeyu",
+  "@settingsClair": {
+    "description": "Mode thème clair"
+  },
+  "settingsSombre": "Yeyu ƒe sui",
+  "@settingsSombre": {
+    "description": "Mode thème sombre"
+  },
+  "settingsSysteme": "Systeme",
+  "@settingsSysteme": {
+    "description": "Mode thème système"
+  },
+  "settingsThemeHint": "Yeyu ƒe sui bua ŋku ƒe ʋuʋu le afi si ɣea me. \"Systeme\" sɔsɔ ɖe wò ƒe telefon ŋu.",
+  "@settingsThemeHint": {
+    "description": "Aide section thème"
+  },
+  "settingsCompteTitle": "Account",
+  "@settingsCompteTitle": {
+    "description": "Titre section compte"
+  },
+  "settingsCompteSubtitle": "Profil, progression kple account ɖe asi",
+  "@settingsCompteSubtitle": {
+    "description": "Sous-titre section compte"
+  },
+  "settingsNomComplet": "Ŋkɔ",
+  "@settingsNomComplet": {
+    "description": "Label nom complet"
+  },
+  "settingsNiveau": "Nɔnɔme",
+  "@settingsNiveau": {
+    "description": "Label niveau"
+  },
+  "settingsEtablissement": "Sukuu",
+  "@settingsEtablissement": {
+    "description": "Label établissement"
+  },
+  "settingsNonRenseigne": "Le o",
+  "@settingsNonRenseigne": {
+    "description": "Valeur par défaut champ vide"
+  },
+  "settingsInscritLe": "Woda asi le",
+  "@settingsInscritLe": {
+    "description": "Label date inscription"
+  },
+  "settingsCompetencesSuivies": "Compétences si wo tia",
+  "@settingsCompetencesSuivies": {
+    "description": "Label compétences suivies"
+  },
+  "settingsQuestionsRepondues": "Biyia si woɖo",
+  "@settingsQuestionsRepondues": {
+    "description": "Label questions répondues"
+  },
+  "settingsResetProgression": "Trɔ progression yi de te",
+  "@settingsResetProgression": {
+    "description": "Titre tile reset progression"
+  },
+  "settingsResetProgressionSub": "Ɖe wò ƒe SRS karta kple BKT scores asi. Wò ƒe profil nɔ anyi.",
+  "@settingsResetProgressionSub": {
+    "description": "Sous-titre tile reset progression"
+  },
+  "settingsSupprimerCompte": "Ɖe wò ƒe account asi",
+  "@settingsSupprimerCompte": {
+    "description": "Titre tile suppression compte"
+  },
+  "settingsSupprimerCompteSub": "Ɖe wò ƒe data katã asi eye nàtsi tre. Dɔ sia mateŋku trɔ o.",
+  "@settingsSupprimerCompteSub": {
+    "description": "Sous-titre tile suppression compte"
+  },
+  "settingsAProposTitle": "Ŋu",
+  "@settingsAProposTitle": {
+    "description": "Titre section à propos"
+  },
+  "settingsAProposSubtitle": "Version, credits kple mentions légales",
+  "@settingsAProposSubtitle": {
+    "description": "Sous-titre section à propos"
+  },
+  "settingsApplication": "Application",
+  "@settingsApplication": {
+    "description": "Label application"
+  },
+  "settingsVersion": "Version",
+  "@settingsVersion": {
+    "description": "Label version"
+  },
+  "settingsEquipe": "Ha",
+  "@settingsEquipe": {
+    "description": "Label équipe"
+  },
+  "settingsLicence": "Licence",
+  "@settingsLicence": {
+    "description": "Label licence"
+  },
+  "settingsCodeSource": "Code source (GitHub)",
+  "@settingsCodeSource": {
+    "description": "Titre tile code source"
+  },
+  "settingsCodeSourceSub": "github.com/djabelo712/ExamBoost-Togo",
+  "@settingsCodeSourceSub": {
+    "description": "Sous-titre tile code source"
+  },
+  "settingsCodeSourceBody": "GitHub ƒe dépôt le public:\ngithub.com/djabelo712/ExamBoost-Togo\n\nÀteŋu atsɔ eŋu, atsi tre alo atito ɖe nɔnɔme yeye ŋu (pull request).",
+  "@settingsCodeSourceBody": {
+    "description": "Corps dialog code source"
+  },
+  "settingsSiteWeb": "Site web",
+  "@settingsSiteWeb": {
+    "description": "Titre tile site web"
+  },
+  "settingsSiteWebSub": "examboost-togo.vercel.app",
+  "@settingsSiteWebSub": {
+    "description": "Sous-titre tile site web"
+  },
+  "settingsSiteWebBody": "Landing page na beta ƒe inscription:\nexamboost-togo.vercel.app\n\nNext.js 16 page si wo da ɖe Vercel ŋu.",
+  "@settingsSiteWebBody": {
+    "description": "Corps dialog site web"
+  },
+  "settingsMentionsLegales": "Mentions légales",
+  "@settingsMentionsLegales": {
+    "description": "Titre tile mentions légales"
+  },
+  "settingsMentionsLegalesBody": "SmartFarm Togo (Lomé) wɔ ExamBoost Togo kple AIMS Ghana.\n\nData: 100% local (Hive) le wò ƒe telefon ŋu. Data ƒe nu o le, unless nàactive collecte anonyme (kpɔ Data ƒe section).\n\nLicence: MIT. Marque ExamBoost © 2026.\nContact: hello@examboost-togo.tg",
+  "@settingsMentionsLegalesBody": {
+    "description": "Corps dialog mentions légales"
+  },
+  "settingsCredits": "Ha ƒe credits",
+  "@settingsCredits": {
+    "description": "Titre tile crédits"
+  },
+  "settingsCreditsBody": "Project ƒe dola:\n  - Djabelo (Lead dev Flutter)\n  - [Ha si woawɔ]\n\nPartners:\n  - DJANTA Tech Hub (CcHub Nigeria)\n  - AIMS Ghana (Ghana)\n  - Direction des Examens et Concours (MEPST Togo)\n\nAkpe: sukuuviwo kple professors togolais siwo va xɔ le enquête terrain me le June 2026.",
+  "@settingsCreditsBody": {
+    "description": "Corps dialog crédits"
+  },
+  "settingsDonneesTitle": "Data kple confidentialité",
+  "@settingsDonneesTitle": {
+    "description": "Titre section données"
+  },
+  "settingsDonneesSubtitle": "Collecte anonyme kple wò ƒe data ƒe export",
+  "@settingsDonneesSubtitle": {
+    "description": "Sous-titre section données"
+  },
+  "settingsCollecteAnonyme": "Na collecte anonyme",
+  "@settingsCollecteAnonyme": {
+    "description": "Titre tile collecte anonyme"
+  },
+  "settingsCollecteAnonymeSub": "Kpe ɖe ha la be woawɔ app (PostHog auto-hébergé). Data personal o.",
+  "@settingsCollecteAnonymeSub": {
+    "description": "Sous-titre tile collecte anonyme"
+  },
+  "settingsExporterJson": "Export wò ƒe data (JSON)",
+  "@settingsExporterJson": {
+    "description": "Titre tile export JSON"
+  },
+  "settingsExporterJsonSub": "Wɔ JSON file si le wò ƒe profil, BKT scores kple SRS karta. Trɔ le systeme ƒe share me.",
+  "@settingsExporterJsonSub": {
+    "description": "Sous-titre tile export JSON"
+  },
+  "settingsNotificationsTitle": "Notifications",
+  "@settingsNotificationsTitle": {
+    "description": "Titre section notifications"
+  },
+  "settingsNotificationsSubtitle": "Rappels, alertes kple hour si wò lɔ",
+  "@settingsNotificationsSubtitle": {
+    "description": "Sous-titre section notifications"
+  },
+  "settingsRappelsQuotidiens": "Rappels le ɖokui si",
+  "@settingsRappelsQuotidiens": {
+    "description": "Titre tile rappels quotidiens"
+  },
+  "settingsRappelsQuotidiensSub": "Xɔ notification le ɖokui si be nàxexe.",
+  "@settingsRappelsQuotidiensSub": {
+    "description": "Sous-titre tile rappels quotidiens"
+  },
+  "settingsAlertesStreak": "Streak ƒe alertes",
+  "@settingsAlertesStreak": {
+    "description": "Titre tile alertes streak"
+  },
+  "settingsAlertesStreakSub": "Gblɔ ne wò ƒe streak le xexexe me (do go midnight).",
+  "@settingsAlertesStreakSub": {
+    "description": "Sous-titre tile alertes streak"
+  },
+  "settingsHeurePreferee": "Hour si wò lɔ na xexexe",
+  "@settingsHeurePreferee": {
+    "description": "Titre tile heure préférée"
+  },
+  "settingsHeurePrefereeSub": "Rappels le ɖokui si na va lɛ {time}",
+  "@settingsHeurePrefereeSub": {
+    "description": "Sous-titre tile heure préférée",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsHeureHelpText": "Tia hour si wò ƒe rappels le ɖokui si",
+  "@settingsHeureHelpText": {
+    "description": "Aide TimePicker"
+  },
+  "settingsResetTitle": "Trɔ progression yi de te?",
+  "@settingsResetTitle": {
+    "description": "Titre dialog reset progression"
+  },
+  "settingsResetBody": "Dɔ sia na ɖe asi:\n  - Wò ƒe SRS karta katã (review_cards)\n  - Wò ƒe BKT scores le compétence ɖeɖi me\n\nWò ƒe profil (ŋkɔ, nɔnɔme, sukuu) nɔ anyi.\n\nDɔ sia mateŋku trɔ o.",
+  "@settingsResetBody": {
+    "description": "Corps dialog reset progression"
+  },
+  "settingsDeleteTitle": "Ɖe wò ƒe account asi le mɔ si trɔ o me?",
+  "@settingsDeleteTitle": {
+    "description": "Titre dialog suppression compte"
+  },
+  "settingsDeleteBody": "Dɔ sia mateŋku TRƆ O.\n\nWò ƒe data katã na ɖe asi:\n  - Profil (ŋkɔ, nɔnɔme, sukuu)\n  - SRS karta kple BKT scores\n  - Sessions kple simulations ƒe history\n  - Preferences\n\nÀtsi tre eye nàtrɔ yi onboarding.",
+  "@settingsDeleteBody": {
+    "description": "Corps dialog suppression compte"
+  },
+  "settingsDeleteConfirm": "Ɖe asi le mɔ si trɔ o me",
+  "@settingsDeleteConfirm": {
+    "description": "Bouton confirmation suppression"
+  },
+  "settingsExportJsonTitle": "JSON ƒe export",
+  "@settingsExportJsonTitle": {
+    "description": "Titre dialog export JSON"
+  },
+  "settingsProgressionReset": "Progression trɔ yi de te. Ètrɔ yi gɔme!",
+  "@settingsProgressionReset": {
+    "description": "Snack progression réinitialisée"
+  },
+  "settingsCompteSupprime": "Account ɖe asi. Míagakpɔ!",
+  "@settingsCompteSupprime": {
+    "description": "Snack compte supprimé"
+  },
+  "settingsErreurExport": "Export ƒe vɔ: {error}",
+  "@settingsErreurExport": {
+    "description": "Snack erreur export",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -33,6 +33,7 @@ dependencies:
   # ─── Réseau et synchronisation ────────────────────────────────
   dio: ^5.4.3+1
   connectivity_plus: ^6.0.3
+  web_socket_channel: ^3.0.0  # Agent AH : classe temps réel (WebSocket)
 
   # ─── UI / Composants visuels ──────────────────────────────────
   fl_chart: ^0.68.0
@@ -41,9 +42,20 @@ dependencies:
   lottie: ^3.1.2
   cached_network_image: ^3.3.1
   flutter_svg: ^2.0.10+1
+  flutter_math_fork: ^0.7.2  # Agent AO : rendu LaTeX formules maths
 
   # ─── Notifications et alertes ─────────────────────────────────
   flutter_local_notifications: ^17.2.1+2
+  timezone: ^0.9.4  # Requis par flutter_local_notifications (zonedSchedule)
+
+  # ─── Audio / Vidéo / TTS (Session 3) ──────────────────────────
+  flutter_tts: ^4.0.2          # Agent AQ : lecture audio des énoncés
+  video_player: ^2.9.2         # Agent AS : explications vidéo
+  chewie: ^1.8.5               # Wrapper video_player avec contrôles
+
+  # ─── Capteurs & saisie (Session 3) ────────────────────────────
+  speech_to_text: ^7.0.0       # Agent BL : reconnaissance vocale réponses
+  image_picker: ^1.1.2         # Agent AT : upload images OCR questions
 
   # ─── Utilitaires ──────────────────────────────────────────────
   intl: ^0.19.0
@@ -72,9 +84,10 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/data/
-    - assets/images/
-    - assets/fonts/
-
-
-    
+    - assets/data/             # Banque de questions JSON (questions.json, geometry_questions.json)
+    - assets/images/           # Images génériques (logos, icônes raster, photos)
+    - assets/fonts/            # Polices personnalisées (placeholders pour l'instant)
+    - assets/illustrations/    # Illustrations onboarding + empty states SVG (Agent BA-illustrations)
+    - assets/branding/         # Logo, icônes, bannière GitHub, mockups SVG
+    - assets/lottie/           # Animations Lottie JSON (emplacement cible, vide pour l'instant)
+    - lib/lottie/              # Animations Lottie JSON actuelles (success, loading, badge_unlock, streak, exam_complete) — conservé pour rétro-compat

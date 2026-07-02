@@ -3,12 +3,14 @@
 // Sauvegarde du profil via UserProvider (Hive + SharedPreferences + notify du router).
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/user.dart';
 import '../../providers/user_provider.dart';
+import '../../theme/adaptive_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/app_router.dart';
 
@@ -159,7 +161,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         setState(() => _isSaving = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur lors de la création du profil : $e'),
+            content: Text(AppLocalizations.of(context)!.onboardingProfileError(e.toString())),
             backgroundColor: AppColors.error,
           ),
         );
@@ -172,7 +174,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: AppColors.background,
       body: _isSaving
           ? _buildSuccessView()
           : SafeArea(
@@ -235,7 +236,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             width: active ? 28 : 8,
             height: 8,
             decoration: BoxDecoration(
-              color: active || passed ? AppColors.primary : AppColors.divider,
+              color: active || passed ? AppColors.primary : AdaptiveColors.divider(context),
               borderRadius: BorderRadius.circular(4),
             ),
           );
@@ -246,6 +247,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   // ─── Étape 1 : Bienvenue ───────────────────────────────────────
   Widget _buildWelcomeStep() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
@@ -273,17 +275,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: 32),
-          Text('ExamBoost Togo', style: AppTextStyles.h1),
+          Text(l10n.onboardingWelcomeTitle,
+              style: AppTextStyles.h1
+                  .copyWith(color: AdaptiveColors.textPrimary(context))),
           const SizedBox(height: 12),
           Text(
-            'Prépare tes examens nationaux avec intelligence.',
-            style: AppTextStyles.h3.copyWith(color: AppColors.textSecondary),
+            l10n.onboardingWelcomeSlogan,
+            style: AppTextStyles.h3
+                .copyWith(color: AdaptiveColors.textSecondary(context)),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
-            'BEPC · BAC · Adapté au programme togolais · 100% hors-ligne',
-            style: AppTextStyles.bodySmall,
+            l10n.onboardingWelcomeSubtitle,
+            style: AppTextStyles.bodySmall
+                .copyWith(color: AdaptiveColors.textSecondary(context)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -293,25 +299,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   // ─── Étape 2 : Identité ────────────────────────────────────────
   Widget _buildIdentityStep() {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           const SizedBox(height: 8),
-          Text('Identité', style: AppTextStyles.h1),
+          Text(l10n.onboardingIdentityTitle,
+              style: AppTextStyles.h1
+                  .copyWith(color: AdaptiveColors.textPrimary(context))),
           const SizedBox(height: 8),
           Text(
-            'Dis-nous en plus sur toi pour personnaliser ton parcours.',
-            style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+            l10n.onboardingIdentityHint,
+            style: AppTextStyles.body
+                .copyWith(color: AdaptiveColors.textSecondary(context)),
           ),
           const SizedBox(height: 24),
           TextField(
             controller: _prenomCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Prénom *',
-              hintText: 'Ex : Kofi',
-              prefixIcon: Icon(Icons.person_outline),
+            decoration: InputDecoration(
+              labelText: l10n.onboardingFirstname,
+              hintText: l10n.onboardingFirstnameHint,
+              prefixIcon: const Icon(Icons.person_outline),
             ),
             textCapitalization: TextCapitalization.words,
             textInputAction: TextInputAction.next,
@@ -320,10 +330,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 16),
           TextField(
             controller: _nomCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Nom *',
-              hintText: 'Ex : Komla',
-              prefixIcon: Icon(Icons.person_outline),
+            decoration: InputDecoration(
+              labelText: l10n.onboardingLastname,
+              hintText: l10n.onboardingLastnameHint,
+              prefixIcon: const Icon(Icons.person_outline),
             ),
             textCapitalization: TextCapitalization.words,
             textInputAction: TextInputAction.next,
@@ -332,10 +342,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 16),
           TextField(
             controller: _etablissementCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Établissement (optionnel)',
-              hintText: 'Ex : Lycée de Tokoin',
-              prefixIcon: Icon(Icons.business_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.onboardingSchool,
+              hintText: l10n.onboardingSchoolHint,
+              prefixIcon: const Icon(Icons.business_outlined),
             ),
             textCapitalization: TextCapitalization.words,
             textInputAction: TextInputAction.next,
@@ -366,10 +376,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 controller: controller,
                 focusNode: focusNode,
                 onSubmitted: (_) => onFieldSubmitted(),
-                decoration: const InputDecoration(
-                  labelText: 'Ville (optionnel)',
-                  hintText: 'Ex : Lomé',
-                  prefixIcon: Icon(Icons.location_city_outlined),
+                decoration: InputDecoration(
+                  labelText: l10n.onboardingCity,
+                  hintText: l10n.onboardingCityHint,
+                  prefixIcon: const Icon(Icons.location_city_outlined),
                 ),
                 textCapitalization: TextCapitalization.words,
               );
@@ -386,7 +396,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Material(
                     elevation: 4,
                     borderRadius: BorderRadius.circular(12),
-                    color: AppColors.surface,
+                    color: AdaptiveColors.surface(context),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                         maxHeight: 200,
@@ -418,29 +428,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   // ─── Étape 3 : Niveau scolaire ─────────────────────────────────
   Widget _buildNiveauStep() {
+    final l10n = AppLocalizations.of(context)!;
     final List<_NiveauOption> niveaux = <_NiveauOption>[
       _NiveauOption(
         value: '3eme',
-        label: '3ème',
-        description: 'Préparation BEPC',
+        label: l10n.onboardingLevel3eme,
+        description: l10n.onboardingLevel3emeDesc,
         icon: Icons.menu_book_outlined,
       ),
       _NiveauOption(
         value: '2nde',
-        label: '2nde',
-        description: 'Préparation BAC (commun)',
+        label: l10n.onboardingLevel2nde,
+        description: l10n.onboardingLevel2ndeDesc,
         icon: Icons.book_outlined,
       ),
       _NiveauOption(
         value: '1ere',
-        label: '1ère',
-        description: 'Préparation BAC (Probatoire)',
+        label: l10n.onboardingLevel1ere,
+        description: l10n.onboardingLevel1ereDesc,
         icon: Icons.school_outlined,
       ),
       _NiveauOption(
         value: 'Terminale',
-        label: 'Terminale',
-        description: 'Préparation BAC (BAC final)',
+        label: l10n.onboardingLevelTerminale,
+        description: l10n.onboardingLevelTerminaleDesc,
         icon: Icons.emoji_events_outlined,
       ),
     ];
@@ -451,11 +462,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           const SizedBox(height: 8),
-          Text('Ton niveau scolaire', style: AppTextStyles.h1),
+          Text(l10n.onboardingLevelTitle,
+              style: AppTextStyles.h1
+                  .copyWith(color: AdaptiveColors.textPrimary(context))),
           const SizedBox(height: 8),
           Text(
-            'Sélectionne la classe qui correspond à ta situation actuelle.',
-            style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+            l10n.onboardingLevelHint,
+            style: AppTextStyles.body
+                .copyWith(color: AdaptiveColors.textSecondary(context)),
           ),
           const SizedBox(height: 20),
           Expanded(
@@ -489,16 +503,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primarySurface : AppColors.surface,
+          color: selected
+              ? AdaptiveColors.primarySurface(context)
+              : AdaptiveColors.surface(context),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: selected ? AppColors.primary : AppColors.divider,
+            color: selected ? AppColors.primary : AdaptiveColors.divider(context),
             width: selected ? 2 : 1,
           ),
           boxShadow: <BoxShadow>[
             if (!selected)
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: AdaptiveColors.shadow(context),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -511,19 +527,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Icon(
               n.icon,
               size: 36,
-              color: selected ? AppColors.primary : AppColors.textSecondary,
+              color: selected
+                  ? AppColors.primary
+                  : AdaptiveColors.textSecondary(context),
             ),
             const SizedBox(height: 12),
             Text(
               n.label,
               style: AppTextStyles.h3.copyWith(
-                color: selected ? AppColors.primary : AppColors.textPrimary,
+                color: selected
+                    ? AppColors.primary
+                    : AdaptiveColors.textPrimary(context),
               ),
             ),
             const SizedBox(height: 4),
             Text(
               n.description,
-              style: AppTextStyles.bodySmall,
+              style: AppTextStyles.bodySmall
+                  .copyWith(color: AdaptiveColors.textSecondary(context)),
               textAlign: TextAlign.center,
             ),
           ],
@@ -534,35 +555,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   // ─── Étape 4 : Série ───────────────────────────────────────────
   Widget _buildSerieStep() {
+    final l10n = AppLocalizations.of(context)!;
     final List<_SerieOption> series = <_SerieOption>[
       _SerieOption(
         value: 'A',
-        label: 'Série A',
-        description: 'Littéraire',
+        label: l10n.onboardingSerieA,
+        description: '',
         icon: Icons.menu_book_outlined,
       ),
       _SerieOption(
         value: 'B',
-        label: 'Série B',
-        description: 'Sciences Économiques',
+        label: l10n.onboardingSerieB,
+        description: '',
         icon: Icons.trending_up,
       ),
       _SerieOption(
         value: 'C',
-        label: 'Série C',
-        description: 'Maths & Sciences Physiques',
+        label: l10n.onboardingSerieC,
+        description: '',
         icon: Icons.calculate_outlined,
       ),
       _SerieOption(
         value: 'D',
-        label: 'Série D',
-        description: 'Sciences Naturelles',
+        label: l10n.onboardingSerieD,
+        description: '',
         icon: Icons.science_outlined,
       ),
       _SerieOption(
         value: 'F',
-        label: 'Série F',
-        description: 'Technique',
+        label: l10n.onboardingSerieF,
+        description: '',
         icon: Icons.engineering_outlined,
       ),
     ];
@@ -573,11 +595,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           const SizedBox(height: 8),
-          Text('Quelle est ta série ?', style: AppTextStyles.h1),
+          Text(l10n.onboardingSerieTitle,
+              style: AppTextStyles.h1
+                  .copyWith(color: AdaptiveColors.textPrimary(context))),
           const SizedBox(height: 8),
           Text(
-            'Indispensable pour cibler les épreuves du BAC adaptées à ta filière.',
-            style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+            l10n.onboardingSerieHint,
+            style: AppTextStyles.body
+                .copyWith(color: AdaptiveColors.textSecondary(context)),
           ),
           const SizedBox(height: 24),
           ...series.map((_SerieOption s) => Padding(
@@ -597,16 +622,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primarySurface : AppColors.surface,
+          color: selected
+              ? AdaptiveColors.primarySurface(context)
+              : AdaptiveColors.surface(context),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: selected ? AppColors.primary : AppColors.divider,
+            color: selected ? AppColors.primary : AdaptiveColors.divider(context),
             width: selected ? 2 : 1,
           ),
           boxShadow: <BoxShadow>[
             if (!selected)
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: AdaptiveColors.shadow(context),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -619,12 +646,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: selected ? AppColors.primary : AppColors.surfaceVariant,
+                color: selected
+                    ? AppColors.primary
+                    : AdaptiveColors.surfaceVariant(context),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 s.icon,
-                color: selected ? Colors.white : AppColors.textSecondary,
+                color: selected
+                    ? Colors.white
+                    : AdaptiveColors.textSecondary(context),
               ),
             ),
             const SizedBox(width: 16),
@@ -632,17 +663,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(s.label, style: AppTextStyles.h3),
+                  Text(s.label,
+                      style: AppTextStyles.h3.copyWith(
+                          color: AdaptiveColors.textPrimary(context))),
                   const SizedBox(height: 2),
-                  Text(s.description, style: AppTextStyles.bodySmall),
+                  Text(s.description,
+                      style: AppTextStyles.bodySmall.copyWith(
+                          color: AdaptiveColors.textSecondary(context))),
                 ],
               ),
             ),
             if (selected)
               const Icon(Icons.check_circle, color: AppColors.primary)
             else
-              const Icon(Icons.radio_button_unchecked,
-                  color: AppColors.textDisabled),
+              Icon(Icons.radio_button_unchecked,
+                  color: AdaptiveColors.textDisabled(context)),
           ],
         ),
       ),
@@ -651,6 +686,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   // ─── Étape 5 : Matières préférées ──────────────────────────────
   Widget _buildMatieresStep() {
+    final l10n = AppLocalizations.of(context)!;
     final bool canSelectMore = _matieresChoisies.length < 3;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
@@ -658,12 +694,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           const SizedBox(height: 8),
-          Text('Tes matières préférées', style: AppTextStyles.h1),
+          Text(l10n.onboardingSubjectsTitle,
+              style: AppTextStyles.h1
+                  .copyWith(color: AdaptiveColors.textPrimary(context))),
           const SizedBox(height: 8),
           Text(
-            'Choisis 1 à 3 matières pour commencer. Tu pourras en ajouter '
-            'd\'autres plus tard depuis ton espace.',
-            style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+            l10n.onboardingSubjectsHint,
+            style: AppTextStyles.body
+                .copyWith(color: AdaptiveColors.textSecondary(context)),
           ),
           const SizedBox(height: 12),
           Row(
@@ -679,7 +717,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               const SizedBox(width: 6),
               Text(
-                '${_matieresChoisies.length}/3 sélectionnées',
+                l10n.onboardingSubjectsCount(_matieresChoisies.length),
                 style: AppTextStyles.label.copyWith(
                   color: _matieresChoisies.length >= 1
                       ? AppColors.success
@@ -695,7 +733,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             children: _matieresDisponibles.map((String m) {
               final bool selected = _matieresChoisies.contains(m);
               return FilterChip(
-                label: Text(m),
+                label: Text(_matiereLabel(context, m)),
                 selected: selected,
                 onSelected: (bool val) {
                   setState(() {
@@ -707,12 +745,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   });
                 },
                 selectedColor: AppColors.primary,
-                backgroundColor: AppColors.surface,
+                backgroundColor: AdaptiveColors.surface(context),
                 side: BorderSide(
-                  color: selected ? AppColors.primary : AppColors.divider,
+                  color: selected
+                      ? AppColors.primary
+                      : AdaptiveColors.divider(context),
                 ),
                 labelStyle: TextStyle(
-                  color: selected ? Colors.white : AppColors.textPrimary,
+                  color: selected
+                      ? Colors.white
+                      : AdaptiveColors.textPrimary(context),
                   fontWeight:
                       selected ? FontWeight.w600 : FontWeight.w400,
                 ),
@@ -729,38 +771,66 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
+  /// Traduit une clé matière (ex : 'Mathématiques') en libellé localisé.
+  /// La clé française reste utilisée comme identifiant interne (QuestionService),
+  /// mais l'affichage utilise la langue courante.
+  String _matiereLabel(BuildContext context, String key) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (key) {
+      case 'Mathématiques':
+        return l10n.subjectMathematiques;
+      case 'Français':
+        return l10n.subjectFrancais;
+      case 'Sciences Physiques':
+        return l10n.subjectSciencesPhysiques;
+      case 'SVT':
+        return l10n.subjectSVT;
+      case 'Histoire-Géographie':
+        return l10n.subjectHistoireGeographie;
+      case 'Anglais':
+        return l10n.subjectAnglais;
+      case 'Philosophie':
+        return l10n.subjectPhilosophie;
+      case 'Économie':
+        return l10n.subjectEconomie;
+      default:
+        return key;
+    }
+  }
+
   // ─── Boutons de navigation ─────────────────────────────────────
   Widget _buildNavigationButtons() {
+    final l10n = AppLocalizations.of(context)!;
     final bool isFirst = _currentStep == _welcomeStep;
 
     bool canProceed = false;
-    String nextLabel = 'Suivant';
+    String nextLabel = l10n.onboardingNextButton;
     VoidCallback? onNext;
 
     switch (_currentStep) {
       case _welcomeStep:
         canProceed = true;
-        nextLabel = 'Commencer';
+        nextLabel = l10n.onboardingStartButton;
         onNext = _nextStep;
         break;
       case _identityStep:
         canProceed = _canProceedFromIdentity;
-        nextLabel = 'Suivant';
+        nextLabel = l10n.onboardingNextButton;
         onNext = _nextStep;
         break;
       case _niveauStep:
         canProceed = _canProceedFromNiveau;
-        nextLabel = 'Suivant';
+        nextLabel = l10n.onboardingNextButton;
         onNext = _nextStep;
         break;
       case _serieStep:
         canProceed = _canProceedFromSerie;
-        nextLabel = 'Suivant';
+        nextLabel = l10n.onboardingNextButton;
         onNext = _nextStep;
         break;
       case _matieresStep:
         canProceed = _canProceedFromMatieres;
-        nextLabel = 'Créer mon profil';
+        nextLabel = l10n.onboardingCreateProfile;
         onNext = _createProfile;
         break;
     }
@@ -773,7 +843,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             OutlinedButton.icon(
               onPressed: _previousStep,
               icon: const Icon(Icons.arrow_back, size: 18),
-              label: const Text('Retour'),
+              label: Text(l10n.onboardingPreviousButton),
               style: OutlinedButton.styleFrom(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -800,6 +870,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   // ─── Écran de succès ───────────────────────────────────────────
   Widget _buildSuccessView() {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Center(
         child: Column(
@@ -826,17 +897,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            Text('Profil créé !', style: AppTextStyles.h1),
+            Text(l10n.onboardingProfileCreated,
+                style: AppTextStyles.h1
+                    .copyWith(color: AdaptiveColors.textPrimary(context))),
             const SizedBox(height: 8),
             Text(
-              'Bienvenue ${_prenomCtrl.text.trim()} !',
-              style:
-                  AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+              l10n.onboardingWelcomeUser(_prenomCtrl.text.trim()),
+              style: AppTextStyles.body
+                  .copyWith(color: AdaptiveColors.textSecondary(context)),
             ),
             const SizedBox(height: 8),
             Text(
-              'Redirection vers l\'accueil...',
-              style: AppTextStyles.bodySmall,
+              l10n.onboardingRedirecting,
+              style: AppTextStyles.bodySmall
+                  .copyWith(color: AdaptiveColors.textSecondary(context)),
             ),
             const SizedBox(height: 32),
             const SizedBox(

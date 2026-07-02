@@ -3,6 +3,11 @@
 On isole une base SQLite par test en remplacant l'engine et le
 SessionLocal du module ``database`` (sans reload, pour conserver la
 meme classe ``Base`` que les modeles).
+
+Les routers ``admin``, ``tutor`` et ``classroom`` ne sont pas encore
+branches dans ``main.py`` (reserve au wiring final). On les monte ici
+sur l'app de test via un guard idempotent afin de pouvoir les tester
+sans toucher au code source backend.
 """
 
 from __future__ import annotations
@@ -22,6 +27,11 @@ if str(_BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(_BACKEND_ROOT))
 
 
+# Guard global pour ne monter les routers additionnels qu'une seule fois
+# (main_module.app est partage entre tous les tests du process pytest).
+_EXTRA_ROUTERS_MOUNTED = False
+
+
 @pytest.fixture(scope="function")
 def client(tmp_path, monkeypatch):
     """Retourne un TestClient avec une base SQLite isolee par test."""
@@ -33,11 +43,22 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setenv("SECRET_KEY", "test-secret-not-for-production-32c")
     monkeypatch.setenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60")
     monkeypatch.setenv("CORS_ORIGINS", '["*"]')
+    # L'email admin correspond a celui utilise par la fixture admin_token,
+    # ce qui garantit que admin@test.tg est admin meme si d'autres users
+    # ont ete inscrits avant (cas rare mais possible si le seeding tourne).
+    monkeypatch.setenv("ADMIN_EMAIL", "admin@test.tg")
 
     # Reset du cache settings pour prendre en compte l'env
     from config import get_settings
 
     get_settings.cache_clear()
+
+    # Desactive le seeding automatique (main.py lifespan appelle
+    # seed_if_empty qui creerait un admin@examboost.tg et 64 questions
+    # de demo dans la base de test, perturbant l'isolation).
+    import scripts.seed_db as _seed_db
+
+    monkeypatch.setattr(_seed_db, "seed_if_empty", lambda: 0)
 
     # Import des modules (premier import — prend en compte l'env)
     import database
@@ -63,6 +84,28 @@ def client(tmp_path, monkeypatch):
     # Import de l'app UNE seule fois (les routers referencent database
     # dynamiquement via Depends(get_db), qui lira database.SessionLocal)
     import main as main_module
+
+    # Monte les routers additionnels (admin / tutor / classroom) une seule
+    # fois sur l'app globale. Ces routers ne sont pas encore inclus dans
+    # main.py (reserve au wiring final), mais on veut les tester des
+    # maintenant. Le guard evite un remontage qui declencherait des
+    # KeyError de routes dupliquees.
+    global _EXTRA_ROUTERS_MOUNTED
+    if not _EXTRA_ROUTERS_MOUNTED:
+        from routers import admin as _admin_router
+        from routers import tutor as _tutor_router
+        from routers import classroom as _classroom_router
+
+        main_module.app.include_router(
+            _admin_router.router, prefix="/admin", tags=["admin"]
+        )
+        main_module.app.include_router(
+            _tutor_router.router, prefix="/tutor", tags=["tutor"]
+        )
+        main_module.app.include_router(
+            _classroom_router.router, tags=["classroom"]
+        )
+        _EXTRA_ROUTERS_MOUNTED = True
 
     with TestClient(main_module.app) as c:
         yield c

@@ -34,3 +34,17 @@ pytest-asyncio==0.23.7
 # pandas==2.2.2
 # joblib==1.4.2
 # py-irt==0.1.5
+
+# ─── Securite / audit (Agent BY — BY-owasp-audit, Vague 2 Session 4) ───
+# bandit : SAST (Static Application Security Testing) pour Python.
+#           Lance en CI : `bandit -r backend/ -ll -x backend/tests,backend/.venv`
+# safety : SCA (Software Composition Analysis) — verifie les CVE connus
+#           sur toutes les dependances pinnees du requirements.txt.
+#           Lance en CI : `safety check --full-report`
+#
+# Note : les upgrades de python-jose (3.3.0 -> 3.4.0) et python-multipart
+# (0.0.9 -> >=0.0.18) sont documentes dans docs/security/SECURITY_FIXES.md
+# (F-16 et F-17) mais ne sont pas appliques ici par respect du perimetre
+# "ne pas toucher au code source backend". A appliquer par l'agent de wiring.
+bandit==1.7.9
+safety==3.2.7

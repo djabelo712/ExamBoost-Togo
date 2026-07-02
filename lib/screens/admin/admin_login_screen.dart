@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../theme/adaptive_colors.dart';
 import '../../theme/app_theme.dart';
 
 class AdminLoginScreen extends StatefulWidget {
@@ -95,7 +96,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     Expanded(
                       child: Text(
                         'Demander une démo',
-                        style: AppTextStyles.h2,
+                        style: AppTextStyles.h2.copyWith(
+                            color: AdaptiveColors.textPrimary(context)),
                       ),
                     ),
                     IconButton(
@@ -108,7 +110,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                 Text(
                   'Notre équipe vous recontactera sous 48h pour une '
                   'démonstration personnalisée.',
-                  style: AppTextStyles.bodySmall,
+                  style: AppTextStyles.bodySmall
+                      .copyWith(color: AdaptiveColors.textSecondary(context)),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -173,7 +176,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -190,11 +192,14 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     const SizedBox(height: 32),
 
                     // ─── Champs de connexion ─────────────────────
-                    Text('Connexion', style: AppTextStyles.h2),
+                    Text('Connexion',
+                        style: AppTextStyles.h2
+                            .copyWith(color: AdaptiveColors.textPrimary(context))),
                     const SizedBox(height: 4),
                     Text(
                       'Réservé aux directeurs et chefs d\'établissement.',
-                      style: AppTextStyles.bodySmall,
+                      style: AppTextStyles.bodySmall
+                          .copyWith(color: AdaptiveColors.textSecondary(context)),
                     ),
                     const SizedBox(height: 20),
 
@@ -302,7 +307,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.primarySurface,
+                        color: AdaptiveColors.primarySurface(context),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                             color: AppColors.primaryLight, width: 1),
@@ -319,7 +324,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                               'établissement. Démo gratuite de 30 jours '
                               'disponible sur demande.',
                               style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.primaryDark),
+                                  color: AdaptiveColors.primary(context)),
                             ),
                           ),
                         ],
@@ -356,12 +361,14 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           child: const Icon(Icons.school, color: Colors.white, size: 42),
         ),
         const SizedBox(height: 14),
-        Text('ExamBoost Togo', style: AppTextStyles.h1),
+        Text('ExamBoost Togo',
+            style: AppTextStyles.h1
+                .copyWith(color: AdaptiveColors.textPrimary(context))),
         const SizedBox(height: 4),
         Text(
           'Espace Directeurs',
           style: AppTextStyles.bodySmall.copyWith(
-            color: AppColors.primary,
+            color: AdaptiveColors.primary(context),
             fontWeight: FontWeight.w600,
             letterSpacing: 1.5,
           ),

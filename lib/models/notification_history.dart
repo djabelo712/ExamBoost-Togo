@@ -9,6 +9,12 @@
 // Persiste dans la box Hive "notification_history".
 // L'adaptateur NotificationHistoryAdapter + NotificationCategoryAdapter doivent
 // etre enregistres dans main.dart (voir README notifications).
+//
+// Note typeIds : typeId 6 = NotificationCategory (enum, sans conflit).
+//   typeId 7 etait utilise ici pour NotificationHistory MAIS entrait en conflit
+//   avec BadgeCategory (lib/models/badge.dart) qui utilise aussi typeId 7.
+//   On a deplace NotificationHistory vers typeId 19 pour eviter le conflit
+//   (BadgeCategory et BadgeLevel sont ancrees historiquement sur 7 et 8).
 
 import 'package:hive/hive.dart';
 
@@ -36,7 +42,7 @@ enum NotificationCategory {
 }
 
 /// Une entree de l'historique des notifications.
-@HiveType(typeId: 7)
+@HiveType(typeId: 19)
 class NotificationHistory extends HiveObject {
   /// Identifiant unique (horodatage en millisecondes, stable suffisamment).
   @HiveField(0)

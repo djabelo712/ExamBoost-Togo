@@ -17,13 +17,14 @@
 // La cle Hive est "scratch_<examId>_q<questionIndex>".
 
 import 'dart:convert';
-import 'dart:ui' as ui;
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/app_logger.dart';
+// Note BE2 : imports precedents 'dart:ui as ui', 'package:flutter/foundation.dart'
+// (kIsWeb) et 'package:flutter/services.dart' etaient inutilises (aucune
+// reference a ui., kIsWeb, HapticFeedback, SystemSound, etc. dans le fichier).
+// Supprimes pour eviter les warnings analyzer 'unused_import'.
 
 /// Ouvre le brouillon plein ecran.
 /// [examId] : identifiant de l'examen (ex: "BEPC-2026-sim").

@@ -1,8 +1,36 @@
 # ExamBoost Togo
 
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/djabelo712/ExamBoost-Togo/actions)
+[![Flutter](https://img.shields.io/badge/Flutter-3.44%2B-02569B?logo=flutter)](https://flutter.dev)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?logo=fastapi)](https://fastapi.tiangolo.com)
+[![License](https://img.shields.io/badge/license-proprietary-red)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.4.0--beta-orange)](https://github.com/djabelo712/ExamBoost-Togo/releases)
+[![GitHub](https://img.shields.io/badge/repo-public-blue?logo=github)](https://github.com/djabelo712/ExamBoost-Togo)
+
 Plateforme de préparation intelligente aux examens nationaux togolais (BEPC, Probatoire, BAC 1 et BAC 2) basée sur l'IA adaptative.
 
 > Projet candidat au **DJANTA Tech Hub — Idée-Action Challenge** (pitch le 24 juillet 2026).
+
+---
+
+## Sommaire
+
+- [Le problème](#-le-problème)
+- [La solution](#-la-solution)
+- [Quick Start](#-quick-start)
+- [Architecture](#-architecture)
+- [Algorithmes implémentés](#-algorithmes-implémentés)
+- [Données](#-données)
+- [Backend API](#-backend-api)
+- [Stack technique](#-stack-technique)
+- [KPIs cibles](#-kpis-cibles-18-mois)
+- [Roadmap](#-roadmap-post-djanta)
+- [Documentation](#-documentation)
+- [Équipe](#-équipe)
+- [Licence](#-licence)
+
+---
 
 ## 🎯 Le problème
 
@@ -85,15 +113,15 @@ examboost_togo/
 └── README.md
 ```
 
-## 🚀 Démarrage rapide
+## 🚀 Quick Start
 
 ### Prérequis
 
-- **Flutter SDK** ≥ 3.3.0 ([flutter.dev](https://flutter.dev))
+- **Flutter SDK** ≥ 3.44 ([flutter.dev](https://flutter.dev))
 - **Python 3.11+** (pour le backend, optionnel)
 - Android Studio ou VS Code avec extension Flutter
 
-### Installation automatique
+### Installation automatique (recommandée)
 
 ```bash
 git clone https://github.com/djabelo712/ExamBoost-Togo.git
@@ -107,7 +135,26 @@ Le script :
 3. Lance l'analyse statique (`flutter analyze`)
 4. Propose d'installer et lancer le backend FastAPI
 
-### Installation manuelle
+### Lancer l'app
+
+```bash
+flutter run                    # Sur un device Android branché ou un emulateur
+# ou
+flutter run -d chrome          # Demo web dans le navigateur
+```
+
+### Lancer le backend (optionnel)
+
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python -m scripts.seed_db      # Peuple la DB avec 64+ questions
+uvicorn main:app --reload      # → http://localhost:8000/docs (Swagger UI)
+```
+
+### Installation manuelle (alternative)
 
 ```bash
 # Dépendances Flutter
@@ -119,14 +166,10 @@ dart run build_runner build --delete-conflicting-outputs
 # Lancer l'app sur Android (ou Chrome pour démo web)
 flutter run
 
-# Backend (optionnel)
-cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python seed.py
-uvicorn main:app --reload  # → http://localhost:8000/docs
+# Backend (optionnel) — voir section ci-dessus
 ```
+
+> Pour le guide complet (setup IDE, variables d'environnement, troubleshooting), voir [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md).
 
 ## 🧠 Algorithmes implémentés
 
@@ -233,6 +276,72 @@ Swagger UI : `http://localhost:8000/docs` après `uvicorn main:app --reload`
 - [ ] Modèle XGBoost entraîné (M7-M8)
 - [ ] Déploiement Play Store national (M8)
 - [ ] Expansion Bénin / Côte d'Ivoire / Burkina Faso (M13+)
+
+## 📚 Documentation
+
+La documentation technique est organisée en **3 documents maîtres** consolidés :
+
+| Document | Contenu | Public cible |
+|---|---|---|
+| [**`docs/ARCHITECTURE.md`**](docs/ARCHITECTURE.md) | Architecture technique complète (11 sections, 12 diagrammes Mermaid) : système global, stack, mobile Flutter, backend FastAPI, pipeline OCR, algorithmes ML (SM-2, BKT, IRT, XGBoost, DKT, K-Means), modèle de données, sync offline, sécurité, déploiement, monitoring | Développeurs, jury technique |
+| [**`docs/CONTRIBUTING.md`**](docs/CONTRIBUTING.md) | Guide de contribution (12 sections) : prérequis, setup, conventions de code, workflow Git, ajout de questions/écrans, tests, déploiement, communication équipe, roadmap | Nouveaux développeurs, contributeurs open-source |
+| [**`docs/DEPLOYMENT_GUIDE.md`**](docs/DEPLOYMENT_GUIDE.md) | Guide de déploiement détaillé : Railway, Vercel, CI/CD GitHub Actions, secrets, monitoring, backup DB, disaster recovery, coûts, scaling | DevOps, lead dev |
+
+### Documentation complémentaire
+
+- [Pitch Deck 10 slides](docs/Pitch_Deck_10_slides.md) — Script pitch bilingue FR/EN pour DJANTA
+- [Q&A jury anticipé](docs/QA_jury_anticipe.md) — 57 questions/réponses sur 10 thèmes
+- [Plan Go-To-Market](docs/Plan_GoToMarket.md) — Stratégie commerciale 18 mois
+- [Étude de faisabilité](docs/ExamBoost_Togo_Etude_Faisabilite_2025.pdf) — Budget 246 400 USD, projections M18
+- [Cours théorique IA](docs/ExamBoost_Togo_Cours_Theorique_2025.pdf) — Démonstrations mathématiques SM-2, BKT, IRT
+- [Guide outils IA](docs/ExamBoost_Togo_Guide_Outils_IA_2025.pdf) — Stack IA par tâche
+- [Business Model Canvas](docs/Business_Model_Canvas.md) — BMC complet
+- [One Pager](docs/One_Pager.md) — Résumé 1 page
+- [Case Study Amina](docs/Case_Study_Amina.md) — Persona élève type
+- [Dossier candidature DJANTA](docs/Dossier_Candidature_DJANTA.md) — Dossier officiel
+- [Enquête terrain Lomé](docs/Enquete_Terrain/README.md) — Enquête élèves + enseignants
+- [Manuels](docs/manuals/) — Manuel élève + guide enseignant
+- [Modèle financier](docs/financial/) — Excel + générateur Python
+- [Vidéo teaser](docs/Video_Teaser_2min.md) — Storyboard vidéo 2 min
+- [Explications vidéo](docs/video_explanations/) — Catalogue + scripts + storyboards
+- [Audit dark mode](docs/DARK_MODE_AUDIT.md) — Rapport conformité WCAG
+
+### Documentation par module
+
+- [Backend README](backend/README.md) — API FastAPI détaillée
+- [Backend DEPLOYMENT](backend/DEPLOYMENT.md) — Déploiement Railway backend
+- [Landing README](landing/README.md) — Landing Next.js
+- [Landing DEPLOYMENT](landing/DEPLOYMENT.md) — Déploiement Vercel landing
+- [Pipeline OCR README](data_pipeline/README.md) — Pipeline OCR annales
+- [Tests README](test/README.md) — Organisation des tests Flutter
+- [Theme README](lib/theme/README.md) — Palette + dark mode
+- [Splash README](lib/screens/splash/README.md) — Écran splash + transitions
+- [Animations README](lib/widgets/animations/README.md) — Catalogue animations
+- [Stats README](lib/screens/stats/README.md) — Module statistiques
+- [Tutor README](lib/screens/tutor/README.md) — Chat IA tutor
+- [Classroom README](lib/screens/classroom/README.md) — Mode classe live
+- [Search README](lib/screens/search/README.md) — Recherche avancée
+- [Favorites README](lib/screens/favorites/README.md) — Favoris + notes
+- [Badges README](lib/screens/badges/README.md) — Gamification
+- [Admin README](lib/screens/admin/README.md) — Dashboard admin
+- [Community README](lib/screens/community/README.md) — Forum + leaderboard
+- [Simulation README](lib/screens/simulation/README.md) — Examen chronométré
+- [Score README](lib/screens/score/README.md) — Prédiction score
+- [Math widgets README](lib/widgets/math/README.md) — LaTeX + FlutterMath
+- [Figures README](lib/widgets/figures/README.md) — SVG géométrie
+- [States README](lib/widgets/states/README.md) — Empty / error / skeletons
+- [Branding README](assets/branding/README.md) — Logo + palette + typographie
+- [Illustrations README](assets/illustrations/README.md) — SVG onboarding + empty states
+- [Lottie README](lib/lottie/README.md) — Animations JSON
+- [i18n README](lib/l10n/README.md) — Internationalisation
+- [ML Training README](backend/scripts/ml_training/README.md) — XGBoost score predictor
+- [IRT Calibration README](backend/scripts/irt_calibration/README.md) — Calibration IRT
+- [DKT Model README](backend/scripts/dkt_model/README.md) — Deep Knowledge Tracing
+- [Student Clustering README](backend/scripts/student_clustering/README.md) — K-Means personas
+- [Scripts README](scripts/README.md) — Scripts déploiement + ops
+- [Golden tests README](test/golden/README.md) — Tests screenshot pixel-perfect
+
+---
 
 ## 👥 Équipe
 

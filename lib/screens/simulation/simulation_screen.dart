@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../models/question.dart';
 import '../../services/question_service.dart';
+import '../../theme/adaptive_colors.dart';
 import '../../theme/app_theme.dart';
 
 /// Phases successives de l'écran simulation.
@@ -404,15 +405,17 @@ class _SimulationScreenState extends State<SimulationScreen>
   }
 
   Widget _buildChip({required String label, required Color color}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        label,
-        style: AppTextStyles.label.copyWith(color: color),
+    return Builder(
+      builder: (context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withOpacity(context.isDark ? 0.20 : 0.12),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: AppTextStyles.label.copyWith(color: color),
+        ),
       ),
     );
   }
@@ -435,7 +438,6 @@ class _SimulationScreenState extends State<SimulationScreen>
 
   Widget _buildPhaseConfig() {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Configuration de l\'examen'),
         leading: IconButton(
@@ -449,27 +451,36 @@ class _SimulationScreenState extends State<SimulationScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Choisis ton examen', style: AppTextStyles.h2),
+              Text('Choisis ton examen',
+                  style: AppTextStyles.h2
+                      .copyWith(color: AdaptiveColors.textPrimary(context))),
               const SizedBox(height: 6),
               Text(
                 'Sélectionne l\'examen que tu veux simuler, '
                 'puis ajuste les paramètres.',
-                style: AppTextStyles.bodySmall,
+                style: AppTextStyles.bodySmall
+                    .copyWith(color: AdaptiveColors.textSecondary(context)),
               ),
               const SizedBox(height: 16),
               _buildExamensGrid(),
               const SizedBox(height: 24),
               if (_estBac(_examenChoisi)) ...[
-                Text('Série (BAC)', style: AppTextStyles.h3),
+                Text('Série (BAC)',
+                    style: AppTextStyles.h3
+                        .copyWith(color: AdaptiveColors.textPrimary(context))),
                 const SizedBox(height: 8),
                 _buildSeriesChips(),
                 const SizedBox(height: 24),
               ],
-              Text('Nombre de questions', style: AppTextStyles.h3),
+              Text('Nombre de questions',
+                  style: AppTextStyles.h3
+                      .copyWith(color: AdaptiveColors.textPrimary(context))),
               const SizedBox(height: 8),
               _buildNombreChips(),
               const SizedBox(height: 24),
-              Text('Durée', style: AppTextStyles.h3),
+              Text('Durée',
+                  style: AppTextStyles.h3
+                      .copyWith(color: AdaptiveColors.textPrimary(context))),
               const SizedBox(height: 8),
               _buildDureeChips(),
               const SizedBox(height: 32),
@@ -541,7 +552,7 @@ class _SimulationScreenState extends State<SimulationScreen>
     VoidCallback onTap,
   ) {
     return Material(
-      color: selected ? AppColors.primary : AppColors.surface,
+      color: selected ? AppColors.primary : AdaptiveColors.surface(context),
       borderRadius: BorderRadius.circular(14),
       elevation: selected ? 4 : 1,
       child: InkWell(
@@ -552,7 +563,9 @@ class _SimulationScreenState extends State<SimulationScreen>
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: selected ? AppColors.primary : AppColors.divider,
+              color: selected
+                  ? AppColors.primary
+                  : AdaptiveColors.divider(context),
               width: selected ? 2 : 1,
             ),
           ),
@@ -566,7 +579,9 @@ class _SimulationScreenState extends State<SimulationScreen>
                     selected
                         ? Icons.radio_button_checked
                         : Icons.radio_button_off,
-                    color: selected ? Colors.white : AppColors.textSecondary,
+                    color: selected
+                        ? Colors.white
+                        : AdaptiveColors.textSecondary(context),
                     size: 18,
                   ),
                   const SizedBox(width: 6),
@@ -575,7 +590,7 @@ class _SimulationScreenState extends State<SimulationScreen>
                     style: AppTextStyles.h3.copyWith(
                       color: selected
                           ? Colors.white
-                          : AppColors.textPrimary,
+                          : AdaptiveColors.textPrimary(context),
                     ),
                   ),
                 ],
@@ -586,7 +601,7 @@ class _SimulationScreenState extends State<SimulationScreen>
                 style: AppTextStyles.bodySmall.copyWith(
                   color: selected
                       ? Colors.white.withOpacity(0.85)
-                      : AppColors.textSecondary,
+                      : AdaptiveColors.textSecondary(context),
                 ),
               ),
             ],
@@ -608,14 +623,18 @@ class _SimulationScreenState extends State<SimulationScreen>
           selected: selected,
           selectedColor: AppColors.primary,
           labelStyle: TextStyle(
-            color: selected ? Colors.white : AppColors.textPrimary,
+            color: selected
+                ? Colors.white
+                : AdaptiveColors.textPrimary(context),
             fontWeight: FontWeight.w600,
           ),
-          backgroundColor: AppColors.surface,
+          backgroundColor: AdaptiveColors.surface(context),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
             side: BorderSide(
-              color: selected ? AppColors.primary : AppColors.divider,
+              color: selected
+                  ? AppColors.primary
+                  : AdaptiveColors.divider(context),
             ),
           ),
           onSelected: (_) => setState(() => _serieChoisie = selected ? null : s),
@@ -635,14 +654,18 @@ class _SimulationScreenState extends State<SimulationScreen>
           selected: selected,
           selectedColor: AppColors.accent,
           labelStyle: TextStyle(
-            color: selected ? Colors.white : AppColors.textPrimary,
+            color: selected
+                ? Colors.white
+                : AdaptiveColors.textPrimary(context),
             fontWeight: FontWeight.w600,
           ),
-          backgroundColor: AppColors.surface,
+          backgroundColor: AdaptiveColors.surface(context),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
             side: BorderSide(
-              color: selected ? AppColors.accent : AppColors.divider,
+              color: selected
+                  ? AppColors.accent
+                  : AdaptiveColors.divider(context),
             ),
           ),
           onSelected: (_) => setState(() => _nombreQuestions = n),
@@ -661,14 +684,18 @@ class _SimulationScreenState extends State<SimulationScreen>
           selected: !_modeRapide,
           selectedColor: AppColors.primary,
           labelStyle: TextStyle(
-            color: !_modeRapide ? Colors.white : AppColors.textPrimary,
+            color: !_modeRapide
+                ? Colors.white
+                : AdaptiveColors.textPrimary(context),
             fontWeight: FontWeight.w600,
           ),
-          backgroundColor: AppColors.surface,
+          backgroundColor: AdaptiveColors.surface(context),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
             side: BorderSide(
-              color: !_modeRapide ? AppColors.primary : AppColors.divider,
+              color: !_modeRapide
+                  ? AppColors.primary
+                  : AdaptiveColors.divider(context),
             ),
           ),
           onSelected: (_) => setState(() {
@@ -681,14 +708,18 @@ class _SimulationScreenState extends State<SimulationScreen>
           selected: _modeRapide,
           selectedColor: AppColors.accent,
           labelStyle: TextStyle(
-            color: _modeRapide ? Colors.white : AppColors.textPrimary,
+            color: _modeRapide
+                ? Colors.white
+                : AdaptiveColors.textPrimary(context),
             fontWeight: FontWeight.w600,
           ),
-          backgroundColor: AppColors.surface,
+          backgroundColor: AdaptiveColors.surface(context),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
             side: BorderSide(
-              color: _modeRapide ? AppColors.accent : AppColors.divider,
+              color: _modeRapide
+                  ? AppColors.accent
+                  : AdaptiveColors.divider(context),
             ),
           ),
           onSelected: (_) => setState(() {
@@ -709,8 +740,11 @@ class _SimulationScreenState extends State<SimulationScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primarySurface, AppColors.accentSurface],
+        gradient: LinearGradient(
+          colors: [
+            AdaptiveColors.primarySurface(context),
+            AdaptiveColors.accentSurface(context),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -761,7 +795,8 @@ class _SimulationScreenState extends State<SimulationScreen>
           const SizedBox(height: 8),
           Text(
             'Examen : $_examenChoisi$serieTexte',
-            style: AppTextStyles.bodySmall,
+            style: AppTextStyles.bodySmall
+                .copyWith(color: AdaptiveColors.textSecondary(context)),
           ),
           const SizedBox(height: 6),
           Text(
@@ -781,7 +816,6 @@ class _SimulationScreenState extends State<SimulationScreen>
     final urgent = _tempsRestant.inMinutes < 10;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.grid_view_rounded),
@@ -793,8 +827,8 @@ class _SimulationScreenState extends State<SimulationScreen>
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
               color: urgent
-                  ? AppColors.error.withOpacity(0.12)
-                  : AppColors.primarySurface,
+                  ? AppColors.error.withOpacity(context.isDark ? 0.20 : 0.12)
+                  : AdaptiveColors.primarySurface(context),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -880,7 +914,7 @@ class _SimulationScreenState extends State<SimulationScreen>
                   ? 0
                   : (_indexCourant + 1) / _questions.length,
               minHeight: 6,
-              backgroundColor: AppColors.primarySurface,
+              backgroundColor: AdaptiveColors.primarySurface(context),
               valueColor:
                   const AlwaysStoppedAnimation<Color>(AppColors.primary),
             ),
@@ -894,7 +928,7 @@ class _SimulationScreenState extends State<SimulationScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withOpacity(context.isDark ? 0.20 : 0.12),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -925,7 +959,9 @@ class _SimulationScreenState extends State<SimulationScreen>
         _buildChip(label: q.matiere, color: AppColors.primary),
         _buildChip(label: _typeLabel(q.type), color: AppColors.info),
         if (q.annee != null)
-          _buildChip(label: q.annee.toString(), color: AppColors.textSecondary),
+          _buildChip(
+              label: q.annee.toString(),
+              color: AdaptiveColors.textSecondary(context)),
         _buildChip(label: '${q.points ?? 1} pts', color: AppColors.accent),
       ],
     );
@@ -936,11 +972,11 @@ class _SimulationScreenState extends State<SimulationScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AdaptiveColors.surface(context),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AdaptiveColors.shadow(context),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -954,13 +990,16 @@ class _SimulationScreenState extends State<SimulationScreen>
               padding: const EdgeInsets.only(bottom: 8),
               child: Text(
                 q.chapitre,
-                style: AppTextStyles.bodySmall
-                    .copyWith(fontStyle: FontStyle.italic),
+                style: AppTextStyles.bodySmall.copyWith(
+                    fontStyle: FontStyle.italic,
+                    color: AdaptiveColors.textSecondary(context)),
               ),
             ),
           Text(
             q.enonce,
-            style: AppTextStyles.questionText.copyWith(fontSize: 18),
+            style: AppTextStyles.questionText.copyWith(
+                fontSize: 18,
+                color: AdaptiveColors.textPrimary(context)),
           ),
         ],
       ),
@@ -986,7 +1025,9 @@ class _SimulationScreenState extends State<SimulationScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Choisis la bonne réponse :', style: AppTextStyles.bodySmall),
+        Text('Choisis la bonne réponse :',
+            style: AppTextStyles.bodySmall
+                .copyWith(color: AdaptiveColors.textSecondary(context))),
         const SizedBox(height: 12),
         ...choix.map((c) {
           final isSelected = selected == c;
@@ -1000,10 +1041,14 @@ class _SimulationScreenState extends State<SimulationScreen>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primarySurface : AppColors.surface,
+                  color: isSelected
+                      ? AdaptiveColors.primarySurface(context)
+                      : AdaptiveColors.surface(context),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isSelected ? AppColors.primary : AppColors.divider,
+                    color: isSelected
+                        ? AppColors.primary
+                        : AdaptiveColors.divider(context),
                     width: isSelected ? 2 : 1,
                   ),
                 ),
@@ -1015,7 +1060,7 @@ class _SimulationScreenState extends State<SimulationScreen>
                           : Icons.radio_button_off,
                       color: isSelected
                           ? AppColors.primary
-                          : AppColors.textSecondary,
+                          : AdaptiveColors.textSecondary(context),
                       size: 22,
                     ),
                     const SizedBox(width: 12),
@@ -1025,7 +1070,7 @@ class _SimulationScreenState extends State<SimulationScreen>
                         style: AppTextStyles.body.copyWith(
                           color: isSelected
                               ? AppColors.primary
-                              : AppColors.textPrimary,
+                              : AdaptiveColors.textPrimary(context),
                           fontWeight:
                               isSelected ? FontWeight.w600 : FontWeight.w400,
                         ),
@@ -1081,10 +1126,10 @@ class _SimulationScreenState extends State<SimulationScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 22),
         decoration: BoxDecoration(
-          color: selected ? color : AppColors.surface,
+          color: selected ? color : AdaptiveColors.surface(context),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: selected ? color : AppColors.divider,
+            color: selected ? color : AdaptiveColors.divider(context),
             width: selected ? 2 : 1,
           ),
         ),
@@ -1141,10 +1186,10 @@ class _SimulationScreenState extends State<SimulationScreen>
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: AdaptiveColors.surface(context),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: AdaptiveColors.shadow(context),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),
@@ -1169,7 +1214,9 @@ class _SimulationScreenState extends State<SimulationScreen>
               tooltip: 'Marquer pour revoir',
               icon: Icon(
                 isMarquee ? Icons.flag : Icons.flag_outlined,
-                color: isMarquee ? AppColors.accent : AppColors.textSecondary,
+                color: isMarquee
+                    ? AppColors.accent
+                    : AdaptiveColors.textSecondary(context),
                 size: 28,
               ),
             ),
@@ -1198,7 +1245,7 @@ class _SimulationScreenState extends State<SimulationScreen>
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.surface,
+      backgroundColor: AdaptiveColors.surface(context),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -1212,7 +1259,9 @@ class _SimulationScreenState extends State<SimulationScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Plan de l\'examen', style: AppTextStyles.h2),
+                  Text('Plan de l\'examen',
+                      style: AppTextStyles.h2
+                          .copyWith(color: AdaptiveColors.textPrimary(context))),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.pop(ctx),
@@ -1224,7 +1273,8 @@ class _SimulationScreenState extends State<SimulationScreen>
                 spacing: 12,
                 runSpacing: 6,
                 children: [
-                  _legendeCircle(AppColors.surfaceVariant, 'Non répondue'),
+                  _legendeCircle(
+                      AdaptiveColors.surfaceVariant(context), 'Non répondue'),
                   _legendeCircle(AppColors.success, 'Répondue'),
                   _legendeCircle(AppColors.accent, 'Marquée'),
                 ],
@@ -1252,7 +1302,7 @@ class _SimulationScreenState extends State<SimulationScreen>
                   } else if (repondue) {
                     couleur = AppColors.success;
                   } else {
-                    couleur = AppColors.surfaceVariant;
+                    couleur = AdaptiveColors.surfaceVariant(context);
                   }
                   return InkWell(
                     onTap: () {
@@ -1265,7 +1315,9 @@ class _SimulationScreenState extends State<SimulationScreen>
                         color: couleur,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: courante ? AppColors.primary : Colors.transparent,
+                          color: courante
+                              ? AppColors.primary
+                              : Colors.transparent,
                           width: 2,
                         ),
                       ),
@@ -1275,7 +1327,7 @@ class _SimulationScreenState extends State<SimulationScreen>
                           style: AppTextStyles.h3.copyWith(
                             color: repondue || marquee
                                 ? Colors.white
-                                : AppColors.textSecondary,
+                                : AdaptiveColors.textSecondary(context),
                           ),
                         ),
                       ),
@@ -1316,11 +1368,14 @@ class _SimulationScreenState extends State<SimulationScreen>
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
-            border: Border.all(color: AppColors.divider, width: 1),
+            border:
+                Border.all(color: AdaptiveColors.divider(context), width: 1),
           ),
         ),
         const SizedBox(width: 4),
-        Text(label, style: AppTextStyles.bodySmall),
+        Text(label,
+            style: AppTextStyles.bodySmall
+                .copyWith(color: AdaptiveColors.textSecondary(context))),
       ],
     );
   }
@@ -1333,7 +1388,6 @@ class _SimulationScreenState extends State<SimulationScreen>
     final color = _scoreColor(pct);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Rapport d\'examen'),
@@ -1372,7 +1426,7 @@ class _SimulationScreenState extends State<SimulationScreen>
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [color.withOpacity(0.15), AppColors.surface],
+          colors: [color.withOpacity(0.15), AdaptiveColors.surface(context)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -1381,11 +1435,14 @@ class _SimulationScreenState extends State<SimulationScreen>
       ),
       child: Column(
         children: [
-          Text('Examen terminé !', style: AppTextStyles.h2),
+          Text('Examen terminé !',
+              style: AppTextStyles.h2
+                  .copyWith(color: AdaptiveColors.textPrimary(context))),
           const SizedBox(height: 6),
           Text(
             '$_examenChoisi$serieLabel',
-            style: AppTextStyles.bodySmall,
+            style: AppTextStyles.bodySmall
+                .copyWith(color: AdaptiveColors.textSecondary(context)),
           ),
           const SizedBox(height: 24),
           // Pourcentage circulaire
@@ -1416,8 +1473,8 @@ class _SimulationScreenState extends State<SimulationScreen>
                     const SizedBox(height: 4),
                     Text(
                       '${score.toStringAsFixed(1)} / 20',
-                      style: AppTextStyles.h3
-                          .copyWith(color: AppColors.textSecondary),
+                      style: AppTextStyles.h3.copyWith(
+                          color: AdaptiveColors.textSecondary(context)),
                     ),
                   ],
                 ),
@@ -1494,11 +1551,11 @@ class _SimulationScreenState extends State<SimulationScreen>
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AdaptiveColors.surface(context),
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AdaptiveColors.shadow(context),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -1518,7 +1575,8 @@ class _SimulationScreenState extends State<SimulationScreen>
           const SizedBox(height: 2),
           Text(
             label,
-            style: AppTextStyles.bodySmall.copyWith(fontSize: 11),
+            style: AppTextStyles.bodySmall.copyWith(
+                fontSize: 11, color: AdaptiveColors.textSecondary(context)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -1541,7 +1599,7 @@ class _SimulationScreenState extends State<SimulationScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AdaptiveColors.surface(context),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -1551,14 +1609,17 @@ class _SimulationScreenState extends State<SimulationScreen>
             children: [
               const Icon(Icons.bar_chart, color: AppColors.primary),
               const SizedBox(width: 8),
-              Text('Analyse par matière', style: AppTextStyles.h3),
+              Text('Analyse par matière',
+                  style: AppTextStyles.h3
+                      .copyWith(color: AdaptiveColors.textPrimary(context))),
             ],
           ),
           const SizedBox(height: 16),
           if (entries.isEmpty)
             Text(
               'Pas de matière à analyser.',
-              style: AppTextStyles.bodySmall,
+              style: AppTextStyles.bodySmall
+                  .copyWith(color: AdaptiveColors.textSecondary(context)),
             )
           else
             ...entries.map((e) {
@@ -1594,7 +1655,8 @@ class _SimulationScreenState extends State<SimulationScreen>
                       child: LinearProgressIndicator(
                         value: pct / 100,
                         minHeight: 10,
-                        backgroundColor: AppColors.surfaceVariant,
+                        backgroundColor:
+                            AdaptiveColors.surfaceVariant(context),
                         valueColor: AlwaysStoppedAnimation<Color>(color),
                       ),
                     ),
@@ -1621,7 +1683,7 @@ class _SimulationScreenState extends State<SimulationScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppColors.accentSurface,
+        color: AdaptiveColors.accentSurface(context),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.accentLight.withOpacity(0.4), width: 1),
       ),
@@ -1656,7 +1718,7 @@ class _SimulationScreenState extends State<SimulationScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AdaptiveColors.surfaceVariant(context),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: AppColors.accentLight.withOpacity(0.6),
@@ -1696,7 +1758,7 @@ class _SimulationScreenState extends State<SimulationScreen>
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.background,
+      backgroundColor: AdaptiveColors.background(context),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -1716,7 +1778,7 @@ class _SimulationScreenState extends State<SimulationScreen>
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: AppColors.divider,
+                      color: AdaptiveColors.divider(context),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1724,7 +1786,9 @@ class _SimulationScreenState extends State<SimulationScreen>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Corrections détaillées', style: AppTextStyles.h2),
+                      Text('Corrections détaillées',
+                          style: AppTextStyles.h2
+                              .copyWith(color: AdaptiveColors.textPrimary(context))),
                       IconButton(
                         icon: const Icon(Icons.close),
                         onPressed: () => Navigator.pop(context),
@@ -1762,7 +1826,7 @@ class _SimulationScreenState extends State<SimulationScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AdaptiveColors.surface(context),
         borderRadius: BorderRadius.circular(14),
         border: Border(left: BorderSide(color: color, width: 4)),
       ),
@@ -1780,7 +1844,7 @@ class _SimulationScreenState extends State<SimulationScreen>
                     _buildChip(label: q.matiere, color: AppColors.info),
                     _buildChip(
                         label: _typeLabel(q.type),
-                        color: AppColors.textSecondary),
+                        color: AdaptiveColors.textSecondary(context)),
                   ],
                 ),
               ),
@@ -1800,7 +1864,9 @@ class _SimulationScreenState extends State<SimulationScreen>
           _buildLigneReponse(
             label: 'Ta réponse',
             value: reponseEleve.isEmpty ? '(sans réponse)' : reponseEleve,
-            color: reponseEleve.isEmpty ? AppColors.textDisabled : color,
+            color: reponseEleve.isEmpty
+                ? AdaptiveColors.textDisabled(context)
+                : color,
           ),
           const SizedBox(height: 6),
           _buildLigneReponse(
@@ -1814,7 +1880,7 @@ class _SimulationScreenState extends State<SimulationScreen>
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.primarySurface,
+                color: AdaptiveColors.primarySurface(context),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -1848,7 +1914,7 @@ class _SimulationScreenState extends State<SimulationScreen>
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.accentSurface,
+                color: AdaptiveColors.accentSurface(context),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -1874,14 +1940,14 @@ class _SimulationScreenState extends State<SimulationScreen>
                           style: ElevatedButton.styleFrom(
                             backgroundColor: correcte
                                 ? AppColors.success
-                                : AppColors.surface,
+                                : AdaptiveColors.surface(context),
                             foregroundColor:
                                 correcte ? Colors.white : AppColors.success,
                             elevation: correcte ? 2 : 0,
                             side: BorderSide(
                               color: correcte
                                   ? AppColors.success
-                                  : AppColors.divider,
+                                  : AdaptiveColors.divider(context),
                             ),
                           ),
                         ),
@@ -1895,14 +1961,14 @@ class _SimulationScreenState extends State<SimulationScreen>
                           style: ElevatedButton.styleFrom(
                             backgroundColor: !correcte
                                 ? AppColors.error
-                                : AppColors.surface,
+                                : AdaptiveColors.surface(context),
                             foregroundColor:
                                 !correcte ? Colors.white : AppColors.error,
                             elevation: !correcte ? 2 : 0,
                             side: BorderSide(
                               color: !correcte
                                   ? AppColors.error
-                                  : AppColors.divider,
+                                  : AdaptiveColors.divider(context),
                             ),
                           ),
                         ),

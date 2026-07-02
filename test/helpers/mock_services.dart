@@ -1,23 +1,43 @@
 // test/helpers/mock_services.dart
-// Manual mocks for SrsService, QuestionService, and UserProvider.
+// Manual mocks for SrsService, QuestionService, UserProvider,
+// FavoritesService, and SyncService.
 //
 // We avoid `mockito`'s `@GenerateMocks` (which requires build_runner) by
 // writing lightweight subclasses that override the public methods used by
 // the UI. This keeps the test suite self-contained.
 //
 // Design:
-//   - MockSrsService : in-memory ReviewCard store (no Hive). Records every
-//     recordAnswer() call for assertions.
-//   - MockQuestionService : loads from assets by default; supports injecting
-//     a custom list of questions or forcing a load failure.
-//   - FakeUserProvider : preset user without Hive/SharedPreferences.
+//   - MockSrsService        : in-memory ReviewCard store (no Hive). Records
+//                             every recordAnswer() call for assertions.
+//   - MockQuestionService   : loads from assets by default; supports injecting
+//                             a custom list of questions or forcing a load
+//                             failure.
+//   - FakeUserProvider      : preset user without Hive/SharedPreferences.
+//   - FakeFavoritesService  : in-memory favorites + notes (no Hive boxes).
+//                             Added by Agent BU (Session 4).
+//   - FakeSyncService       : super with throwaway deps + overridden getters
+//                             (status, pendingCount, lastError) so the
+//                             underlying state is never touched. Added by
+//                             Agent BU (Session 4).
+
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 
 import 'package:examboost_togo/models/question.dart';
 import 'package:examboost_togo/models/review_card.dart';
+import 'package:examboost_togo/models/sync_status.dart';
+import 'package:examboost_togo/models/tts_settings.dart';
 import 'package:examboost_togo/models/user.dart';
 import 'package:examboost_togo/providers/user_provider.dart';
+import 'package:examboost_togo/screens/favorites/models/favorite_question.dart';
+import 'package:examboost_togo/screens/favorites/models/question_note.dart';
+import 'package:examboost_togo/screens/favorites/services/favorites_service.dart';
+import 'package:examboost_togo/services/audio_playback_service.dart';
 import 'package:examboost_togo/services/question_service.dart';
 import 'package:examboost_togo/services/srs_service.dart';
+import 'package:examboost_togo/services/sync_queue.dart';
+import 'package:examboost_togo/services/sync_service.dart';
+import 'package:examboost_togo/services/tts_service.dart';
 
 // ─── MockSrsService ────────────────────────────────────────────────
 
@@ -277,5 +297,319 @@ class FakeUserProvider extends UserProvider {
   @override
   Future<void> refresh() async {
     // No-op: user is in-memory only.
+  }
+}
+
+// ─── FakeFavoritesService (Agent BU — Session 4) ─────────────────
+//
+// In-memory mock of [FavoritesService] that doesn't touch Hive boxes.
+// Used by widget tests for FavoriteButton, FavoritesScreen, SearchScreen.
+// Mirrors the real service's public API surface so widgets can consume it
+// transparently via Provider<FavoritesService>.
+
+class FakeFavoritesService extends FavoritesService {
+  FakeFavoritesService();
+
+  final List<FavoriteQuestion> _favorites = [];
+  final List<QuestionNote> _notes = [];
+
+  // The parent's `_initialized` field is private. We override the public
+  // getter so all public methods (which short-circuit on !isInitialized)
+  // work without calling init() — and therefore without opening Hive boxes.
+  @override
+  bool get isInitialized => true;
+
+  @override
+  bool isFavorite(String userId, String questionId) {
+    return _favorites.any(
+      (f) => f.userId == userId && f.questionId == questionId,
+    );
+  }
+
+  @override
+  Future<bool> toggleFavorite(String userId, String questionId) async {
+    final existingIndex = _favorites.indexWhere(
+      (f) => f.userId == userId && f.questionId == questionId,
+    );
+    if (existingIndex >= 0) {
+      _favorites.removeAt(existingIndex);
+      notifyListeners();
+      return false;
+    }
+    _favorites.add(
+      FavoriteQuestion(
+        userId: userId,
+        questionId: questionId,
+        addedAt: DateTime.now(),
+      ),
+    );
+    notifyListeners();
+    return true;
+  }
+
+  @override
+  List<String> getFavoriteIds(String userId) {
+    return _favorites
+        .where((f) => f.userId == userId)
+        .map((f) => f.questionId)
+        .toList();
+  }
+
+  @override
+  List<FavoriteQuestion> getFavorites(String userId) {
+    final list =
+        _favorites.where((f) => f.userId == userId).toList();
+    list.sort((a, b) => b.addedAt.compareTo(a.addedAt));
+    return list;
+  }
+
+  @override
+  int favoritesCount(String userId) =>
+      _favorites.where((f) => f.userId == userId).length;
+
+  @override
+  QuestionNote? getNote(String userId, String questionId) {
+    for (final n in _notes) {
+      if (n.userId == userId && n.questionId == questionId) return n;
+    }
+    return null;
+  }
+
+  @override
+  Future<void> saveNote({
+    required String userId,
+    required String questionId,
+    required String content,
+    String color = 'yellow',
+  }) async {
+    final trimmed = content.trim();
+    if (trimmed.isEmpty) {
+      await deleteNote(userId, questionId);
+      return;
+    }
+    final existing = getNote(userId, questionId);
+    if (existing != null) {
+      existing.content = trimmed;
+      existing.color = color;
+      existing.updatedAt = DateTime.now();
+    } else {
+      _notes.add(
+        QuestionNote(
+          id: 'note-${_notes.length + 1}',
+          userId: userId,
+          questionId: questionId,
+          content: trimmed,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          color: color,
+        ),
+      );
+    }
+    notifyListeners();
+  }
+
+  @override
+  Future<void> deleteNote(String userId, String questionId) async {
+    _notes.removeWhere(
+      (n) => n.userId == userId && n.questionId == questionId,
+    );
+    notifyListeners();
+  }
+
+  @override
+  List<QuestionNote> getAllNotes(String userId) {
+    final list = _notes.where((n) => n.userId == userId).toList();
+    list.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    return list;
+  }
+
+  @override
+  int notesCount(String userId) =>
+      _notes.where((n) => n.userId == userId).length;
+
+  /// Direct helper for tests: pre-seed the favorites list with no async work.
+  void seedFavorite(String userId, String questionId, {DateTime? addedAt}) {
+    if (!isFavorite(userId, questionId)) {
+      _favorites.add(
+        FavoriteQuestion(
+          userId: userId,
+          questionId: questionId,
+          addedAt: addedAt ?? DateTime.now(),
+        ),
+      );
+      notifyListeners();
+    }
+  }
+}
+
+// ─── FakeSyncService (Agent BU — Session 4) ──────────────────────
+//
+// Mock [SyncService] for widget tests that consume SyncIndicator.
+// The real SyncService has a complex constructor (Dio, Connectivity,
+// SyncQueue) and triggers network calls on init — overkill for widget
+// tests that only need to render the indicator in different states.
+//
+// This fake calls super() with throwaway dependencies, then overrides
+// the three getters consumed by SyncIndicator (status, pendingCount,
+// lastError) so the underlying state is never touched.
+
+class FakeSyncService extends SyncService {
+  FakeSyncService()
+      : super(
+          queue: SyncQueue(),
+          dio: Dio(),
+          connectivity: Connectivity(),
+        );
+
+  SyncStatus _status = SyncStatus.idle;
+  int _pending = 0;
+  String? _error;
+
+  @override
+  SyncStatus get status => _status;
+
+  @override
+  int get pendingCount => _pending;
+
+  @override
+  String? get lastError => _error;
+
+  /// Test-only setter to simulate a status change.
+  void setStatus(SyncStatus s) {
+    _status = s;
+    notifyListeners();
+  }
+
+  /// Test-only setter to simulate pending actions in the queue.
+  void setPending(int n) {
+    _pending = n;
+    notifyListeners();
+  }
+
+  /// Test-only setter to simulate an error message.
+  void setLastError(String? e) {
+    _error = e;
+    notifyListeners();
+  }
+}
+
+// ─── FakeTtsService + FakeAudioPlaybackService (Agent BU — Session 4) ──
+//
+// Lightweight fakes for the audio playback stack. The real TtsService
+// initialises a FlutterTts engine (native plugin) + Hive box, neither of
+// which work in widget tests. We extend the real classes and override
+// the public surface consumed by AudioPlayerButton / AudioPlayerBar:
+//   - settings (TtsSettings)
+//   - isSpeaking / isPaused / currentlySpokenText
+//   - isSpeakingText(text)
+//   - speak / pause / resume / stop (no-op, record calls)
+//   - AudioPlaybackService.isPlayingText / isPausedText / play
+
+class FakeTtsService extends TtsService {
+  TtsSettings _fakeSettings = TtsSettings();
+  bool _fakeIsSpeaking = false;
+  bool _fakeIsPaused = false;
+  String _fakeCurrentText = '';
+
+  final List<String> speakCalls = <String>[];
+  final List<void Function()> _pauseCalls = <void Function()>[];
+  int _stopCallCount = 0;
+
+  @override
+  TtsSettings get settings => _fakeSettings;
+
+  @override
+  bool get isSpeaking => _fakeIsSpeaking;
+
+  @override
+  bool get isPaused => _fakeIsPaused;
+
+  @override
+  String get currentlySpokenText => _fakeCurrentText;
+
+  @override
+  bool isSpeakingText(String text) =>
+      _fakeIsSpeaking && _fakeCurrentText == text;
+
+  /// Test-only: simulate the TTS engine starting playback of [text].
+  void simulatePlaying(String text) {
+    _fakeIsSpeaking = true;
+    _fakeIsPaused = false;
+    _fakeCurrentText = text;
+    notifyListeners();
+  }
+
+  /// Test-only: simulate the TTS engine pausing.
+  void simulatePaused(String text) {
+    _fakeIsSpeaking = true;
+    _fakeIsPaused = true;
+    _fakeCurrentText = text;
+    notifyListeners();
+  }
+
+  /// Test-only: simulate the TTS engine idle (no playback).
+  void simulateIdle() {
+    _fakeIsSpeaking = false;
+    _fakeIsPaused = false;
+    _fakeCurrentText = '';
+    notifyListeners();
+  }
+
+  /// Test-only: change the settings (e.g. disable TTS).
+  void setSettings(TtsSettings s) {
+    _fakeSettings = s;
+    notifyListeners();
+  }
+
+  // ── No-op overrides (avoid touching the native plugin) ─────────
+
+  @override
+  Future<void> speak(String text) async {
+    speakCalls.add(text);
+    // Mimic the engine: start speaking immediately.
+    simulatePlaying(text);
+  }
+
+  @override
+  Future<void> pause() async {
+    _fakeIsPaused = true;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> resume() async {
+    _fakeIsPaused = false;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> stop() async {
+    _stopCallCount++;
+    simulateIdle();
+  }
+}
+
+class FakeAudioPlaybackService extends AudioPlaybackService {
+  FakeAudioPlaybackService(FakeTtsService tts) : super(tts);
+
+  final List<String> playCalls = <String>[];
+
+  @override
+  bool isPlayingText(String text) =>
+      ttsService.isSpeaking &&
+      ttsService.currentlySpokenText == text &&
+      !ttsService.isPaused;
+
+  @override
+  bool isPausedText(String text) =>
+      ttsService.isSpeaking &&
+      ttsService.isPaused &&
+      ttsService.currentlySpokenText == text;
+
+  @override
+  Future<void> play(String text) async {
+    playCalls.add(text);
+    // Delegate to the TtsService fake (which will simulatePlaying).
+    await ttsService.speak(text);
   }
 }

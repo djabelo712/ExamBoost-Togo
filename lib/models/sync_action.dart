@@ -10,8 +10,8 @@
 //   dart run build_runner build --delete-conflicting-outputs
 //
 // Note : typeId 10 choisi car 0-9 sont deja pris par Question, QuestionType,
-// ReviewCard, AppUser, ScorePrediction, NotificationSettings,
-// NotificationHistory, NotificationType, BadgeCategory, BadgeLevel, UserBadge.
+// ReviewCard, AppUser, NotificationSettings, NotificationCategory,
+// BadgeCategory, BadgeLevel, UserBadge.
 // (voir README a la fin du fichier pour l'inventaire complet)
 
 import 'package:hive/hive.dart';
@@ -143,7 +143,7 @@ class SyncAction extends HiveObject {
 }
 
 /*
-   Inventaire des typeIds Hive (a jour au 30 juin 2026) :
+   Inventaire des typeIds Hive (a jour au 30 juin 2026, revise Session 4) :
 
    0  Question                lib/models/question.dart
    1  QuestionType            lib/models/question.dart
@@ -151,14 +151,34 @@ class SyncAction extends HiveObject {
    3  AppUser                 lib/models/user.dart
    4  (libre)
    5  NotificationSettings    lib/models/notification_settings.dart
-   6  NotificationHistory     lib/models/notification_history.dart
-   7  NotificationType        lib/models/notification_history.dart
-   7  BadgeCategory           lib/models/badge.dart (conflit potentiel a verifier)
+   6  NotificationCategory    lib/models/notification_history.dart
+   7  BadgeCategory           lib/models/badge.dart
    8  BadgeLevel              lib/models/badge.dart
    9  UserBadge               lib/models/badge.dart
    10 SyncAction              lib/models/sync_action.dart       <-- ce fichier
    11 SyncActionType          lib/models/sync_action.dart       <-- ce fichier
+   12 SyncHistoryEntry        lib/models/sync_status.dart
+   13 SyncHistoryStatus       lib/models/sync_status.dart
+   14 SavedSearch             lib/screens/search/models/saved_search.dart
+   15 FavoriteQuestion        lib/screens/favorites/models/favorite_question.dart
+   16 QuestionNote            lib/screens/favorites/models/question_note.dart
+   17 TtsSettings             lib/models/tts_settings.dart
+   18 AudioCacheEntry         lib/models/audio_cache_entry.dart
+   19 NotificationHistory     lib/models/notification_history.dart
+      (deplace depuis typeId 7 par Agent BE pour eviter le conflit
+       avec BadgeCategory — Bug Hunt Session 4)
+   20 AccessibilitySettings   lib/models/accessibility_settings.dart
+      (deplace depuis typeId 8 par Agent BE pour eviter le conflit
+       avec BadgeLevel — Bug Hunt Session 4)
 
-   TODO agent wiring : verifier la duplication typeId 7 entre
-   NotificationType et BadgeCategory et ajuster si besoin.
+   Conflits typeId resolus (Session 4, Agent BE) :
+   - typeId 7 : anciennement utilise par NotificationHistory ET BadgeCategory.
+     NotificationHistory deplacee vers typeId 19. BadgeCategory conserve 7.
+   - typeId 8 : anciennement utilise par AccessibilitySettings ET BadgeLevel.
+     AccessibilitySettings deplacee vers typeId 20. BadgeLevel conserve 8.
+
+   TODO agent wiring (main.dart) : mettre a jour les commentaires qui mentionnent
+   encore les anciens typeIds pour NotificationHistory (7) et
+   AccessibilitySettings (8). Le code d'enregistrement des adapters reste valide
+   (Hive.registerAdapter utilise le typeId declare dans l'annotation @HiveType).
 */

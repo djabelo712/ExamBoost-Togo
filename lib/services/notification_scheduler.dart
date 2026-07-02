@@ -20,6 +20,7 @@ import '../models/user.dart';
 import '../utils/app_logger.dart';
 import 'notification_service.dart';
 import 'notification_templates.dart';
+import 'srs_service.dart' show SrsStats;
 
 /// Identifiants fixes des notifications planifiees (pour pouvoir les annuler).
 class _NotifIds {

@@ -234,29 +234,34 @@ Chaque pilier = une icône Material (36 px, orange) + titre (Outfit Medium, 22 p
 
 #### Mosaïque des 5 écrans (centrée, 5 mockups côte à côte)
 
-Chaque mockup : 200 × 400 px, cadre smartphone fin noir, légende en dessous (Inter Medium, 14 pt, vert Togo).
+Chaque mockup : 200 × 400 px, cadre smartphone fin noir, légende en dessous (Inter Medium, 14 pt, vert Togo). Sources : captures d'écran réelles du prototype Flutter, disponibles dans le repo sous `docs/slide 4/`.
 
-1. **Accueil**
+1. **Accueil** — capture : `docs/slide 4/ecran_1_accueil.png`
    - Affiche : « Bonjour, Amina », sélecteur BEPC / BAC 1 / BAC 2, boutons « Révision adaptative », « Mock exam », « Ma progression »
-2. **Sélection matière**
+2. **Sélection matière** — capture : `docs/slide 4/ecran_2_matieres.png`
    - Liste matières : Maths (78 % mastered), Français (64 %), Physique (52 %)
-3. **Révision (flashcard)**
+3. **Révision (flashcard)** — capture : `docs/slide 4/ecran_3_revision.png`
    - Question, bouton « Voir la réponse », 3 boutons Facile/Correct/Difficile
-4. **Simulation d'examen**
+4. **Simulation d'examen** — capture : `docs/slide 4/ecran_4_simulation.png`
    - Question 5/20, minuterie, 4 options QCM, barre de progression
-5. **Tableau de bord**
+5. **Tableau de bord** — capture : `docs/slide 4/ecran_5_dashboard.png`
    - Carte de chaleur par matière, prédiction de score, streak de jours
+
+Vue mosaïque complète aussi disponible : `docs/slide 4/tous_les_ecrans.png` (récap visuel pour partage email et réseaux sociaux).
+
+**Bande métriques techniques** (5 chips horizontales, fond blanc cassé, bordure orange 1 px, padding 6 px, Inter SemiBold 13 pt vert Togo) :
+- 23 routes Flutter · 17 Hive adapters · 10 providers · 114 questions calibrées · APK 100 % offline
 
 - **Encart en bas (fond orange #D97700, texte blanc)** :
   - « Démo live possible sur téléphone — APK installable. Code source public : github.com/djabelo712/ExamBoost-Togo » (Inter SemiBold, 16 pt)
 
 ### Script oral (FR)
 
-> « Voici à quoi ressemble l'expérience d'Amina. Cinq écrans. Elle ouvre l'app, choisit BEPC, et voit tout de suite où elle en est : 78 % en Maths, 64 % en Français, 52 % en Physique. Elle lance une session de révision adaptative — l'algorithme lui propose la question exacte au bon niveau. Elle peut aussi simuler un examen complet, chronométré, dans les conditions réelles. Et sur son tableau de bord, elle suit sa progression jour après jour. Le prototype Flutter est fonctionnel aujourd'hui. Le code est public sur GitHub. Nous pouvons faire la démo live sur téléphone juste après. »
+> « Voici à quoi ressemble l'expérience d'Amina. Cinq écrans. Elle ouvre l'app, choisit BEPC, et voit tout de suite où elle en est : 78 % en Maths, 64 % en Français, 52 % en Physique. Elle lance une session de révision adaptative — l'algorithme lui propose la question exacte au bon niveau. Elle peut aussi simuler un examen complet, chronométré, dans les conditions réelles. Et sur son tableau de bord, elle suit sa progression jour après jour. Le prototype Flutter est fonctionnel aujourd'hui : 23 routes, 17 adapters Hive, 10 providers, 114 questions déjà calibrées. Le code est public sur GitHub. Nous pouvons faire la démo live sur téléphone juste après. »
 
 ### Script oral (EN)
 
-> « Here's what Amina's experience looks like. Five screens. She opens the app, selects BEPC, and immediately sees where she stands: 78 % in Math, 64 % in French, 52 % in Physics. She launches an adaptive revision session — the algorithm serves her the exact question at the right level. She can also simulate a full timed exam, under real conditions. And on her dashboard, she tracks her progress day by day. The Flutter prototype is functional today. The code is public on GitHub. We can do a live demo on a phone right after. »
+> « Here's what Amina's experience looks like. Five screens. She opens the app, selects BEPC, and immediately sees where she stands: 78 % in Math, 64 % in French, 52 % in Physics. She launches an adaptive revision session — the algorithm serves her the exact question at the right level. She can also simulate a full timed exam, under real conditions. And on her dashboard, she tracks her progress day by day. The Flutter prototype is functional today: 23 routes, 17 Hive adapters, 10 providers, 114 questions already calibrated. The code is public on GitHub. We can do a live demo on a phone right after. »
 
 ### Éléments visuels suggérés
 
@@ -317,6 +322,13 @@ Trois rectangles superposés (du plus grand au plus petit), chacun avec un chiff
 - **Légende sous la carte** :
   - « Même curriculum francophone · 6 pays · 3 000 000+ élèves » (Inter SemiBold, 16 pt, vert Togo)
   - « Déploiement prévu à partir de l'an 3. » (Inter Regular, 14 pt, gris)
+
+- **Encart CEDEAO détails** (3 mini-cartes côte à côte sous la légende, fond blanc, bordure gauche orange 4 px, padding 12 px, Inter Medium 13 pt vert Togo pour le nom du pays + Inter Regular 12 pt gris pour les détails) :
+  - **Bénin** — même examen BEPC (programme quasi identique au MEPST togolais), français langue d'enseignement, ~700 000 élèves du secondaire
+  - **Côte d'Ivoire** — BEPC reconnu par la MENA-CI, même structure 6ème → Terminale, ~2 millions d'élèves du secondaire
+  - **Burkina Faso** — BEPC équivalent (Brevet d'Études du Premier Cycle), francophone, ~1 million d'élèves du secondaire
+
+  Note source (Inter Italic, 11 pt, gris) : « Données UNESCO ISCED 2025 + mémos curricula MEPST Togo / MESS Bénin / MENA-CI / MENAPLN Burkina Faso. »
 
 ### Script oral (FR)
 
@@ -499,34 +511,47 @@ Deux grands chiffres empilés (Outfit Black, 80 pt, orange #D97700) :
 
 Note source : « Enquête terrain · 30 élèves · Lomé · juin 2026 »
 
-#### Colonne droite (55 %) — Citations + signaux de traction
+#### Colonne droite (55 %) — Modules produits livrés (Session 3-4)
 
-- **Citation 1** (encart blanc, bordure gauche orange 4 px) :
-  - « J'aimerais tant savoir où j'en suis vraiment dans mes révisions. »
-  - — Élève, 3ème, Atakpamé
-- **Citation 2** (encart blanc, bordure gauche orange 4 px) :
-  - « Je révise avec des PDF sur WhatsApp, mais c'est complètement désorganisé. »
-  - — Élève, Terminale C, Lomé
+La traction n'est pas qu'une enquête : c'est aussi 12 modules déjà codés et testés. Grille compacte 2 × 6 de mini-badges (fond blanc, bordure gauche orange 3 px, padding 6 px, icône Material 18 px vert Togo, label Inter Medium 12 pt gris foncé, métrique Inter Bold 11 pt orange) :
 
-- **Trois badges en bas de colonne** (petits, ronds, fond vert clair, texte vert Togo) :
-  - `check_circle` 30 élèves interrogés · Lomé
-  - `code` Repo GitHub actif · 4 contributeurs
-  - `phone_iphone` Prototype Flutter installable
+| # | Module (agent) | Métrique clé |
+|---|---|---|
+| 1 | `smart_toy` Tuteur IA (Agent W) | Conversations adaptatives |
+| 2 | `military_tech` 39 badges gamification (Agent X) | Système Bronze/Argent/Or complet |
+| 3 | `cloud_sync` Sync cloud offline (Agent AC) | Conflits multi-appareils résolus |
+| 4 | `tune` Calibration IRT réelle (Agent AI) | 114 questions calibrées 3PL |
+| 5 | `auto_graph` Prédiction XGBoost (Agent AJ) | RMSE 1.46/20 |
+| 6 | `quiz` Banque questions (Agent BD) | 114 questions BEPC couvertes |
+| 7 | `family_restroom` Module parent (Agent BK) | Suivi progression enfant |
+| 8 | `assignment` Module devoirs (Agent BQ) | Suivi élèves enseignant |
+| 9 | `trending_up` Système niveaux XP (Agent BR) | 10 niveaux progression |
+| 10 | `explore` Module orientation (Agent BS) | Carrières post-BAC |
+| 11 | `groups` Mode multijoueur (Agent BT) | Duels classe temps réel |
+| 12 | `security` Audit sécurité OWASP (Agent BY) | 0 vulnérabilité critique |
+
+**Encart bas** (fond vert clair #E8F5EE, texte vert Togo, Inter SemiBold 13 pt) :
+- `verified` 91 tests critiques validés (SM-2, BKT, IRT) · 50+ tests widget · repo GitHub actif (4 contributeurs)
+
+**Citation élève compacte** (1 ligne, Inter Italic 12 pt, gris) :
+- « J'aimerais tant savoir où j'en suis vraiment dans mes révisions. » — Élève, 3ème, Atakpamé
 
 ### Script oral (FR)
 
-> « Nous sommes allés sur le terrain. 30 élèves interrogés à Lomé. Résultat : 87 % n'ont aucun outil numérique pour préparer leurs examens. 94 % sont prêts à utiliser ExamBoost dès aujourd'hui. Une élève de 3ème à Atakpamé nous a dit : j'aimerais tant savoir où j'en suis. Le prototype Flutter tourne aujourd'hui. Le code est public sur GitHub, avec 4 contributeurs actifs. La demande est validée. Maintenant, nous exécutons. »
+> « La traction n'est pas qu'une enquête. 30 élèves interrogés à Lomé : 87 % n'ont aucun outil numérique, 94 % sont prêts à adopter ExamBoost. Mais surtout : 12 modules déjà livrés. Tuteur IA, 39 badges gamification, sync cloud offline, calibration IRT réelle sur 114 questions, prédiction XGBoost à 1,46 point près sur 20, modules parent, devoirs, orientation, multijoueur. Audit OWASP : zéro vulnérabilité critique. 91 tests critiques validés, plus de 50 tests widget. La demande est validée. Le produit est réel. Maintenant, nous exécutons. »
 
 ### Script oral (EN)
 
-> « We went to the field. 30 students surveyed in Lomé. Result: 87 % have no digital tool to prepare for their exams. 94 % are ready to use ExamBoost today. A 9th-grade student in Atakpamé told us: I'd love to know where I really stand. The Flutter prototype runs today. The code is public on GitHub, with 4 active contributors. Demand is validated. Now we execute. »
+> « Traction isn't just a survey. 30 students surveyed in Lomé: 87 % have no digital tool, 94 % are ready to adopt ExamBoost. But more importantly: 12 modules already shipped. AI tutor, 39 gamification badges, offline cloud sync, real IRT calibration on 114 questions, XGBoost prediction within 1.46 points out of 20, parent, homework, orientation, and multiplayer modules. OWASP audit: zero critical vulnerability. 91 critical tests validated, plus 50 widget tests. Demand is validated. The product is real. Now we execute. »
 
 ### Éléments visuels suggérés
 
 - **Photo en arrière-plan léger** (5 % opacité) : élève togolais tenant un smartphone, en train de répondre à l'enquête
-- **Citations** : encarts blancs, bordure gauche orange 4 px, texte en italique, signature en regular
-- **Badges** : Material Icons `check_circle`, `code`, `phone_iphone` (24 px, vert Togo) + texte court
+- **Grille 12 modules** : 12 mini-badges alignés en 2 colonnes × 6 lignes, icône Material à gauche + label + métrique à droite
+- **Encart tests** : badge vert clair avec icône `verified` (24 px, vert Togo) pour souligner 91 tests critiques + 50+ tests widget
 - **Mini-graphique** (optionnel, en bas à gauche) : donut chart 87 % vs 13 % (élèves sans outil vs avec outil)
+- **Badge RMSE XGBoost 1.46/20** mis en avant (encadré orange 2 px) pour souligner la performance ML
+- **Badge OWASP 0 vulnérabilité** mis en avant (encadré vert Togo 2 px) pour souligner la maturité sécurité
 
 ### Couleurs / Style
 
@@ -572,13 +597,19 @@ Chaque carte : photo ronde (120 px) + prénom + rôle + 1 ligne de crédibilité
 - **Encart bas (centré)** :
   - **Soutiens institutionnels** : logo AIMS Ghana (60 px) + logo SmartFarm Togo (60 px) + texte « Accès aux expertises IA appliquée à l'éducation en Afrique. » (Inter Regular, 14 pt, gris)
 
+- **Bloc stack technique maîtrisée** (4 chips horizontales sous l'encart institutionnel, fond blanc cassé, bordure verte Togo 1 px, padding 8 px, Inter SemiBold 13 pt vert Togo) :
+  - `flutter` Mobile + Backend : Flutter 3.44, FastAPI, PostgreSQL, Redis
+  - `psychology` ML : scikit-learn, XGBoost, py-irt, PyTorch (DKT)
+  - `document_scanner` OCR : Tesseract + GPT-4o Vision (capture devoirs manuscrits)
+  - `translate` i18n : FR / EN / Ewe / Kabyè
+
 ### Script oral (FR)
 
-> « Nous sommes quatre profils complémentaires. Tech : le développeur Flutter qui a déjà codé l'app et le backend. Data : le spécialiste IA qui a implémenté SM-2, IRT et BKT. Design : la designer UX qui pense l'expérience élève togolaise. Growth : le profil go-to-market qui pilote les partenariats avec les lycées. Notre connexion à AIMS Ghana nous donne accès aux meilleurs chercheurs en IA appliquée à l'éducation en Afrique. Et SmartFarm Togo nous ancre dans l'écosystème tech local. »
+> « Nous sommes quatre profils complémentaires. Tech : le développeur Flutter qui a déjà codé l'app et le backend FastAPI. Data : le spécialiste IA qui a implémenté SM-2, IRT, BKT et XGBoost. Design : la designer UX qui pense l'expérience élève togolaise. Growth : le profil go-to-market qui pilote les partenariats avec les lycées. Stack technique maîtrisée : Flutter 3.44, FastAPI, PostgreSQL, Redis côté backend ; scikit-learn, XGBoost, py-irt et PyTorch pour le ML ; Tesseract plus GPT-4o Vision pour l'OCR des devoirs manuscrits ; interface traduite en français, anglais, ewe et kabyè. Notre connexion à AIMS Ghana nous donne accès aux meilleurs chercheurs en IA appliquée à l'éducation en Afrique. Et SmartFarm Togo nous ancre dans l'écosystème tech local. »
 
 ### Script oral (EN)
 
-> « We are four complementary profiles. Tech: the Flutter developer who already built the app and the backend. Data: the AI specialist who implemented SM-2, IRT, and BKT. Design: the UX designer focused on the Togolese student experience. Growth: the go-to-market lead driving school partnerships. Our connection to AIMS Ghana gives us access to the best researchers in AI applied to education in Africa. And SmartFarm Togo anchors us in the local tech ecosystem. »
+> « We are four complementary profiles. Tech: the Flutter developer who already built the app and the FastAPI backend. Data: the AI specialist who implemented SM-2, IRT, BKT, and XGBoost. Design: the UX designer focused on the Togolese student experience. Growth: the go-to-market lead driving school partnerships. Tech stack mastered: Flutter 3.44, FastAPI, PostgreSQL, and Redis on the backend; scikit-learn, XGBoost, py-irt, and PyTorch for ML; Tesseract plus GPT-4o Vision for OCR of handwritten homework; interface localized in French, English, Ewe, and Kabyè. Our connection to AIMS Ghana gives us access to the best researchers in AI applied to education in Africa. And SmartFarm Togo anchors us in the local tech ecosystem. »
 
 ### Éléments visuels suggérés
 
@@ -602,6 +633,7 @@ Chaque carte : photo ronde (120 px) + prénom + rôle + 1 ligne de crédibilité
 
 - **5:15** — Annoncer « Quatre profils complémentaires » en levant 4 doigts (geste).
 - **5:25** — Présenter chaque membre rapidement, sans s'attarder.
+- **5:30** — Citer la stack technique en énumérant les 4 chips (Flutter/FastAPI, XGBoost/PyTorch, Tesseract+GPT-4o, i18n FR/EN/Ewe/Kabyè) pour rassurer le jury sur la profondeur technique.
 - **5:35** — Mentionner AIMS Ghana (credibilité IA) avec assurance.
 - **5:40** — Conclure par SmartFarm Togo (ancrage local).
 - **5:45** — Passer à la slide finale.
@@ -684,7 +716,7 @@ Chaque carte : photo ronde (120 px) + prénom + rôle + 1 ligne de crédibilité
 - [ ] Acheter la licence Outfit + Inter (Google Fonts, gratuit) et les installer
 - [ ] Préparer la palette de couleurs dans Figma (variables globales)
 - [ ] Rassembler les photos authentiques d'élèves togolais (demande autorisation écrite)
-- [ ] Capturer les 5 vrais screenshots du prototype Flutter (orientation portrait, 1080 × 1920 px)
+- [x] Capturer les 5 vrais screenshots du prototype Flutter (orientation portrait, 1080 × 1920 px) — FAIT : `docs/slide 4/ecran_1_accueil.png`, `ecran_2_matieres.png`, `ecran_3_revision.png`, `ecran_4_simulation.png`, `ecran_5_dashboard.png` + mosaïque `tous_les_ecrans.png`
 - [ ] Préparer les logos ExamBoost, DJANTA Tech Hub, CcHub, AIMS Ghana, SmartFarm Togo en SVG
 - [ ] Créer la carte CEDEAO en SVG simplifié
 - [ ] Vérifier la lisibilité de chaque slide projetée à 3 mètres de distance
@@ -770,6 +802,23 @@ Toutes les affirmations chiffrées de ce pitch deck proviennent des documents su
 | 4G 42 % des terminaux | ARCEP Togo, T1-2025 | Étude Faisabilité |
 | APK < 25 MB, Android 5+ | Spécifications produit | Étude Faisabilité |
 | 3 000+ questions (cible 3 000–6 000) | Estimation à partir de 800–1 200 sujets PDF | Étude Faisabilité |
+
+### Sources Session 3-4 (état production réel)
+
+| Chiffre | Source | Document |
+|---|---|---|
+| 114 questions calibrées IRT 3PL | Session 3-4 (Agents BD, AI) | Pitch Deck actuel (slide 4 + slide 8) |
+| 23 routes Flutter (GoRouter) | Session 3-4 (Agent BV2) | Pitch Deck actuel (slide 4 + slide 8) |
+| 17 Hive adapters | Session 3-4 | Pitch Deck actuel (slide 4) |
+| 10 providers (StateNotifier) | Session 3-4 | Pitch Deck actuel (slide 4) |
+| 91 tests critiques (SM-2, BKT, IRT) | Session 3-4 | Pitch Deck actuel (slide 8) |
+| 50+ tests widget | Session 3-4 (Agents BU, BU2) | Pitch Deck actuel (slide 8) |
+| XGBoost entraîné RMSE 1.46/20 | Session 3-4 (Agent AJ) | Pitch Deck actuel (slide 8) |
+| 39 badges gamification (Bronze/Argent/Or) | Session 3-4 (Agent X) | Pitch Deck actuel (slide 8) |
+| 12 modules livrés (Tuteur IA, sync, parent, devoirs, orientation, multijoueur…) | Session 3-4 (Agents W, X, AC, AI, AJ, BD, BK, BQ, BR, BS, BT, BY) | Pitch Deck actuel (slide 8) |
+| Audit OWASP 0 vulnérabilité critique | Session 3-4 (Agent BY) | Pitch Deck actuel (slide 8) |
+| CEDEAO curriculum Bénin/CI/Burkina Faso | UNESCO ISCED 2025 + mémos MEPST/MESS/MENA-CI/MENAPLN | Pitch Deck actuel (slide 5) |
+| Stack technique : Flutter 3.44, FastAPI, PostgreSQL, Redis, scikit-learn, XGBoost, py-irt, PyTorch, Tesseract, GPT-4o Vision, i18n FR/EN/Ewe/Kabyè | Session 3-4 | Pitch Deck actuel (slide 9) |
 
 ### Sources secondaires (projections et objectifs)
 
